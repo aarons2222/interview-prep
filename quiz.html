@@ -148,6 +148,27 @@
         }
         .explanation.show { display: block; }
         .explanation strong { color: #00d9ff; }
+        .explanation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .tts-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .tts-btn:hover { background: rgba(255,255,255,0.2); }
+        .tts-btn.speaking { background: #00d9ff; color: #000; }
         
         .nav-buttons {
             display: flex;
@@ -223,7 +244,6 @@
         
         .hidden { display: none !important; }
         
-        /* History styles */
         .history-section {
             margin-top: 40px;
             padding-top: 30px;
@@ -247,26 +267,31 @@
             font-size: 1.2rem;
         }
         .history-date { color: #666; font-size: 0.9rem; }
+        
+        .bank-info {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="index.html" class="back">✕</a>
         <h1>📝 Interview Quiz</h1>
-        <p class="subtitle">Test your Android & iOS knowledge — 40 questions</p>
+        <p class="subtitle">20 random questions from 200+ question bank</p>
         
         <div class="progress-bar">
             <div class="progress-fill" id="progress"></div>
         </div>
         
         <div class="score-display">
-            Question <span id="currentQ">1</span> of <span id="totalQ">40</span> | 
+            Question <span id="currentQ">1</span> of <span id="totalQ">20</span> | 
             Score: <span id="score">0</span>
         </div>
         
-        <div id="quiz-container">
-            <!-- Questions loaded by JS -->
-        </div>
+        <div id="quiz-container"></div>
         
         <div class="results" id="results">
             <h2>Quiz Complete!</h2>
@@ -276,7 +301,7 @@
                 <button class="review-btn" onclick="viewMatrix()">📊 View Strengths & Weaknesses</button>
             </div>
             <div>
-                <button class="review-btn secondary" onclick="restartQuiz()">Try Again</button>
+                <button class="review-btn secondary" onclick="restartQuiz()">Try Again (New Questions)</button>
                 <a href="index.html" class="review-btn secondary">Back to Prep</a>
             </div>
             
@@ -285,372 +310,303 @@
                 <div id="historyList"></div>
             </div>
         </div>
+        
+        <p class="bank-info" id="bankInfo"></p>
     </div>
 
     <script>
-        const questions = [
-            // ==================== iOS QUESTIONS ====================
-            // UIKit & SwiftUI
-            {
-                tag: 'ios', topic: 'UIKit/SwiftUI',
-                question: 'What is the main difference between UIKit and SwiftUI?',
-                options: ['UIKit is newer than SwiftUI', 'UIKit is imperative, SwiftUI is declarative', 'SwiftUI only works on iPad', 'UIKit uses Swift, SwiftUI uses Objective-C'],
-                correct: 1,
-                explanation: 'UIKit is imperative — you tell it HOW to build the UI step by step. SwiftUI is declarative — you describe WHAT the UI should look like.'
-            },
-            {
-                tag: 'ios', topic: 'UIKit/SwiftUI',
-                question: 'Which property wrapper makes a SwiftUI view update when data changes?',
-                options: ['@Published', '@State', '@Binding', '@ObservedObject'],
-                correct: 1,
-                explanation: '@State is used for simple value types owned by the view. When @State changes, SwiftUI re-renders the view.'
-            },
-            {
-                tag: 'ios', topic: 'UIKit/SwiftUI',
-                question: 'What is the purpose of @Binding in SwiftUI?',
-                options: ['To create a new data source', 'To share state between parent and child views', 'To fetch data from an API', 'To animate views'],
-                correct: 1,
-                explanation: '@Binding creates a two-way connection to a @State property owned by a parent view, allowing child views to read and write the value.'
-            },
+        // ==================== 200+ QUESTION BANK ====================
+        const questionBank = [
+            // ==================== iOS - UIKit/SwiftUI (20) ====================
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the main difference between UIKit and SwiftUI?', options: ['UIKit is newer than SwiftUI', 'UIKit is imperative, SwiftUI is declarative', 'SwiftUI only works on iPad', 'UIKit uses Objective-C only'], correct: 1, explanation: 'UIKit is imperative — you tell it HOW to build the UI step by step. SwiftUI is declarative — you describe WHAT the UI should look like.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'Which property wrapper makes a SwiftUI view update when data changes?', options: ['@Published', '@State', '@Binding', '@ObservedObject'], correct: 1, explanation: '@State is used for simple value types owned by the view. When @State changes, SwiftUI re-renders the view.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the purpose of @Binding in SwiftUI?', options: ['To create a new data source', 'To share state between parent and child views', 'To fetch data from an API', 'To animate views'], correct: 1, explanation: '@Binding creates a two-way connection to a @State property owned by a parent view.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What does @ObservedObject do in SwiftUI?', options: ['Observes system events', 'Watches an external ObservableObject for changes', 'Creates a singleton', 'Binds to Core Data'], correct: 1, explanation: '@ObservedObject watches an external object conforming to ObservableObject and updates the view when @Published properties change.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is a UIViewController responsible for?', options: ['Drawing pixels on screen', 'Managing a view hierarchy and responding to events', 'Network requests', 'Data persistence'], correct: 1, explanation: 'UIViewController manages a view hierarchy, handles user interaction, and coordinates with the app lifecycle.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the purpose of UITableViewDataSource?', options: ['To handle cell selection', 'To provide data and cells to the table view', 'To style the table', 'To manage scrolling'], correct: 1, explanation: 'UITableViewDataSource provides the number of rows/sections and creates cells for the table view to display.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'How do you pass data between SwiftUI views?', options: ['Global variables only', 'Through initializers, @Binding, or environment objects', 'Notifications only', 'UserDefaults'], correct: 1, explanation: 'Data flows via initializers (down), @Binding (two-way), @EnvironmentObject (dependency injection), or @Environment.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the SwiftUI equivalent of UINavigationController?', options: ['NavigationStack', 'NavigationLink', 'NavigationController', 'NavView'], correct: 0, explanation: 'NavigationStack (iOS 16+) or NavigationView manages hierarchical navigation in SwiftUI.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What does @StateObject do differently from @ObservedObject?', options: ['Nothing, they are identical', '@StateObject owns and creates the object, @ObservedObject observes external objects', '@StateObject is for structs', '@ObservedObject is deprecated'], correct: 1, explanation: '@StateObject creates and owns the instance (survives view recreation). @ObservedObject expects the object to be passed in.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is a Storyboard in iOS development?', options: ['A Swift file for logic', 'A visual tool for designing UI and segues', 'A testing framework', 'A build configuration'], correct: 1, explanation: 'Storyboards are XML files with a visual editor for designing UI, creating segues, and setting up view controllers.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the purpose of prepareForReuse() in UITableViewCell?', options: ['To prepare the cell for display', 'To reset the cell state before reuse', 'To animate the cell', 'To delete the cell'], correct: 1, explanation: 'prepareForReuse() is called before a cell is reused. Reset any content to avoid showing stale data.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is Auto Layout?', options: ['Automatic code formatting', 'A constraint-based layout system', 'A SwiftUI feature', 'A memory management system'], correct: 1, explanation: 'Auto Layout uses constraints to define relationships between views, enabling adaptive layouts across screen sizes.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the difference between frame and bounds?', options: ['They are the same', 'Frame is in superview coordinates, bounds is in own coordinates', 'Bounds includes rotation', 'Frame is for SwiftUI only'], correct: 1, explanation: 'Frame is position/size relative to superview. Bounds is position/size in the view\'s own coordinate system.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is @Environment used for in SwiftUI?', options: ['Setting environment variables', 'Reading system-provided values like color scheme', 'Creating global state', 'Debugging'], correct: 1, explanation: '@Environment reads system values (colorScheme, locale, etc.) or custom EnvironmentValues injected up the view tree.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is a GeometryReader in SwiftUI?', options: ['A file reader', 'A container that provides size and position info', 'A 3D rendering tool', 'A gesture handler'], correct: 1, explanation: 'GeometryReader provides the size and coordinate space of its container, useful for custom layouts.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the purpose of viewDidLoad()?', options: ['Called every time view appears', 'Called once when the view is loaded into memory', 'Called when view is deallocated', 'Called on rotation'], correct: 1, explanation: 'viewDidLoad() is called once after the view hierarchy is loaded. Use it for one-time setup.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is a ZStack in SwiftUI?', options: ['A zero-padding stack', 'A stack that layers views on top of each other', 'A compressed stack', 'A horizontal stack'], correct: 1, explanation: 'ZStack overlays views on top of each other along the z-axis (depth).' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What does dequeueReusableCell do?', options: ['Creates a new cell', 'Returns a recycled cell or creates one if needed', 'Deletes a cell', 'Animates a cell'], correct: 1, explanation: 'dequeueReusableCell returns a recycled cell from the reuse pool, or creates a new one if none available.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is the purpose of @ViewBuilder?', options: ['Builds app icons', 'Allows functions to return multiple views', 'Creates view controllers', 'Optimizes rendering'], correct: 1, explanation: '@ViewBuilder is a result builder that lets functions return multiple views combined into one.' },
+            { tag: 'ios', topic: 'UIKit/SwiftUI', question: 'What is safeAreaInsets?', options: ['Secure memory areas', 'Padding to avoid notches, home indicators, and status bars', 'Encrypted storage', 'Testing boundaries'], correct: 1, explanation: 'Safe area insets define regions not obscured by system UI (notch, home indicator, status bar).' },
             
-            // Memory Management
-            {
-                tag: 'ios', topic: 'Memory',
-                question: 'What does ARC stand for in iOS memory management?',
-                options: ['Apple Resource Controller', 'Automatic Reference Counting', 'Advanced Runtime Compiler', 'Asynchronous Request Cache'],
-                correct: 1,
-                explanation: 'ARC (Automatic Reference Counting) tracks how many references point to an object. When the count hits zero, the object is deallocated.'
-            },
-            {
-                tag: 'ios', topic: 'Memory',
-                question: 'How do you prevent retain cycles in closures?',
-                options: ['Use @escaping keyword', 'Use [weak self] or [unowned self] in capture list', 'Always use structs instead of classes', 'Call deinit manually'],
-                correct: 1,
-                explanation: '[weak self] captures self weakly (becomes optional). [unowned self] doesn\'t increase retain count but crashes if accessed after deallocation.'
-            },
-            {
-                tag: 'ios', topic: 'Memory',
-                question: 'What is the difference between weak and unowned references?',
-                options: ['Weak is faster than unowned', 'Weak becomes nil when deallocated, unowned crashes', 'Unowned is for value types only', 'There is no difference'],
-                correct: 1,
-                explanation: 'Weak references become nil when the object is deallocated (must be optional). Unowned references crash if accessed after deallocation (non-optional).'
-            },
+            // ==================== iOS - Memory (15) ====================
+            { tag: 'ios', topic: 'Memory', question: 'What does ARC stand for?', options: ['Apple Resource Controller', 'Automatic Reference Counting', 'Advanced Runtime Compiler', 'Async Request Cache'], correct: 1, explanation: 'ARC automatically tracks reference counts and deallocates objects when count hits zero.' },
+            { tag: 'ios', topic: 'Memory', question: 'How do you prevent retain cycles in closures?', options: ['Use @escaping', 'Use [weak self] or [unowned self]', 'Use structs', 'Call deinit'], correct: 1, explanation: '[weak self] captures weakly (becomes optional). [unowned self] doesn\'t retain but crashes if nil.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is the difference between weak and unowned?', options: ['Weak is faster', 'Weak becomes nil, unowned crashes if accessed after dealloc', 'Unowned is for value types', 'No difference'], correct: 1, explanation: 'Weak references become nil when deallocated. Unowned crashes if accessed after deallocation.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is a retain cycle?', options: ['A loop in code', 'Two objects strongly referencing each other, preventing deallocation', 'A caching strategy', 'A design pattern'], correct: 1, explanation: 'Retain cycles occur when objects hold strong references to each other, so neither can be deallocated.' },
+            { tag: 'ios', topic: 'Memory', question: 'When is deinit called?', options: ['When app terminates', 'When an object is about to be deallocated', 'Every frame', 'On viewDidDisappear'], correct: 1, explanation: 'deinit is called just before an object is deallocated. Use it to clean up resources.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is a memory leak?', options: ['RAM hardware failure', 'Memory that is allocated but never freed', 'Slow performance', 'A security vulnerability'], correct: 1, explanation: 'Memory leaks occur when allocated memory is never freed, usually due to retain cycles or forgotten references.' },
+            { tag: 'ios', topic: 'Memory', question: 'What tool helps detect memory leaks in Xcode?', options: ['Simulator', 'Instruments (Leaks)', 'Playground', 'TestFlight'], correct: 1, explanation: 'Instruments with the Leaks template detects memory leaks. Also check for abandoned memory.' },
+            { tag: 'ios', topic: 'Memory', question: 'Why use structs over classes for simple data?', options: ['Structs are slower', 'Structs are value types with no retain counting overhead', 'Classes are deprecated', 'Structs support inheritance'], correct: 1, explanation: 'Structs are value types, copied on assignment. No reference counting needed, avoiding retain cycles.' },
+            { tag: 'ios', topic: 'Memory', question: 'What does [weak self] do in a closure?', options: ['Makes closure run faster', 'Captures self without increasing retain count', 'Prevents closure from running', 'Makes self immutable'], correct: 1, explanation: '[weak self] captures self weakly. Self becomes an optional and may be nil inside the closure.' },
+            { tag: 'ios', topic: 'Memory', question: 'When should you use unowned instead of weak?', options: ['Always', 'When you\'re certain the reference will outlive the closure', 'Never', 'For UI elements'], correct: 1, explanation: 'Use unowned when the reference is guaranteed to exist for the closure\'s lifetime. Avoids optional unwrapping.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is autorelease pool used for?', options: ['Threading', 'Delaying deallocation until pool is drained', 'Network caching', 'UI rendering'], correct: 1, explanation: 'Autorelease pools delay deallocation of autoreleased objects until the pool drains, managing memory in loops.' },
+            { tag: 'ios', topic: 'Memory', question: 'How can delegates cause retain cycles?', options: ['Delegates are always weak', 'If delegate is strong, owner and delegate retain each other', 'They can\'t', 'Only with closures'], correct: 1, explanation: 'If a delegate property is strong, the delegating object and delegate can retain each other. Use weak delegates.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is copy-on-write?', options: ['File copying', 'Value types share storage until mutated', 'A design pattern', 'Network protocol'], correct: 1, explanation: 'Swift collections use copy-on-write: they share underlying storage until one copy is mutated, improving performance.' },
+            { tag: 'ios', topic: 'Memory', question: 'What does the Allocations instrument show?', options: ['CPU usage', 'All memory allocations and their lifecycle', 'Network traffic', 'UI frames'], correct: 1, explanation: 'Allocations shows every object allocated, its size, and when it was created/destroyed.' },
+            { tag: 'ios', topic: 'Memory', question: 'What is abandoned memory?', options: ['Memory leaks', 'Memory still referenced but no longer needed', 'Freed memory', 'Stack memory'], correct: 1, explanation: 'Abandoned memory is still reachable (not a leak) but no longer used. Often from caches or forgotten references.' },
             
-            // App Lifecycle
-            {
-                tag: 'ios', topic: 'Lifecycle',
-                question: 'Which iOS app state means the app is in foreground but NOT receiving events?',
-                options: ['Active', 'Background', 'Inactive', 'Suspended'],
-                correct: 2,
-                explanation: 'Inactive means the app is in the foreground but not receiving events — for example, during an incoming call or system alert.'
-            },
-            {
-                tag: 'ios', topic: 'Lifecycle',
-                question: 'Which method is called when an iOS app is about to move to the background?',
-                options: ['applicationWillResignActive', 'applicationDidEnterBackground', 'applicationWillTerminate', 'applicationDidBecomeActive'],
-                correct: 1,
-                explanation: 'applicationDidEnterBackground is called when the app has moved to the background. applicationWillResignActive is called just before losing focus.'
-            },
+            // ==================== iOS - Lifecycle (12) ====================
+            { tag: 'ios', topic: 'Lifecycle', question: 'Which state means the app is in foreground but not receiving events?', options: ['Active', 'Background', 'Inactive', 'Suspended'], correct: 2, explanation: 'Inactive: foreground but not receiving events (e.g., incoming call, system alert).' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'Which method is called when app moves to background?', options: ['applicationWillResignActive', 'applicationDidEnterBackground', 'applicationWillTerminate', 'viewDidDisappear'], correct: 1, explanation: 'applicationDidEnterBackground is called when the app has fully entered the background.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What is the Suspended state?', options: ['App is frozen', 'App is in background, not executing, can be purged', 'App crashed', 'App is updating'], correct: 1, explanation: 'Suspended apps are in memory but not executing. System can purge them without notice to free memory.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'When is viewWillAppear called?', options: ['Once when loaded', 'Every time the view is about to become visible', 'When view is deallocated', 'On orientation change'], correct: 1, explanation: 'viewWillAppear is called each time the view is about to appear on screen.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What is the difference between viewDidLoad and viewWillAppear?', options: ['Same thing', 'viewDidLoad once on load, viewWillAppear every time view appears', 'viewWillAppear is deprecated', 'viewDidLoad is for SwiftUI'], correct: 1, explanation: 'viewDidLoad: once when view loads. viewWillAppear: every time view becomes visible.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'When should you save user data?', options: ['Only on app terminate', 'In applicationDidEnterBackground or sceneDidEnterBackground', 'Never automatically', 'Only on device shutdown'], correct: 1, explanation: 'Save data when entering background. App may be terminated without warning from suspended state.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What is a Scene in iOS 13+?', options: ['A view controller', 'An instance of your app\'s UI that can run alongside others', 'A storyboard', 'A test case'], correct: 1, explanation: 'Scenes allow multiple instances of your app UI (e.g., split view on iPad). Each has its own lifecycle.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What does applicationWillTerminate do?', options: ['Always called before app closes', 'Called if app is terminated while in foreground (not suspended)', 'Never called', 'Called every 5 minutes'], correct: 1, explanation: 'applicationWillTerminate is NOT called if app is terminated from suspended state. Not guaranteed.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'When is viewDidDisappear called?', options: ['When view is deallocated', 'After view has been removed from screen', 'Before view appears', 'On memory warning'], correct: 1, explanation: 'viewDidDisappear is called after the view has been removed from the view hierarchy.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What happens on a memory warning?', options: ['App crashes', 'didReceiveMemoryWarning is called, release caches', 'Nothing', 'App is suspended'], correct: 1, explanation: 'Memory warnings let you free caches and resources. If you don\'t reduce memory, app may be terminated.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'What is the purpose of sceneDidBecomeActive?', options: ['Scene was loaded', 'Scene is now in foreground and interactive', 'Scene was terminated', 'Scene rotated'], correct: 1, explanation: 'sceneDidBecomeActive: scene is in foreground and ready for user interaction. Resume tasks here.' },
+            { tag: 'ios', topic: 'Lifecycle', question: 'How do you handle state restoration?', options: ['It\'s automatic', 'Implement restorationIdentifier and encode/decode state', 'Not possible', 'Use Core Data'], correct: 1, explanation: 'Assign restorationIdentifier to view controllers and implement encode/decode methods for state.' },
             
-            // Architecture
-            {
-                tag: 'ios', topic: 'Architecture',
-                question: 'In MVVM architecture on iOS, which layer does the ViewController belong to?',
-                options: ['Model', 'View', 'ViewModel', 'Controller (separate layer)'],
-                correct: 1,
-                explanation: 'In MVVM, the ViewController is part of the View layer. The ViewModel contains the presentation logic that would otherwise bloat the VC.'
-            },
-            {
-                tag: 'ios', topic: 'Architecture',
-                question: 'What problem does the Coordinator pattern solve?',
-                options: ['Memory leaks', 'Navigation logic scattered across view controllers', 'Slow network requests', 'Database corruption'],
-                correct: 1,
-                explanation: 'The Coordinator pattern extracts navigation logic from view controllers into dedicated coordinator objects, improving reusability and testability.'
-            },
+            // ==================== iOS - Architecture (12) ====================
+            { tag: 'ios', topic: 'Architecture', question: 'In MVVM, which layer does ViewController belong to?', options: ['Model', 'View', 'ViewModel', 'Controller'], correct: 1, explanation: 'In MVVM, ViewController is part of the View layer. ViewModel handles presentation logic.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What problem does the Coordinator pattern solve?', options: ['Memory leaks', 'Navigation logic scattered across VCs', 'Slow networking', 'Database issues'], correct: 1, explanation: 'Coordinators centralize navigation logic, making VCs more reusable and navigation testable.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is the purpose of a ViewModel?', options: ['Display views', 'Transform model data for display and handle presentation logic', 'Make network requests', 'Store to database'], correct: 1, explanation: 'ViewModel transforms model data for display and contains presentation logic, keeping View simple.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What does VIPER stand for?', options: ['View, Interface, Presenter, Entity, Router', 'View, Interactor, Presenter, Entity, Router', 'Visual Interface Protocol', 'None of these'], correct: 1, explanation: 'VIPER: View, Interactor, Presenter, Entity, Router. A highly modular architecture.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is the Repository pattern?', options: ['Git workflow', 'Abstracts data sources behind a clean interface', 'UI pattern', 'Testing pattern'], correct: 1, explanation: 'Repository abstracts data access. Consumers don\'t know if data comes from network, cache, or database.' },
+            { tag: 'ios', topic: 'Architecture', question: 'Why avoid Massive View Controller?', options: ['It\'s fast', 'Hard to test, maintain, and reuse', 'Apple recommends it', 'It uses less memory'], correct: 1, explanation: 'Massive VCs mix concerns, making code hard to test, maintain, and reuse. Extract logic to other layers.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is dependency injection?', options: ['Injecting code at runtime', 'Providing dependencies from outside rather than creating internally', 'A security feature', 'Automatic imports'], correct: 1, explanation: 'DI provides dependencies externally, enabling testing with mocks and loose coupling.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is a use case in Clean Architecture?', options: ['A test case', 'A single piece of business logic', 'A UI component', 'A data model'], correct: 1, explanation: 'Use cases (interactors) contain single business operations, independent of UI and frameworks.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is the purpose of protocols in architecture?', options: ['Network protocol', 'Define contracts for loose coupling and testability', 'Memory management', 'Threading'], correct: 1, explanation: 'Protocols define interfaces, allowing different implementations and mock objects for testing.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is unidirectional data flow?', options: ['Data flows one direction through the app', 'Using one database', 'Single-threaded', 'One API endpoint'], correct: 0, explanation: 'Unidirectional flow: State → View → Action → Reducer → State. Makes state predictable. (Redux, TCA)' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is The Composable Architecture (TCA)?', options: ['UI framework', 'A Swift architecture with unidirectional flow, reducers, and effects', 'A build system', 'Apple framework'], correct: 1, explanation: 'TCA is a popular Swift architecture using unidirectional flow, composable reducers, and testable effects.' },
+            { tag: 'ios', topic: 'Architecture', question: 'What is the Model in MVC/MVVM?', options: ['UI components', 'Data structures and business logic', 'Navigation', 'Networking'], correct: 1, explanation: 'Model contains data structures, business rules, and data access. Independent of UI.' },
             
-            // Data & Security
-            {
-                tag: 'ios', topic: 'Data/Security',
-                question: 'What is the correct way to store sensitive data like auth tokens on iOS?',
-                options: ['UserDefaults', 'Core Data', 'Keychain', 'FileManager documents directory'],
-                correct: 2,
-                explanation: 'Keychain is encrypted secure storage for sensitive data. Never use UserDefaults for tokens or passwords.'
-            },
-            {
-                tag: 'ios', topic: 'Data/Security',
-                question: 'What is App Transport Security (ATS)?',
-                options: ['A DRM system for apps', 'A requirement to use HTTPS for network connections', 'A code signing mechanism', 'An encryption library'],
-                correct: 1,
-                explanation: 'ATS enforces secure network connections by default. Apps must use HTTPS unless exceptions are explicitly declared in Info.plist.'
-            },
+            // ==================== iOS - Data/Security (12) ====================
+            { tag: 'ios', topic: 'Data/Security', question: 'Where should you store auth tokens?', options: ['UserDefaults', 'Core Data', 'Keychain', 'Documents folder'], correct: 2, explanation: 'Keychain is encrypted secure storage. Never store sensitive data in UserDefaults.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is App Transport Security?', options: ['DRM', 'Requirement to use HTTPS', 'Code signing', 'Encryption library'], correct: 1, explanation: 'ATS enforces HTTPS by default. Exceptions must be declared in Info.plist.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is UserDefaults used for?', options: ['Sensitive data', 'Small amounts of user preferences', 'Large files', 'Images'], correct: 1, explanation: 'UserDefaults stores simple preferences (settings, flags). Not secure, not for large data.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is Core Data?', options: ['Database server', 'Object graph and persistence framework', 'Networking', 'UI framework'], correct: 1, explanation: 'Core Data manages object graphs with persistence (usually SQLite). Handles relationships and caching.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is certificate pinning?', options: ['UI animation', 'Validating server certificates against known values', 'Storing certs locally', 'Creating certificates'], correct: 1, explanation: 'Pinning validates server certificates against embedded copies, preventing MITM attacks.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is the Codable protocol?', options: ['Encryption', 'Enables encoding/decoding to JSON, plist, etc.', 'Code signing', 'Obfuscation'], correct: 1, explanation: 'Codable (Encodable + Decodable) enables automatic encoding/decoding to various formats.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is FileManager used for?', options: ['Memory management', 'Working with the file system', 'Network requests', 'UI layout'], correct: 1, explanation: 'FileManager creates, reads, writes, deletes, and manages files and directories.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'Where should large files be stored?', options: ['UserDefaults', 'Keychain', 'Documents or Caches directory', 'In memory'], correct: 2, explanation: 'Large files go in Documents (user data, backed up) or Caches (recreatable, not backed up).' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is CloudKit?', options: ['Weather API', 'Apple\'s cloud storage and database service', 'File compression', 'Backup tool'], correct: 1, explanation: 'CloudKit provides cloud storage, database, and sync across user\'s devices via iCloud.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is biometric authentication on iOS?', options: ['Password only', 'Face ID and Touch ID via LocalAuthentication', 'Two-factor auth', 'OAuth'], correct: 1, explanation: 'LocalAuthentication framework provides Face ID and Touch ID for secure authentication.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is data protection in iOS?', options: ['Backup feature', 'Encryption of files based on device lock state', 'Antivirus', 'Firewall'], correct: 1, explanation: 'Data protection encrypts files. Protection levels determine accessibility when device is locked.' },
+            { tag: 'ios', topic: 'Data/Security', question: 'What is SwiftData?', options: ['Network library', 'Apple\'s new persistence framework (iOS 17+)', 'Data visualization', 'Analytics'], correct: 1, explanation: 'SwiftData is Apple\'s modern persistence framework using Swift macros, replacing Core Data for new projects.' },
             
-            // Concurrency
-            {
-                tag: 'ios', topic: 'Concurrency',
-                question: 'Which queue should UI updates run on?',
-                options: ['Global queue', 'Background queue', 'Main queue', 'Any queue'],
-                correct: 2,
-                explanation: 'All UI updates must happen on the main queue (main thread). Updating UI from background threads causes crashes or visual glitches.'
-            },
-            {
-                tag: 'ios', topic: 'Concurrency',
-                question: 'What is the purpose of DispatchGroup?',
-                options: ['To create UI components', 'To wait for multiple async tasks to complete', 'To encrypt data', 'To manage memory'],
-                correct: 1,
-                explanation: 'DispatchGroup lets you wait for multiple async tasks to complete before executing a completion block. Use enter/leave/notify.'
-            },
+            // ==================== iOS - Concurrency (12) ====================
+            { tag: 'ios', topic: 'Concurrency', question: 'Which queue should UI updates run on?', options: ['Global', 'Background', 'Main', 'Any'], correct: 2, explanation: 'All UI updates must happen on the main queue. Background updates cause crashes or glitches.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is DispatchGroup used for?', options: ['UI grouping', 'Waiting for multiple async tasks', 'Data encryption', 'Memory management'], correct: 1, explanation: 'DispatchGroup waits for multiple async tasks to complete before executing a completion block.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is the difference between sync and async dispatch?', options: ['Same thing', 'sync blocks until complete, async returns immediately', 'async is slower', 'sync is deprecated'], correct: 1, explanation: 'sync blocks the calling thread until work completes. async returns immediately, work runs in background.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is a serial queue?', options: ['A queue that runs tasks one at a time', 'A queue that runs tasks in parallel', 'A deprecated feature', 'A UI queue'], correct: 0, explanation: 'Serial queues execute tasks one at a time, in order. Main queue is serial.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is a concurrent queue?', options: ['A queue that runs one task', 'A queue that can run multiple tasks simultaneously', 'A testing queue', 'A UI queue'], correct: 1, explanation: 'Concurrent queues can execute multiple tasks at the same time, order not guaranteed.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is async/await in Swift?', options: ['Network library', 'Syntax for writing async code that reads like sync code', 'UI framework', 'Testing tool'], correct: 1, explanation: 'async/await (Swift 5.5+) makes async code readable. No callback pyramids.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is a Task in Swift concurrency?', options: ['A to-do item', 'A unit of asynchronous work', 'A test case', 'A timer'], correct: 1, explanation: 'Task creates a new unit of async work that can be awaited, cancelled, or run detached.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What does @MainActor do?', options: ['Creates actors', 'Ensures code runs on main thread', 'Improves performance', 'Handles errors'], correct: 1, explanation: '@MainActor ensures methods/properties are accessed on the main thread, enforced at compile time.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is an Actor in Swift?', options: ['A class type', 'A reference type that protects state from data races', 'A value type', 'A protocol'], correct: 1, explanation: 'Actors isolate mutable state, allowing only one task to access state at a time, preventing data races.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What causes a data race?', options: ['Slow network', 'Multiple threads accessing shared mutable state without synchronization', 'Memory leaks', 'UI updates'], correct: 1, explanation: 'Data races occur when multiple threads access shared mutable data simultaneously without synchronization.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is DispatchSemaphore used for?', options: ['UI signals', 'Controlling access to a resource by multiple threads', 'Network requests', 'Logging'], correct: 1, explanation: 'Semaphores limit concurrent access to a resource. wait() decrements, signal() increments.' },
+            { tag: 'ios', topic: 'Concurrency', question: 'What is OperationQueue?', options: ['A FIFO queue', 'A higher-level abstraction over GCD with dependencies and cancellation', 'A database', 'A UI component'], correct: 1, explanation: 'OperationQueue manages Operation objects with support for dependencies, priorities, and cancellation.' },
             
-            // Frameworks
-            {
-                tag: 'ios', topic: 'Frameworks',
-                question: 'Which framework provides reactive programming on iOS 13+?',
-                options: ['RxSwift', 'Combine', 'SwiftUI', 'Foundation'],
-                correct: 1,
-                explanation: 'Combine is Apple\'s native reactive framework (iOS 13+). It handles async events as streams with Publishers, Subscribers, and Operators.'
-            },
-            {
-                tag: 'ios', topic: 'Frameworks',
-                question: 'What is Core Data used for?',
-                options: ['Network requests', 'Object graph and persistence management', 'UI layout', 'Push notifications'],
-                correct: 1,
-                explanation: 'Core Data is Apple\'s ORM framework for object graph management with SQLite backend. It handles relationships, caching, and change tracking.'
-            },
+            // ==================== iOS - Frameworks (10) ====================
+            { tag: 'ios', topic: 'Frameworks', question: 'What is Combine?', options: ['UI framework', 'Reactive programming framework for handling async events', 'Database', 'Testing tool'], correct: 1, explanation: 'Combine handles async events as streams with Publishers, Subscribers, and Operators.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is URLSession?', options: ['URL parser', 'API for network requests', 'Database', 'File manager'], correct: 1, explanation: 'URLSession handles HTTP/HTTPS requests, downloads, uploads, and WebSocket connections.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is NotificationCenter used for?', options: ['Push notifications', 'Broadcasting messages within the app', 'Local notifications', 'Alerts'], correct: 1, explanation: 'NotificationCenter broadcasts messages to observers without tight coupling. Not for push notifications.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is CoreLocation?', options: ['Map rendering', 'Getting device location and heading', 'Geofencing only', 'Weather data'], correct: 1, explanation: 'CoreLocation provides GPS location, heading, region monitoring, and visit detection.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is MapKit?', options: ['Location services', 'Displaying and annotating maps', 'Navigation only', 'GPS hardware'], correct: 1, explanation: 'MapKit displays maps, annotations, overlays, and provides directions.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is AVFoundation?', options: ['UI framework', 'Audio and video playback, recording, and editing', 'Networking', 'Analytics'], correct: 1, explanation: 'AVFoundation handles media playback, recording, editing, and camera capture.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is StoreKit used for?', options: ['Data storage', 'In-app purchases and App Store interactions', 'Shopping apps', 'Inventory'], correct: 1, explanation: 'StoreKit handles in-app purchases, subscriptions, and App Store rating prompts.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is UserNotifications framework for?', options: ['System notifications', 'Local and push notifications', 'NotificationCenter', 'Alerts'], correct: 1, explanation: 'UserNotifications schedules local notifications and handles push notification content.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is HealthKit?', options: ['App health monitoring', 'Access to health and fitness data', 'Doctor appointments', 'Medical records'], correct: 1, explanation: 'HealthKit provides access to health/fitness data stored in the Health app.' },
+            { tag: 'ios', topic: 'Frameworks', question: 'What is CoreML?', options: ['Machine learning inference', 'Cloud ML', 'Data analysis', 'A/B testing'], correct: 0, explanation: 'CoreML runs trained machine learning models on-device for inference.' },
             
-            // ==================== ANDROID QUESTIONS ====================
-            // Components
-            {
-                tag: 'android', topic: 'Components',
-                question: 'What are the four fundamental Android components?',
-                options: ['Activity, Fragment, View, Intent', 'Activity, Service, Broadcast Receiver, Content Provider', 'MainActivity, Application, Context, Bundle', 'View, ViewModel, Repository, Database'],
-                correct: 1,
-                explanation: 'The four components are: Activity (UI), Service (background work), Broadcast Receiver (system events), Content Provider (shared data).'
-            },
-            {
-                tag: 'android', topic: 'Components',
-                question: 'What is the purpose of a Content Provider?',
-                options: ['To display content on screen', 'To share data between applications', 'To provide internet connectivity', 'To manage app permissions'],
-                correct: 1,
-                explanation: 'Content Providers manage shared app data and expose it to other apps. Examples: Contacts, MediaStore. Accessed via ContentResolver.'
-            },
-            {
-                tag: 'android', topic: 'Components',
-                question: 'What is the difference between a Service and an IntentService?',
-                options: ['IntentService runs on main thread', 'IntentService auto-stops when work is done', 'Service is deprecated', 'There is no difference'],
-                correct: 1,
-                explanation: 'IntentService runs on a worker thread and automatically stops itself when all work is done. Regular Service runs on main thread and you manage its lifecycle.'
-            },
+            // ==================== ANDROID - Components (15) ====================
+            { tag: 'android', topic: 'Components', question: 'What are the four fundamental Android components?', options: ['Activity, Fragment, View, Intent', 'Activity, Service, Broadcast Receiver, Content Provider', 'MainActivity, Application, Context, Bundle', 'View, ViewModel, Repository, Database'], correct: 1, explanation: 'The four components: Activity (UI), Service (background), Broadcast Receiver (events), Content Provider (data).' },
+            { tag: 'android', topic: 'Components', question: 'What is a Content Provider?', options: ['UI component', 'Shares data between applications', 'Network provider', 'Storage provider'], correct: 1, explanation: 'Content Providers share data between apps via a structured interface (ContentResolver).' },
+            { tag: 'android', topic: 'Components', question: 'What is the difference between Service and IntentService?', options: ['Same thing', 'IntentService auto-stops when work completes', 'Service is deprecated', 'IntentService runs on main thread'], correct: 1, explanation: 'IntentService runs on a worker thread and stops itself when done. Regular Service runs on main thread.' },
+            { tag: 'android', topic: 'Components', question: 'What is a Broadcast Receiver?', options: ['Radio app', 'Responds to system-wide broadcast events', 'Sends broadcasts', 'Network component'], correct: 1, explanation: 'Broadcast Receivers respond to system or app broadcasts (boot completed, battery low, etc.).' },
+            { tag: 'android', topic: 'Components', question: 'What is an Intent?', options: ['User intention', 'Messaging object for requesting actions', 'A promise', 'A callback'], correct: 1, explanation: 'Intents request actions (start activity, service) and can carry data between components.' },
+            { tag: 'android', topic: 'Components', question: 'What is the difference between explicit and implicit intents?', options: ['Same thing', 'Explicit names the target, implicit declares action for system to resolve', 'Implicit is faster', 'Explicit is deprecated'], correct: 1, explanation: 'Explicit: specific target component. Implicit: declares action, system finds appropriate handler.' },
+            { tag: 'android', topic: 'Components', question: 'What is AndroidManifest.xml?', options: ['Layout file', 'Declares components, permissions, and app metadata', 'Build config', 'Test config'], correct: 1, explanation: 'Manifest declares all components, permissions, features, and app configuration to the system.' },
+            { tag: 'android', topic: 'Components', question: 'What is a PendingIntent?', options: ['Delayed intent', 'Token giving another app permission to run your intent', 'Cancelled intent', 'Scheduled task'], correct: 1, explanation: 'PendingIntent grants another app permission to execute an Intent on your behalf.' },
+            { tag: 'android', topic: 'Components', question: 'What is a Foreground Service?', options: ['UI service', 'Service with notification that user is aware of', 'Fast service', 'Main thread service'], correct: 1, explanation: 'Foreground services show a notification and have higher priority. Required for visible ongoing work.' },
+            { tag: 'android', topic: 'Components', question: 'What is WorkManager?', options: ['Task manager app', 'API for deferrable, guaranteed background work', 'Thread pool', 'Process manager'], correct: 1, explanation: 'WorkManager schedules deferrable background work that runs even if app exits or device restarts.' },
+            { tag: 'android', topic: 'Components', question: 'What is the Application class?', options: ['Main activity', 'Base class maintaining global app state', 'Launcher', 'Package manager'], correct: 1, explanation: 'Application is created before any component. Use for app-wide initialization and state.' },
+            { tag: 'android', topic: 'Components', question: 'What is Context?', options: ['App settings', 'Interface to global app info and system services', 'A view', 'A callback'], correct: 1, explanation: 'Context provides access to app resources, system services, and app-level operations.' },
+            { tag: 'android', topic: 'Components', question: 'What is the difference between Activity and Fragment?', options: ['Same thing', 'Activity is a screen, Fragment is a reusable UI portion within Activity', 'Fragment is deprecated', 'Activity is for tablets'], correct: 1, explanation: 'Activities are full screens. Fragments are reusable UI pieces that live within Activities.' },
+            { tag: 'android', topic: 'Components', question: 'What is a Bundle?', options: ['App package', 'Key-value map for passing data between components', 'Resource folder', 'Build artifact'], correct: 1, explanation: 'Bundle is a map of key-value pairs used to pass data between activities, fragments, etc.' },
+            { tag: 'android', topic: 'Components', question: 'What is savedInstanceState?', options: ['Saved game', 'Bundle containing UI state before destruction', 'Database backup', 'Preferences'], correct: 1, explanation: 'savedInstanceState contains UI state saved before activity destruction (rotation, memory pressure).' },
             
-            // Lifecycle
-            {
-                tag: 'android', topic: 'Lifecycle',
-                question: 'Which Activity lifecycle method is called when the activity becomes visible?',
-                options: ['onCreate()', 'onStart()', 'onResume()', 'onVisible()'],
-                correct: 1,
-                explanation: 'onStart() is called when the activity is becoming visible. onResume() is when it becomes interactive. onCreate() is initial setup.'
-            },
-            {
-                tag: 'android', topic: 'Lifecycle',
-                question: 'What happens to an Activity when you rotate the device?',
-                options: ['Nothing, it stays the same', 'It is destroyed and recreated', 'Only the layout changes', 'The app crashes'],
-                correct: 1,
-                explanation: 'Configuration changes like rotation destroy and recreate the Activity. Use ViewModel to survive this, or handle it with configChanges in manifest.'
-            },
-            {
-                tag: 'android', topic: 'Lifecycle',
-                question: 'Which lifecycle method should you use to release resources like camera or sensors?',
-                options: ['onCreate()', 'onPause()', 'onStop()', 'onDestroy()'],
-                correct: 2,
-                explanation: 'Release resources in onStop() when the activity is no longer visible. onPause() is too early (activity may become visible again quickly).'
-            },
+            // ==================== ANDROID - Lifecycle (12) ====================
+            { tag: 'android', topic: 'Lifecycle', question: 'Which method is called when activity becomes visible?', options: ['onCreate()', 'onStart()', 'onResume()', 'onVisible()'], correct: 1, explanation: 'onStart() is called when activity is becoming visible. onResume() when interactive.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What happens on device rotation?', options: ['Nothing', 'Activity is destroyed and recreated', 'Only layout changes', 'App crashes'], correct: 1, explanation: 'Configuration changes destroy and recreate the Activity. Use ViewModel to survive this.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'When should you release resources like camera?', options: ['onCreate()', 'onPause()', 'onStop()', 'onDestroy()'], correct: 2, explanation: 'Release resources in onStop() when not visible. onPause() is too early for most cases.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is the difference between onPause() and onStop()?', options: ['Same thing', 'onPause when losing focus, onStop when not visible', 'onStop is deprecated', 'onPause is for fragments'], correct: 1, explanation: 'onPause(): losing focus (may still be visible). onStop(): completely hidden.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'When is onCreate() called?', options: ['Every time activity appears', 'When activity is first created', 'On rotation only', 'On resume'], correct: 1, explanation: 'onCreate() is called when activity is created. Also called after destruction (rotation).' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is onSaveInstanceState() for?', options: ['Saving to database', 'Saving UI state before destruction', 'Saving preferences', 'Backing up data'], correct: 1, explanation: 'onSaveInstanceState() saves UI state to Bundle before activity may be destroyed.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What does finish() do?', options: ['Ends the app', 'Closes the current activity', 'Saves state', 'Pauses activity'], correct: 1, explanation: 'finish() closes the activity and removes it from the back stack.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is the lifecycle order when Activity A starts Activity B?', options: ['A.onStop → B.onCreate', 'A.onPause → B.onCreate → B.onStart → B.onResume → A.onStop', 'B starts first', 'Undefined'], correct: 1, explanation: 'A pauses first, B goes through creation, then A stops. Ensures smooth transitions.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is LifecycleObserver?', options: ['A debugging tool', 'Interface to observe lifecycle events', 'A testing class', 'System service'], correct: 1, explanation: 'LifecycleObserver allows components to react to lifecycle changes without subclassing.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is ProcessLifecycleOwner?', options: ['OS process', 'Lifecycle owner for the entire app (foreground/background)', 'Thread manager', 'Memory manager'], correct: 1, explanation: 'ProcessLifecycleOwner provides lifecycle for the whole app - know when app is in foreground/background.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What does setRetainInstance(true) do in Fragments?', options: ['Retains UI', 'Fragment instance survives configuration changes (deprecated)', 'Prevents destruction', 'Caches data'], correct: 1, explanation: 'setRetainInstance(true) kept fragment instance across rotation. Deprecated - use ViewModel instead.' },
+            { tag: 'android', topic: 'Lifecycle', question: 'What is onRestart() called?', options: ['Every resume', 'When activity returns from stopped state (not destroyed)', 'On rotation', 'First launch'], correct: 1, explanation: 'onRestart() is called when returning from stopped state without being destroyed (back navigation).' },
             
-            // Kotlin
-            {
-                tag: 'android', topic: 'Kotlin',
-                question: 'What is the main advantage of Kotlin over Java for Android?',
-                options: ['Kotlin is faster at runtime', 'Kotlin has null safety built-in', 'Kotlin doesn\'t need the JVM', 'Kotlin uses less memory'],
-                correct: 1,
-                explanation: 'Kotlin has null safety in the type system. Nullable types (String?) must be explicitly handled, preventing NullPointerException.'
-            },
-            {
-                tag: 'android', topic: 'Kotlin',
-                question: 'What does the "data class" keyword do in Kotlin?',
-                options: ['Creates a database table', 'Auto-generates equals, hashCode, toString, copy', 'Makes the class immutable', 'Enables serialization'],
-                correct: 1,
-                explanation: 'Data classes auto-generate equals(), hashCode(), toString(), copy(), and componentN() functions based on constructor properties.'
-            },
-            {
-                tag: 'android', topic: 'Kotlin',
-                question: 'What is a sealed class used for?',
-                options: ['To prevent inheritance', 'To define restricted class hierarchies for when expressions', 'To encrypt data', 'To create singletons'],
-                correct: 1,
-                explanation: 'Sealed classes define restricted hierarchies. All subclasses must be declared in the same file. Useful with when expressions for exhaustive checking.'
-            },
+            // ==================== ANDROID - Kotlin (15) ====================
+            { tag: 'android', topic: 'Kotlin', question: 'What is the main advantage of Kotlin over Java?', options: ['Faster runtime', 'Null safety built-in', 'No JVM needed', 'Less memory'], correct: 1, explanation: 'Kotlin has null safety in the type system. Nullable types must be explicitly handled.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What does data class do?', options: ['Creates database', 'Auto-generates equals, hashCode, toString, copy', 'Makes immutable', 'Enables serialization'], correct: 1, explanation: 'Data classes auto-generate equals(), hashCode(), toString(), copy(), componentN().' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is a sealed class?', options: ['Encrypted class', 'Restricted class hierarchy for exhaustive when', 'Final class', 'Abstract class'], correct: 1, explanation: 'Sealed classes define restricted hierarchies. All subclasses declared in same file. Exhaustive when.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What does the ? operator mean?', options: ['Unknown type', 'Nullable type', 'Optional parameter', 'Ternary operator'], correct: 1, explanation: 'String? means nullable String. Must handle null case explicitly.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What does !! do?', options: ['Logical NOT', 'Assert non-null (throws if null)', 'Safe call', 'Elvis operator'], correct: 1, explanation: '!! asserts non-null. Throws NullPointerException if value is null. Avoid when possible.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is the Elvis operator ?:', options: ['Ternary operator', 'Provides default value if null', 'Safe call', 'Null check'], correct: 1, explanation: 'Elvis operator (?:) returns left side if not null, otherwise right side. val x = a ?: default' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is an extension function?', options: ['Plugin system', 'Adding functions to existing classes without inheritance', 'Interface method', 'Abstract function'], correct: 1, explanation: 'Extension functions add methods to classes without modifying them. fun String.hello() = "Hello $this"' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is the difference between val and var?', options: ['Same thing', 'val is read-only, var is mutable', 'var is deprecated', 'val is for primitives'], correct: 1, explanation: 'val is read-only (like final). var is mutable and can be reassigned.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is a companion object?', options: ['Singleton', 'Holds static members for a class', 'Testing helper', 'Interface implementation'], correct: 1, explanation: 'Companion object holds "static" members. Accessed via ClassName.member.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What does lazy do?', options: ['Delays execution', 'Initializes property on first access', 'Makes slow', 'Disables caching'], correct: 1, explanation: 'lazy {} initializes the property only when first accessed, then caches the value.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is lateinit?', options: ['Late binding', 'Declares non-null var initialized later', 'Lazy init', 'Optional init'], correct: 1, explanation: 'lateinit declares non-null var that will be initialized later. Avoids null checks, but crashes if used before init.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is a higher-order function?', options: ['Math function', 'Function that takes or returns functions', 'Main function', 'Recursive function'], correct: 1, explanation: 'Higher-order functions take functions as parameters or return them. Enables functional programming.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What does inline do for functions?', options: ['Makes faster', 'Copies function body to call site, avoiding lambda overhead', 'Compresses code', 'Enables debugging'], correct: 1, explanation: 'inline copies function body to call sites, eliminating lambda object allocation overhead.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is object declaration?', options: ['Variable declaration', 'Creates a singleton', 'Interface', 'Anonymous class'], correct: 1, explanation: 'object ClassName { } creates a singleton. Initialized lazily when first accessed.' },
+            { tag: 'android', topic: 'Kotlin', question: 'What is destructuring declaration?', options: ['Destroying objects', 'Extracting multiple values from object at once', 'Memory cleanup', 'Unpacking arrays'], correct: 1, explanation: 'val (name, age) = person extracts properties using componentN() functions.' },
             
-            // UI
-            {
-                tag: 'android', topic: 'UI',
-                question: 'Why does RecyclerView perform better than ListView?',
-                options: ['RecyclerView uses less XML', 'RecyclerView recycles views and uses ViewHolder pattern', 'RecyclerView is written in Kotlin', 'RecyclerView doesn\'t support animations'],
-                correct: 1,
-                explanation: 'RecyclerView reuses off-screen item views and caches view references with ViewHolder to avoid repeated findViewById calls.'
-            },
-            {
-                tag: 'android', topic: 'UI',
-                question: 'What is the purpose of DiffUtil in RecyclerView?',
-                options: ['To add animations', 'To calculate minimal updates between old and new lists', 'To handle click events', 'To create layouts'],
-                correct: 1,
-                explanation: 'DiffUtil calculates the difference between two lists and dispatches minimal update operations, improving performance and enabling animations.'
-            },
-            {
-                tag: 'android', topic: 'UI',
-                question: 'What is Jetpack Compose?',
-                options: ['A music composition app', 'A declarative UI toolkit for Android', 'A database library', 'A testing framework'],
-                correct: 1,
-                explanation: 'Jetpack Compose is Android\'s modern declarative UI toolkit. You describe UI as functions of state, and Compose handles updates.'
-            },
+            // ==================== ANDROID - UI (15) ====================
+            { tag: 'android', topic: 'UI', question: 'Why does RecyclerView perform better than ListView?', options: ['Uses less XML', 'Recycles views and uses ViewHolder pattern', 'Written in Kotlin', 'No animations'], correct: 1, explanation: 'RecyclerView reuses views and caches references with ViewHolder, avoiding repeated findViewById.' },
+            { tag: 'android', topic: 'UI', question: 'What is DiffUtil?', options: ['Diff tool', 'Calculates minimal updates between lists', 'Git integration', 'Comparison operator'], correct: 1, explanation: 'DiffUtil calculates differences between lists and dispatches minimal update operations.' },
+            { tag: 'android', topic: 'UI', question: 'What is Jetpack Compose?', options: ['Music app', 'Declarative UI toolkit', 'Database', 'Testing framework'], correct: 1, explanation: 'Compose is Android\'s modern declarative UI toolkit. Describe UI as functions of state.' },
+            { tag: 'android', topic: 'UI', question: 'What is a ViewHolder?', options: ['View container', 'Caches view references to avoid repeated findViewById', 'Layout manager', 'Animation holder'], correct: 1, explanation: 'ViewHolder holds references to views in a list item, improving scroll performance.' },
+            { tag: 'android', topic: 'UI', question: 'What does ConstraintLayout offer?', options: ['Simple lists', 'Flat hierarchy with constraint-based positioning', 'Automatic constraints', 'Database constraints'], correct: 1, explanation: 'ConstraintLayout creates flat hierarchies using constraints, improving performance over nested layouts.' },
+            { tag: 'android', topic: 'UI', question: 'What is View Binding?', options: ['Data binding', 'Type-safe access to views without findViewById', 'Event binding', 'Service binding'], correct: 1, explanation: 'View Binding generates binding classes providing direct, type-safe view references.' },
+            { tag: 'android', topic: 'UI', question: 'What is Data Binding?', options: ['Database connection', 'Binding UI to data sources with observable updates', 'View Binding', 'Intent binding'], correct: 1, explanation: 'Data Binding binds UI to data sources. Observable data automatically updates UI.' },
+            { tag: 'android', topic: 'UI', question: 'What is remember in Compose?', options: ['Memory function', 'Stores value across recompositions', 'Caching', 'State saving'], correct: 1, explanation: 'remember {} stores a value that survives recomposition. Lost on configuration change.' },
+            { tag: 'android', topic: 'UI', question: 'What is rememberSaveable?', options: ['Auto-save', 'remember that survives configuration changes', 'Database save', 'File save'], correct: 1, explanation: 'rememberSaveable stores values that survive configuration changes (rotation).' },
+            { tag: 'android', topic: 'UI', question: 'What is a Modifier in Compose?', options: ['Access modifier', 'Decorates/configures composables (size, padding, click)', 'State modifier', 'Theme modifier'], correct: 1, explanation: 'Modifiers configure composables: size, padding, background, click handlers, etc.' },
+            { tag: 'android', topic: 'UI', question: 'What is recomposition?', options: ['Code compilation', 'Compose re-running functions when state changes', 'Layout pass', 'View recycling'], correct: 1, explanation: 'Recomposition re-executes composable functions when their inputs (state) change.' },
+            { tag: 'android', topic: 'UI', question: 'What is LazyColumn?', options: ['Slow column', 'Compose equivalent of RecyclerView - renders visible items only', 'Cached column', 'Static column'], correct: 1, explanation: 'LazyColumn only composes visible items, like RecyclerView. Efficient for long lists.' },
+            { tag: 'android', topic: 'UI', question: 'What is setHasFixedSize(true)?', options: ['Fixes bugs', 'Tells RecyclerView size won\'t change, improving performance', 'Sets exact size', 'Prevents resizing'], correct: 1, explanation: 'setHasFixedSize(true) optimizes RecyclerView when you know its size won\'t change.' },
+            { tag: 'android', topic: 'UI', question: 'What is Material Design?', options: ['Raw materials app', 'Google\'s design system with components and guidelines', 'Manufacturing app', '3D graphics'], correct: 1, explanation: 'Material Design is Google\'s design language providing components, colors, typography, and guidelines.' },
+            { tag: 'android', topic: 'UI', question: 'What does invalidate() do on a View?', options: ['Deletes view', 'Marks view for redraw', 'Disables view', 'Validates input'], correct: 1, explanation: 'invalidate() marks the view as needing redraw. onDraw() will be called on next frame.' },
             
-            // Architecture
-            {
-                tag: 'android', topic: 'Architecture',
-                question: 'What is the purpose of ViewModel in Android Architecture Components?',
-                options: ['To display views on screen', 'To survive configuration changes and hold UI state', 'To make network requests', 'To store data in SQLite'],
-                correct: 1,
-                explanation: 'ViewModel survives configuration changes (like rotation) and holds UI state. It doesn\'t reference the View, making it testable.'
-            },
-            {
-                tag: 'android', topic: 'Architecture',
-                question: 'What is LiveData?',
-                options: ['A real-time database', 'A lifecycle-aware observable data holder', 'A streaming video library', 'A crash reporting tool'],
-                correct: 1,
-                explanation: 'LiveData is lifecycle-aware — it only updates observers in active lifecycle states (STARTED/RESUMED), preventing crashes and memory leaks.'
-            },
-            {
-                tag: 'android', topic: 'Architecture',
-                question: 'In Clean Architecture, which layer should have no Android dependencies?',
-                options: ['Presentation', 'Data', 'Domain', 'UI'],
-                correct: 2,
-                explanation: 'The Domain layer contains business logic and use cases. It should be pure Kotlin with no Android dependencies, making it highly testable.'
-            },
+            // ==================== ANDROID - Architecture (12) ====================
+            { tag: 'android', topic: 'Architecture', question: 'What is ViewModel for?', options: ['Display views', 'Survive config changes and hold UI state', 'Network requests', 'Database'], correct: 1, explanation: 'ViewModel survives configuration changes and holds UI state. Doesn\'t reference View.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is LiveData?', options: ['Real-time database', 'Lifecycle-aware observable data holder', 'Streaming library', 'Crash reporter'], correct: 1, explanation: 'LiveData is lifecycle-aware. Only updates active observers, preventing crashes.' },
+            { tag: 'android', topic: 'Architecture', question: 'In Clean Architecture, which layer has no Android dependencies?', options: ['Presentation', 'Data', 'Domain', 'UI'], correct: 2, explanation: 'Domain layer is pure Kotlin: business logic and use cases. No Android imports.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is the Repository pattern?', options: ['Git pattern', 'Abstracts data sources behind clean interface', 'UI pattern', 'Testing pattern'], correct: 1, explanation: 'Repository abstracts data access. Consumers don\'t know if data comes from network, cache, or DB.' },
+            { tag: 'android', topic: 'Architecture', question: 'Why shouldn\'t ViewModel hold Context or View references?', options: ['Performance', 'Causes memory leaks (survives longer than Activity)', 'Google policy', 'No reason'], correct: 1, explanation: 'ViewModel outlives Activity. Holding Activity reference causes memory leak. Use AndroidViewModel if needed.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is StateFlow?', options: ['Animation flow', 'Hot flow that always has a value, emits to collectors', 'Data flow diagram', 'Network stream'], correct: 1, explanation: 'StateFlow always has a current value, is hot (active regardless of collectors), and conflates.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is the difference between LiveData and StateFlow?', options: ['Same thing', 'StateFlow is Kotlin-native, doesn\'t need lifecycle handling', 'LiveData is newer', 'StateFlow is deprecated'], correct: 1, explanation: 'StateFlow is Kotlin Coroutines native. LiveData is lifecycle-aware but more verbose in pure Kotlin.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is a UseCase/Interactor?', options: ['User story', 'Single piece of business logic', 'UI component', 'Data model'], correct: 1, explanation: 'UseCases encapsulate single business operations, independent of UI. Usually in Domain layer.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is MVI architecture?', options: ['Model-View-Interface', 'Model-View-Intent with unidirectional flow', 'Multiple View Instances', 'Mobile View Integration'], correct: 1, explanation: 'MVI: Model (state), View (UI), Intent (user actions). Unidirectional flow with immutable state.' },
+            { tag: 'android', topic: 'Architecture', question: 'What does SavedStateHandle provide?', options: ['File saving', 'ViewModel access to savedInstanceState', 'Database handle', 'Network handle'], correct: 1, explanation: 'SavedStateHandle gives ViewModel access to saved state that survives process death.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is the Single Source of Truth principle?', options: ['One database', 'One authoritative data source, others sync from it', 'Single developer', 'One API'], correct: 1, explanation: 'SSOT: one authoritative data source. Database is often SSOT, with network updating it.' },
+            { tag: 'android', topic: 'Architecture', question: 'What is offline-first architecture?', options: ['No network apps', 'App works offline, syncs when connected', 'Local-only storage', 'Cached apps'], correct: 1, explanation: 'Offline-first: local data is primary, network syncs in background. Works without connectivity.' },
             
-            // Concurrency
-            {
-                tag: 'android', topic: 'Concurrency',
-                question: 'Which Kotlin feature simplifies asynchronous programming?',
-                options: ['Data classes', 'Extension functions', 'Coroutines', 'Sealed classes'],
-                correct: 2,
-                explanation: 'Coroutines make async code read like synchronous code using suspend functions. Combined with Dispatchers, they replace callbacks and RxJava.'
-            },
-            {
-                tag: 'android', topic: 'Concurrency',
-                question: 'What is the difference between Dispatchers.IO and Dispatchers.Default?',
-                options: ['IO is for CPU work, Default is for disk/network', 'IO is for disk/network, Default is for CPU work', 'They are the same', 'IO is deprecated'],
-                correct: 1,
-                explanation: 'Dispatchers.IO is optimized for disk/network I/O (more threads). Dispatchers.Default is for CPU-intensive work (threads = CPU cores).'
-            },
-            {
-                tag: 'android', topic: 'Concurrency',
-                question: 'What is the purpose of viewModelScope?',
-                options: ['To create ViewModels', 'To auto-cancel coroutines when ViewModel is cleared', 'To observe LiveData', 'To inject dependencies'],
-                correct: 1,
-                explanation: 'viewModelScope is a CoroutineScope tied to ViewModel lifecycle. Coroutines launched in it are automatically cancelled when ViewModel is cleared.'
-            },
+            // ==================== ANDROID - Concurrency (12) ====================
+            { tag: 'android', topic: 'Concurrency', question: 'What are Kotlin Coroutines?', options: ['Threading library', 'Lightweight threads for async programming', 'UI components', 'Network library'], correct: 1, explanation: 'Coroutines are lightweight, suspendable computations. Simpler than threads for async work.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is Dispatchers.IO vs Dispatchers.Default?', options: ['Same', 'IO for disk/network, Default for CPU work', 'IO is deprecated', 'Default is for UI'], correct: 1, explanation: 'IO: optimized for blocking I/O (more threads). Default: CPU-intensive work (threads = cores).' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is viewModelScope?', options: ['Creates ViewModels', 'CoroutineScope tied to ViewModel lifecycle', 'View scope', 'Test scope'], correct: 1, explanation: 'viewModelScope auto-cancels coroutines when ViewModel is cleared.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What does suspend mean?', options: ['Pause app', 'Function can be paused and resumed', 'Stop thread', 'Block execution'], correct: 1, explanation: 'suspend functions can pause execution without blocking thread, resuming when result is ready.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is a Flow in Kotlin?', options: ['UI animation', 'Cold asynchronous stream of values', 'Network stream', 'Data flow diagram'], correct: 1, explanation: 'Flow is a cold stream that emits values over time. Collects only when collected.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is the difference between Flow and StateFlow?', options: ['Same thing', 'Flow is cold, StateFlow is hot with current value', 'StateFlow is deprecated', 'Flow is synchronous'], correct: 1, explanation: 'Flow: cold (runs on collect). StateFlow: hot (always active), always has current value.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What does launch do?', options: ['Starts app', 'Starts a coroutine that doesn\'t return a result', 'Launches activity', 'Opens URL'], correct: 1, explanation: 'launch starts a fire-and-forget coroutine. Returns Job for cancellation.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What does async do differently from launch?', options: ['Same thing', 'Returns Deferred with result, retrieved via await()', 'Runs synchronously', 'Is deprecated'], correct: 1, explanation: 'async returns Deferred<T>. Call await() to get the result. Good for parallel operations.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is withContext used for?', options: ['Adding context', 'Switching dispatcher within a coroutine', 'Creating context', 'Passing data'], correct: 1, explanation: 'withContext switches the dispatcher for a block of code. withContext(Dispatchers.IO) { }' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is lifecycleScope?', options: ['Lifecycle manager', 'CoroutineScope tied to Activity/Fragment lifecycle', 'System scope', 'Global scope'], correct: 1, explanation: 'lifecycleScope auto-cancels coroutines when lifecycle is destroyed.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What is SharedFlow?', options: ['Shared preferences', 'Hot flow that can have multiple subscribers', 'Cached flow', 'Broadcast flow'], correct: 1, explanation: 'SharedFlow is hot, can have multiple subscribers, configurable replay and buffer.' },
+            { tag: 'android', topic: 'Concurrency', question: 'What does collectLatest do?', options: ['Collects all', 'Cancels previous collection when new value arrives', 'Gets latest only', 'Ignores old'], correct: 1, explanation: 'collectLatest cancels previous collector block when new value arrives. Good for search.' },
             
-            // DI & Libraries
-            {
-                tag: 'android', topic: 'Libraries',
-                question: 'What is the recommended DI framework for Android?',
-                options: ['Koin', 'Dagger', 'Hilt', 'Guice'],
-                correct: 2,
-                explanation: 'Hilt is Google\'s recommended DI framework. Built on Dagger, it reduces boilerplate and provides scopes for Android components.'
-            },
-            {
-                tag: 'android', topic: 'Libraries',
-                question: 'What does Room provide?',
-                options: ['Network caching', 'SQLite abstraction with compile-time verification', 'Image loading', 'JSON parsing'],
-                correct: 1,
-                explanation: 'Room is an SQLite abstraction that verifies SQL at compile time. It uses annotations (@Entity, @Dao, @Database) and supports LiveData/Flow.'
-            },
+            // ==================== ANDROID - Libraries (12) ====================
+            { tag: 'android', topic: 'Libraries', question: 'What is Hilt?', options: ['Sword handle', 'Recommended DI framework built on Dagger', 'Testing library', 'UI library'], correct: 1, explanation: 'Hilt is Google\'s recommended DI framework. Reduces boilerplate vs plain Dagger.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Room?', options: ['Chat room', 'SQLite abstraction with compile-time verification', 'Image library', 'Network cache'], correct: 1, explanation: 'Room is SQLite wrapper. Annotations (@Entity, @Dao). Compile-time SQL verification.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Retrofit?', options: ['Retro games', 'Type-safe HTTP client', 'Database', 'UI library'], correct: 1, explanation: 'Retrofit turns HTTP API into Kotlin/Java interface. Type-safe, supports coroutines.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is OkHttp?', options: ['Greeting library', 'HTTP client underlying Retrofit', 'OK button library', 'Testing framework'], correct: 1, explanation: 'OkHttp is the HTTP client. Handles connections, caching, interceptors. Retrofit uses it.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Coil?', options: ['Metal coil', 'Kotlin-first image loading library', 'Animation library', 'Database'], correct: 1, explanation: 'Coil: Coroutine Image Loader. Kotlin-first, lightweight, integrates with Compose.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Glide?', options: ['Animation', 'Image loading and caching library', 'Transition library', 'Video player'], correct: 1, explanation: 'Glide efficiently loads, caches, and displays images. Handles memory/disk caching.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Navigation Component?', options: ['GPS library', 'Handles fragment navigation with type-safe args', 'Map SDK', 'Routing library'], correct: 1, explanation: 'Navigation Component manages fragment navigation, back stack, and safe args.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Paging library?', options: ['Book reader', 'Loads data incrementally for large lists', 'Pagination UI', 'Print library'], correct: 1, explanation: 'Paging loads data in chunks. Integrates with RecyclerView, Room, and network.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is DataStore?', options: ['Data storage manager', 'Modern replacement for SharedPreferences', 'Database', 'Cloud storage'], correct: 1, explanation: 'DataStore replaces SharedPreferences. Uses coroutines. Supports typed data (Proto) or key-value.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is LeakCanary?', options: ['Canary bird app', 'Memory leak detection library', 'Security scanner', 'Network monitor'], correct: 1, explanation: 'LeakCanary automatically detects memory leaks in debug builds.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Timber?', options: ['Wood logging', 'Logging library with better API than Log', 'Build tool', 'Material library'], correct: 1, explanation: 'Timber wraps Android Log with better API. Auto-tags, extensible, production-safe.' },
+            { tag: 'android', topic: 'Libraries', question: 'What is Moshi?', options: ['Sushi app', 'JSON parsing library', 'Network library', 'Database'], correct: 1, explanation: 'Moshi is a modern JSON library for Kotlin. Supports Kotlin types, codegen, and reflection.' },
             
-            // Build & Release
-            {
-                tag: 'android', topic: 'Build',
-                question: 'What does R8 do in the Android build process?',
-                options: ['Compiles Java to bytecode', 'Shrinks, obfuscates, and optimizes code', 'Generates data binding classes', 'Creates APK signatures'],
-                correct: 1,
-                explanation: 'R8 shrinks unused code/resources, obfuscates names, and optimizes bytecode for smaller, faster APKs. Configured via proguard-rules.pro.'
-            },
-            {
-                tag: 'android', topic: 'Build',
-                question: 'What is the difference between minSdk, targetSdk, and compileSdk?',
-                options: ['They are all the same', 'minSdk is lowest supported, targetSdk is tested version, compileSdk is build version', 'minSdk is for tablets only', 'targetSdk must equal compileSdk'],
-                correct: 1,
-                explanation: 'minSdk = minimum Android version supported. targetSdk = version you\'ve tested against (enables new behaviors). compileSdk = API used to compile.'
-            },
+            // ==================== ANDROID - Build (10) ====================
+            { tag: 'android', topic: 'Build', question: 'What does R8 do?', options: ['Compiles code', 'Shrinks, obfuscates, and optimizes', 'Runs tests', 'Signs APK'], correct: 1, explanation: 'R8 shrinks unused code/resources, obfuscates names, optimizes bytecode.' },
+            { tag: 'android', topic: 'Build', question: 'What is minSdk vs targetSdk vs compileSdk?', options: ['All same', 'minSdk=lowest, targetSdk=tested, compileSdk=build API', 'Version numbers', 'Build types'], correct: 1, explanation: 'minSdk: minimum supported. targetSdk: tested against. compileSdk: API to compile with.' },
+            { tag: 'android', topic: 'Build', question: 'What is a build variant?', options: ['Build error', 'Combination of build type and product flavor', 'Version number', 'APK type'], correct: 1, explanation: 'Variants combine build types (debug/release) with flavors (free/paid) for different APKs.' },
+            { tag: 'android', topic: 'Build', question: 'What is ProGuard rules file for?', options: ['Security rules', 'Tells R8 what not to shrink/obfuscate', 'Lint rules', 'Test rules'], correct: 1, explanation: 'ProGuard rules keep classes/methods used via reflection from being removed or renamed.' },
+            { tag: 'android', topic: 'Build', question: 'What is an AAB vs APK?', options: ['Same format', 'AAB is bundle for Play Store, APK is installable package', 'AAB is compressed', 'APK is newer'], correct: 1, explanation: 'AAB (Android App Bundle) lets Play Store generate optimized APKs per device.' },
+            { tag: 'android', topic: 'Build', question: 'What is Gradle?', options: ['Grading app', 'Build automation tool for Android', 'Testing framework', 'IDE'], correct: 1, explanation: 'Gradle manages dependencies, compiles code, runs tests, and builds APK/AAB.' },
+            { tag: 'android', topic: 'Build', question: 'What is a product flavor?', options: ['App taste', 'Different versions of app (free/paid, regions)', 'Build type', 'Dependency'], correct: 1, explanation: 'Flavors create app variants with different features, resources, or configurations.' },
+            { tag: 'android', topic: 'Build', question: 'What does signing an APK do?', options: ['Adds signature image', 'Proves app authenticity and enables updates', 'Encrypts app', 'Compresses app'], correct: 1, explanation: 'Signing proves you\'re the developer. Same signature required for updates.' },
+            { tag: 'android', topic: 'Build', question: 'What is KSP?', options: ['Keyboard shortcut', 'Kotlin Symbol Processing - faster annotation processor', 'Build tool', 'Testing library'], correct: 1, explanation: 'KSP is Kotlin-native annotation processor. Faster than kapt for Room, Hilt, etc.' },
+            { tag: 'android', topic: 'Build', question: 'What is buildConfigField?', options: ['UI field', 'Adds constants to BuildConfig class', 'Database field', 'Form field'], correct: 1, explanation: 'buildConfigField adds compile-time constants to BuildConfig. Good for API keys per flavor.' },
             
-            // ==================== GENERAL QUESTIONS ====================
-            {
-                tag: 'general', topic: 'Architecture',
-                question: 'What does MVVM stand for?',
-                options: ['Model-View-Virtual Machine', 'Model-View-ViewModel', 'Multiple Views Virtual Model', 'Mobile View Visual Manager'],
-                correct: 1,
-                explanation: 'Model-View-ViewModel. The ViewModel holds presentation logic and UI state, exposing data for the View to observe.'
-            },
-            {
-                tag: 'general', topic: 'Architecture',
-                question: 'What is the Single Responsibility Principle?',
-                options: ['A class should have only one instance', 'A class should have only one reason to change', 'A function should have one parameter', 'An app should have one activity'],
-                correct: 1,
-                explanation: 'SRP states that a class should have only one reason to change — it should do one thing well. Part of SOLID principles.'
-            },
-            {
-                tag: 'general', topic: 'Testing',
-                question: 'What is the main benefit of Dependency Injection?',
-                options: ['Faster app startup', 'Smaller APK/IPA size', 'Easier testing with mock objects', 'Better UI animations'],
-                correct: 2,
-                explanation: 'DI makes testing easier by allowing you to inject mock/fake dependencies. It also improves flexibility and decouples components.'
-            },
-            {
-                tag: 'general', topic: 'Testing',
-                question: 'Which testing type verifies individual functions in isolation?',
-                options: ['UI Tests', 'Integration Tests', 'Unit Tests', 'End-to-End Tests'],
-                correct: 2,
-                explanation: 'Unit Tests test individual functions/classes in isolation using mocks. They\'re fast and should cover business logic.'
-            },
-            {
-                tag: 'general', topic: 'Security',
-                question: 'What is certificate pinning used for?',
-                options: ['Encrypting local database', 'Preventing man-in-the-middle attacks', 'Signing the app for store release', 'Storing passwords securely'],
-                correct: 1,
-                explanation: 'Certificate pinning verifies the server\'s certificate against a known value, preventing MITM attacks even with rogue CAs.'
-            },
-            {
-                tag: 'general', topic: 'Security',
-                question: 'What is the safest way to store API keys in a mobile app?',
-                options: ['Hardcode them in source code', 'Store in SharedPreferences/UserDefaults', 'Don\'t store them — use a backend proxy', 'Put them in a text file'],
-                correct: 2,
-                explanation: 'Never store secret API keys in mobile apps — they can be extracted. Use a backend server to proxy requests with the secret key.'
-            },
-            {
-                tag: 'general', topic: 'API',
-                question: 'What does REST stand for?',
-                options: ['Remote Execution Service Transfer', 'Representational State Transfer', 'Request-Response State Tracking', 'Reliable Encrypted Secure Transport'],
-                correct: 1,
-                explanation: 'REST (Representational State Transfer) is an architectural style using HTTP methods (GET, POST, PUT, DELETE) for stateless client-server communication.'
-            },
-            {
-                tag: 'general', topic: 'API',
-                question: 'What HTTP status code indicates "resource not found"?',
-                options: ['200', '401', '404', '500'],
-                correct: 2,
-                explanation: '404 = Not Found. 200 = OK. 401 = Unauthorized. 500 = Internal Server Error.'
-            }
+            // ==================== GENERAL - Architecture (15) ====================
+            { tag: 'general', topic: 'Architecture', question: 'What does MVVM stand for?', options: ['Model-View-Virtual Machine', 'Model-View-ViewModel', 'Multiple Views Virtual Model', 'Mobile View Visual Manager'], correct: 1, explanation: 'Model-View-ViewModel. ViewModel holds presentation logic. View observes ViewModel.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is Single Responsibility Principle?', options: ['One instance', 'A class should have one reason to change', 'One parameter', 'One activity'], correct: 1, explanation: 'SRP: a class should do one thing well and have only one reason to change.' },
+            { tag: 'general', topic: 'Architecture', question: 'What does SOLID stand for?', options: ['Firm code', 'Single responsibility, Open-closed, Liskov, Interface segregation, Dependency inversion', 'Code quality metric', 'Testing framework'], correct: 1, explanation: 'SOLID: five design principles for maintainable object-oriented software.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is the Open-Closed Principle?', options: ['Open source', 'Open for extension, closed for modification', 'Always open files', 'Database principle'], correct: 1, explanation: 'OCP: extend behavior without modifying existing code. Use abstractions and polymorphism.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is Dependency Inversion Principle?', options: ['Flip dependencies', 'Depend on abstractions, not concretions', 'Invert control flow', 'Reverse engineering'], correct: 1, explanation: 'DIP: high-level modules shouldn\'t depend on low-level. Both depend on abstractions.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is loose coupling?', options: ['Relaxed code', 'Components depend minimally on each other', 'Flexible typing', 'Optional parameters'], correct: 1, explanation: 'Loose coupling: components interact via interfaces with minimal knowledge of each other.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is high cohesion?', options: ['Sticky code', 'Related functionality grouped together', 'Team agreement', 'Code density'], correct: 1, explanation: 'High cohesion: a module\'s elements are strongly related and focused on single purpose.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is separation of concerns?', options: ['Dividing worries', 'Different aspects handled by different modules', 'Error handling', 'Threading'], correct: 1, explanation: 'SoC: each module handles one aspect (UI, business logic, data). Don\'t mix concerns.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is an anti-pattern?', options: ['Design pattern opposite', 'Common solution that causes more problems', 'Testing pattern', 'Security pattern'], correct: 1, explanation: 'Anti-patterns are common but ineffective/counterproductive approaches. God object, spaghetti code.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is the Facade pattern?', options: ['Building front', 'Simplified interface to complex subsystem', 'UI pattern', 'Authentication'], correct: 1, explanation: 'Facade provides simple interface to complex subsystem. Hides complexity from clients.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is the Observer pattern?', options: ['Watching code', 'Objects subscribe to events from subject', 'Debugging pattern', 'Logging pattern'], correct: 1, explanation: 'Observer: subject notifies observers of state changes. Foundation of reactive programming.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is the Singleton pattern?', options: ['Single instance', 'Class with only one instance globally accessible', 'Single file', 'One function'], correct: 1, explanation: 'Singleton ensures only one instance exists. Can be anti-pattern if overused (testing issues).' },
+            { tag: 'general', topic: 'Architecture', question: 'What is composition over inheritance?', options: ['Music composition', 'Prefer containing objects over extending classes', 'Code structure', 'File organization'], correct: 1, explanation: 'Favor composition (has-a) over inheritance (is-a). More flexible, avoids fragile base class.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is the Strategy pattern?', options: ['Game strategy', 'Encapsulate algorithms and make them interchangeable', 'Planning pattern', 'Testing strategy'], correct: 1, explanation: 'Strategy: define family of algorithms, encapsulate each, make interchangeable at runtime.' },
+            { tag: 'general', topic: 'Architecture', question: 'What is technical debt?', options: ['Unpaid developers', 'Shortcuts that need future fixing', 'Server costs', 'License fees'], correct: 1, explanation: 'Technical debt: shortcuts or quick fixes that work now but need proper solution later.' },
+            
+            // ==================== GENERAL - Testing (12) ====================
+            { tag: 'general', topic: 'Testing', question: 'What is the benefit of dependency injection for testing?', options: ['Faster tests', 'Inject mock objects easily', 'Skip testing', 'Auto-generate tests'], correct: 1, explanation: 'DI allows injecting mocks/fakes instead of real dependencies, isolating units under test.' },
+            { tag: 'general', topic: 'Testing', question: 'What are unit tests?', options: ['Testing units of measurement', 'Testing individual functions in isolation', 'Testing UI', 'Testing servers'], correct: 1, explanation: 'Unit tests verify individual functions/classes in isolation using mocks for dependencies.' },
+            { tag: 'general', topic: 'Testing', question: 'What are integration tests?', options: ['Math tests', 'Testing multiple components working together', 'Continuous integration', 'API tests only'], correct: 1, explanation: 'Integration tests verify components work together correctly (database + repository).' },
+            { tag: 'general', topic: 'Testing', question: 'What is a mock object?', options: ['Fake data', 'Test double that verifies interactions', 'UI mockup', 'Database copy'], correct: 1, explanation: 'Mocks are test doubles that record interactions. Verify methods were called correctly.' },
+            { tag: 'general', topic: 'Testing', question: 'What is a stub?', options: ['Short code', 'Test double that returns predefined responses', 'Code placeholder', 'Error handler'], correct: 1, explanation: 'Stubs return predefined responses. Simpler than mocks, don\'t verify interactions.' },
+            { tag: 'general', topic: 'Testing', question: 'What is code coverage?', options: ['Code comments', 'Percentage of code executed by tests', 'Error handling', 'Documentation'], correct: 1, explanation: 'Coverage measures what percentage of code is executed during tests. Aim for meaningful, not 100%.' },
+            { tag: 'general', topic: 'Testing', question: 'What is TDD?', options: ['Test Documentation', 'Test-Driven Development - write tests first', 'Testing framework', 'Debugging tool'], correct: 1, explanation: 'TDD: write failing test, write minimal code to pass, refactor. Red-green-refactor.' },
+            { tag: 'general', topic: 'Testing', question: 'What is BDD?', options: ['Bug-Driven Development', 'Behavior-Driven Development - describe behavior in plain language', 'Build tool', 'Database'], correct: 1, explanation: 'BDD describes behavior in plain language (Given-When-Then). Tests as documentation.' },
+            { tag: 'general', topic: 'Testing', question: 'What is regression testing?', options: ['Going backwards', 'Re-running tests to catch bugs from changes', 'Performance testing', 'Security testing'], correct: 1, explanation: 'Regression tests verify that changes haven\'t broken existing functionality.' },
+            { tag: 'general', topic: 'Testing', question: 'What is a flaky test?', options: ['Pastry test', 'Test that sometimes passes, sometimes fails', 'UI test', 'Slow test'], correct: 1, explanation: 'Flaky tests have inconsistent results. Often caused by timing, shared state, or environment.' },
+            { tag: 'general', topic: 'Testing', question: 'What is end-to-end testing?', options: ['Testing ends', 'Testing complete user flows through entire system', 'Unit testing', 'API testing'], correct: 1, explanation: 'E2E tests verify complete user journeys through the full system, including UI.' },
+            { tag: 'general', topic: 'Testing', question: 'What is the testing pyramid?', options: ['Egyptian tests', 'Many unit tests, fewer integration, fewest E2E', 'Test organization', 'Priority system'], correct: 1, explanation: 'Pyramid: many fast unit tests at base, fewer integration in middle, few slow E2E at top.' },
+            
+            // ==================== GENERAL - Security (10) ====================
+            { tag: 'general', topic: 'Security', question: 'What is certificate pinning?', options: ['Pinning certificates to wall', 'Validating server certs against known values', 'Creating certificates', 'Storing certs'], correct: 1, explanation: 'Pinning validates server certificates match expected values, preventing MITM attacks.' },
+            { tag: 'general', topic: 'Security', question: 'Why not store API keys in mobile apps?', options: ['Too big', 'Can be extracted from app binary', 'Not needed', 'Against policy'], correct: 1, explanation: 'App binaries can be decompiled. Use backend proxy for secret keys.' },
+            { tag: 'general', topic: 'Security', question: 'What is HTTPS?', options: ['Fast HTTP', 'HTTP over TLS - encrypted communication', 'HTTP version 2', 'Secure headers'], correct: 1, explanation: 'HTTPS encrypts HTTP traffic using TLS. Prevents eavesdropping and tampering.' },
+            { tag: 'general', topic: 'Security', question: 'What is SQL injection?', options: ['Database injection', 'Malicious SQL in user input', 'SQL optimization', 'Database backup'], correct: 1, explanation: 'SQL injection inserts malicious SQL via user input. Prevent with parameterized queries.' },
+            { tag: 'general', topic: 'Security', question: 'What is XSS?', options: ['Extra small screen', 'Cross-Site Scripting - injecting scripts into web pages', 'XML standard', 'CSS extension'], correct: 1, explanation: 'XSS injects malicious scripts into web pages viewed by others. Sanitize user input.' },
+            { tag: 'general', topic: 'Security', question: 'What is OAuth 2.0?', options: ['Authentication protocol', 'Authorization framework for delegated access', 'Encryption standard', 'Password manager'], correct: 1, explanation: 'OAuth 2.0 is authorization framework. Grants limited access without sharing credentials.' },
+            { tag: 'general', topic: 'Security', question: 'What is a JWT?', options: ['Java Web Tool', 'JSON Web Token - compact token for claims', 'JavaScript runtime', 'Testing framework'], correct: 1, explanation: 'JWT is a compact, self-contained token containing claims. Used for authentication.' },
+            { tag: 'general', topic: 'Security', question: 'What is the principle of least privilege?', options: ['Minimum salary', 'Grant only permissions actually needed', 'Fewer features', 'Simple code'], correct: 1, explanation: 'Least privilege: give minimum permissions necessary. Limits damage from compromises.' },
+            { tag: 'general', topic: 'Security', question: 'What is input validation?', options: ['Checking keyboard', 'Verifying user input meets expected format', 'Form styling', 'Auto-complete'], correct: 1, explanation: 'Validate all user input. Check type, length, format, range. Never trust client input.' },
+            { tag: 'general', topic: 'Security', question: 'What is CORS?', options: ['Code organization', 'Cross-Origin Resource Sharing - controls cross-domain requests', 'Caching system', 'Compression'], correct: 1, explanation: 'CORS controls which origins can access resources. Browsers enforce for security.' },
+            
+            // ==================== GENERAL - API (10) ====================
+            { tag: 'general', topic: 'API', question: 'What does REST stand for?', options: ['Remote Execution Service', 'Representational State Transfer', 'Request-Response State', 'Reliable Service'], correct: 1, explanation: 'REST: stateless, uses HTTP methods (GET, POST, PUT, DELETE) on resources.' },
+            { tag: 'general', topic: 'API', question: 'What is HTTP 404?', options: ['Success', 'Not Found', 'Unauthorized', 'Server Error'], correct: 1, explanation: '404: resource not found. 200: OK. 401: Unauthorized. 500: Server Error.' },
+            { tag: 'general', topic: 'API', question: 'What is HTTP 401 vs 403?', options: ['Same', '401: not authenticated, 403: authenticated but not authorized', '401 is worse', 'Neither exists'], correct: 1, explanation: '401 Unauthorized: not authenticated. 403 Forbidden: authenticated but lacks permission.' },
+            { tag: 'general', topic: 'API', question: 'What is the difference between PUT and PATCH?', options: ['Same', 'PUT replaces entire resource, PATCH modifies partially', 'PATCH is deprecated', 'PUT is for creation'], correct: 1, explanation: 'PUT: complete replacement. PATCH: partial modification of resource.' },
+            { tag: 'general', topic: 'API', question: 'What is idempotent in HTTP?', options: ['Same password', 'Same result no matter how many times called', 'Identity check', 'Caching'], correct: 1, explanation: 'Idempotent: multiple identical requests have same effect as one. GET, PUT, DELETE are idempotent.' },
+            { tag: 'general', topic: 'API', question: 'What is GraphQL?', options: ['Graph database', 'Query language for APIs - request specific data', 'Graphing library', 'Graph visualization'], correct: 1, explanation: 'GraphQL lets clients request exactly the data they need. Single endpoint, typed schema.' },
+            { tag: 'general', topic: 'API', question: 'What is rate limiting?', options: ['Speed limit', 'Restricting number of API requests per time period', 'Data throttling', 'Bandwidth control'], correct: 1, explanation: 'Rate limiting prevents abuse by capping requests. Returns 429 Too Many Requests.' },
+            { tag: 'general', topic: 'API', question: 'What is pagination?', options: ['Book pages', 'Returning data in chunks/pages', 'Error handling', 'Caching'], correct: 1, explanation: 'Pagination returns data in pages. Offset/limit or cursor-based. Prevents huge responses.' },
+            { tag: 'general', topic: 'API', question: 'What is a WebSocket?', options: ['Socket wrench', 'Persistent two-way communication channel', 'HTTP request', 'Database connection'], correct: 1, explanation: 'WebSocket provides persistent, full-duplex communication. Good for real-time features.' },
+            { tag: 'general', topic: 'API', question: 'What is API versioning?', options: ['Version control', 'Managing breaking changes across API versions', 'Git for APIs', 'Documentation'], correct: 1, explanation: 'Versioning (v1, v2) allows introducing breaking changes without affecting existing clients.' }
         ];
 
+        const QUESTIONS_PER_ROUND = 20;
         let currentQuestion = 0;
         let score = 0;
         let answered = false;
-        let shuffledQuestions = [];
-        let results = []; // Track each answer
+        let roundQuestions = [];
+        let results = [];
+        let speechSynth = window.speechSynthesis;
+        let currentUtterance = null;
 
         function shuffleArray(array) {
             const shuffled = [...array];
@@ -662,14 +618,15 @@
         }
 
         function init() {
-            shuffledQuestions = shuffleArray(questions);
-            document.getElementById('totalQ').textContent = shuffledQuestions.length;
+            roundQuestions = shuffleArray(questionBank).slice(0, QUESTIONS_PER_ROUND);
+            document.getElementById('totalQ').textContent = QUESTIONS_PER_ROUND;
+            document.getElementById('bankInfo').textContent = `Question bank: ${questionBank.length} questions`;
             results = [];
             showQuestion();
         }
 
         function showQuestion() {
-            const q = shuffledQuestions[currentQuestion];
+            const q = roundQuestions[currentQuestion];
             const tagClass = q.tag === 'ios' ? 'tag-ios' : q.tag === 'android' ? 'tag-android' : 'tag-general';
             const tagLabel = q.tag === 'ios' ? '🍎 iOS' : q.tag === 'android' ? '🤖 Android' : '📱 General';
             
@@ -686,11 +643,17 @@
                         `).join('')}
                     </div>
                     <div class="explanation" id="explanation">
-                        <strong>💡 Explanation:</strong> ${q.explanation}
+                        <div class="explanation-header">
+                            <strong>💡 Explanation</strong>
+                            <button class="tts-btn" onclick="toggleTTS()" id="ttsBtn">
+                                🔊 Listen
+                            </button>
+                        </div>
+                        <p id="explanationText">${q.explanation}</p>
                     </div>
                     <div class="nav-buttons">
                         <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
-                            ${currentQuestion === shuffledQuestions.length - 1 ? 'See Results' : 'Next Question'}
+                            ${currentQuestion === QUESTIONS_PER_ROUND - 1 ? 'See Results' : 'Next Question'}
                         </button>
                     </div>
                 </div>
@@ -698,7 +661,7 @@
             
             document.getElementById('quiz-container').innerHTML = html;
             document.getElementById('currentQ').textContent = currentQuestion + 1;
-            document.getElementById('progress').style.width = ((currentQuestion + 1) / shuffledQuestions.length * 100) + '%';
+            document.getElementById('progress').style.width = ((currentQuestion + 1) / QUESTIONS_PER_ROUND * 100) + '%';
             answered = false;
         }
 
@@ -706,11 +669,10 @@
             if (answered) return;
             answered = true;
             
-            const q = shuffledQuestions[currentQuestion];
+            const q = roundQuestions[currentQuestion];
             const options = document.querySelectorAll('.option');
             const isCorrect = index === q.correct;
             
-            // Track result
             results.push({
                 question: q.question,
                 tag: q.tag,
@@ -738,9 +700,52 @@
             document.getElementById('nextBtn').disabled = false;
         }
 
+        function toggleTTS() {
+            const btn = document.getElementById('ttsBtn');
+            const text = document.getElementById('explanationText').textContent;
+            
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+                btn.classList.remove('speaking');
+                btn.innerHTML = '🔊 Listen';
+                return;
+            }
+            
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.rate = 1.0;
+            currentUtterance.pitch = 1.0;
+            
+            // Try to get a good English voice
+            const voices = speechSynth.getVoices();
+            const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Daniel')) ||
+                                 voices.find(v => v.lang.startsWith('en-GB')) ||
+                                 voices.find(v => v.lang.startsWith('en'));
+            if (englishVoice) currentUtterance.voice = englishVoice;
+            
+            currentUtterance.onstart = () => {
+                btn.classList.add('speaking');
+                btn.innerHTML = '⏹️ Stop';
+            };
+            currentUtterance.onend = () => {
+                btn.classList.remove('speaking');
+                btn.innerHTML = '🔊 Listen';
+            };
+            currentUtterance.onerror = () => {
+                btn.classList.remove('speaking');
+                btn.innerHTML = '🔊 Listen';
+            };
+            
+            speechSynth.speak(currentUtterance);
+        }
+
         function nextQuestion() {
+            // Stop any playing TTS
+            if (speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+            
             currentQuestion++;
-            if (currentQuestion >= shuffledQuestions.length) {
+            if (currentQuestion >= QUESTIONS_PER_ROUND) {
                 showResults();
             } else {
                 showQuestion();
@@ -750,26 +755,25 @@
         function showResults() {
             document.getElementById('quiz-container').classList.add('hidden');
             document.getElementById('results').classList.add('show');
+            document.getElementById('bankInfo').classList.add('hidden');
             
-            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            const percentage = Math.round((score / QUESTIONS_PER_ROUND) * 100);
             document.getElementById('finalScore').textContent = percentage + '%';
             
-            // Save results
             saveResults(percentage);
             
             let message = '';
             if (percentage >= 90) {
                 message = '🔥 Excellent! You\'re ready to crush this interview!';
             } else if (percentage >= 70) {
-                message = '👍 Good job! Review the topics you missed and you\'ll be solid.';
+                message = '👍 Good job! Review the topics you missed.';
             } else if (percentage >= 50) {
-                message = '📚 Getting there! Spend some time with the reading guides.';
+                message = '📚 Getting there! Spend time with the reading guides.';
             } else {
                 message = '💪 Keep studying! Go through the cheat sheets again.';
             }
             document.getElementById('resultMessage').textContent = message;
             
-            // Show history
             displayHistory();
         }
         
@@ -778,12 +782,11 @@
             const attempt = {
                 date: new Date().toISOString(),
                 score: score,
-                total: shuffledQuestions.length,
+                total: QUESTIONS_PER_ROUND,
                 percentage: percentage,
                 results: results
             };
             history.unshift(attempt);
-            // Keep last 10 attempts
             if (history.length > 10) history.pop();
             localStorage.setItem('quizHistory', JSON.stringify(history));
             localStorage.setItem('lastQuizResults', JSON.stringify(results));
@@ -794,11 +797,11 @@
             const container = document.getElementById('historyList');
             
             if (history.length <= 1) {
-                container.innerHTML = '<p style="color: #666;">Complete more quizzes to see your progress!</p>';
+                container.innerHTML = '<p style="color: #666;">Complete more quizzes to track progress!</p>';
                 return;
             }
             
-            container.innerHTML = history.slice(1).map((h, i) => `
+            container.innerHTML = history.slice(1, 6).map(h => `
                 <div class="history-item">
                     <div>
                         <span class="history-score" style="color: ${h.percentage >= 70 ? '#00ff88' : h.percentage >= 50 ? '#FF9800' : '#ff4444'}">${h.percentage}%</span>
@@ -819,9 +822,13 @@
             document.getElementById('score').textContent = 0;
             document.getElementById('quiz-container').classList.remove('hidden');
             document.getElementById('results').classList.remove('show');
+            document.getElementById('bankInfo').classList.remove('hidden');
             init();
         }
 
+        // Load voices
+        speechSynthesis.onvoiceschanged = () => speechSynth.getVoices();
+        
         init();
     </script>
 </body>
