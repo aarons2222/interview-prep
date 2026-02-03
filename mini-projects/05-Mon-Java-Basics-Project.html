@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project 1: Java Basics</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back { color: #fff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; margin-bottom: 20px; transition: all 0.2s; } .back:hover { background: rgba(255,255,255,0.2); border-color: #00d9ff; }
+        h1 { font-size: 2rem; margin-bottom: 10px; color: #f89820; }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .meta { display: flex; gap: 20px; margin-bottom: 30px; }
+        .meta-item { background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px; }
+        .meta-label { color: #888; font-size: 0.8rem; }
+        .meta-value { color: #fff; font-weight: 600; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 { font-size: 1.2rem; margin-bottom: 15px; color: #f89820; }
+        .code-block {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre { white-space: pre-wrap; }
+        .exercise {
+            border-left: 4px solid #f89820;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .exercise h3 { color: #f89820; margin-bottom: 10px; }
+        .exercise p { color: #ccc; margin-bottom: 10px; }
+        details {
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            color: #00d9ff;
+            font-weight: 600;
+        }
+        summary:hover { background: rgba(0,217,255,0.1); border-radius: 8px; }
+        .solution { padding: 0 15px 15px 15px; }
+        .checklist { list-style: none; margin-top: 20px; }
+        .checklist li { padding: 10px 0; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .checklist li::before { content: '○ '; color: #00ff88; }
+        .keyword { color: #ff79c6; }
+        .type { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>☕ Mini Project 1: Java Basics</h1>
+        <p class="subtitle">Warm-up exercises to get your Java syntax back</p>
+        
+        <div class="meta">
+            <div class="meta-item">
+                <div class="meta-label">Time</div>
+                <div class="meta-value">1-2 hours</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Difficulty</div>
+                <div class="meta-value">Refresher</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Focus</div>
+                <div class="meta-value">Syntax & Patterns</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="exercise">
+                <h3>Exercise 1: Basic Classes</h3>
+                <p>Create a <code>User</code> class with:</p>
+                <ul style="color: #ccc; margin-left: 20px; line-height: 1.8;">
+                    <li>Fields: <code>id</code> (int), <code>name</code> (String), <code>email</code> (String)</li>
+                    <li>Constructor</li>
+                    <li>Getters and setters</li>
+                    <li><code>toString()</code> method</li>
+                </ul>
+            </div>
+            
+            <details>
+                <summary>👀 Show Solution</summary>
+                <div class="solution">
+                    <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">User</span> {
+    <span class="keyword">private int</span> id;
+    <span class="keyword">private</span> <span class="type">String</span> name;
+    <span class="keyword">private</span> <span class="type">String</span> email;
+    
+    <span class="keyword">public</span> <span class="function">User</span>(<span class="keyword">int</span> id, <span class="type">String</span> name, <span class="type">String</span> email) {
+        <span class="keyword">this</span>.id = id;
+        <span class="keyword">this</span>.name = name;
+        <span class="keyword">this</span>.email = email;
+    }
+    
+    <span class="keyword">public int</span> <span class="function">getId</span>() { <span class="keyword">return</span> id; }
+    <span class="keyword">public void</span> <span class="function">setId</span>(<span class="keyword">int</span> id) { <span class="keyword">this</span>.id = id; }
+    
+    <span class="keyword">public</span> <span class="type">String</span> <span class="function">getName</span>() { <span class="keyword">return</span> name; }
+    <span class="keyword">public void</span> <span class="function">setName</span>(<span class="type">String</span> name) { <span class="keyword">this</span>.name = name; }
+    
+    <span class="keyword">public</span> <span class="type">String</span> <span class="function">getEmail</span>() { <span class="keyword">return</span> email; }
+    <span class="keyword">public void</span> <span class="function">setEmail</span>(<span class="type">String</span> email) { <span class="keyword">this</span>.email = email; }
+    
+    <span class="keyword">@Override</span>
+    <span class="keyword">public</span> <span class="type">String</span> <span class="function">toString</span>() {
+        <span class="keyword">return</span> <span class="string">"User{id="</span> + id + <span class="string">", name='"</span> + name + <span class="string">"', email='"</span> + email + <span class="string">"'}"</span>;
+    }
+}</pre>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="section">
+            <div class="exercise">
+                <h3>Exercise 2: Collections & Lambdas</h3>
+                <p>Create a <code>UserManager</code> class that:</p>
+                <ul style="color: #ccc; margin-left: 20px; line-height: 1.8;">
+                    <li>Has a <code>List&lt;User&gt;</code> of users</li>
+                    <li>Method to add a user</li>
+                    <li>Method to find user by ID</li>
+                    <li>Method to filter users by email domain (e.g., all "@gmail.com" users)</li>
+                    <li>Method to sort users by name</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Use Java 8 streams and lambdas!</strong></p>
+            </div>
+            
+            <details>
+                <summary>👀 Show Solution</summary>
+                <div class="solution">
+                    <div class="code-block">
+<pre><span class="keyword">import</span> java.util.*;
+<span class="keyword">import</span> java.util.stream.*;
+
+<span class="keyword">public class</span> <span class="type">UserManager</span> {
+    <span class="keyword">private</span> <span class="type">List</span><<span class="type">User</span>> users = <span class="keyword">new</span> <span class="type">ArrayList</span><>();
+    
+    <span class="keyword">public void</span> <span class="function">addUser</span>(<span class="type">User</span> user) {
+        users.add(user);
+    }
+    
+    <span class="keyword">public</span> <span class="type">User</span> <span class="function">findById</span>(<span class="keyword">int</span> id) {
+        <span class="keyword">return</span> users.stream()
+            .filter(u -> u.getId() == id)
+            .findFirst()
+            .orElse(<span class="keyword">null</span>);
+    }
+    
+    <span class="keyword">public</span> <span class="type">List</span><<span class="type">User</span>> <span class="function">filterByDomain</span>(<span class="type">String</span> domain) {
+        <span class="keyword">return</span> users.stream()
+            .filter(u -> u.getEmail().endsWith(domain))
+            .collect(<span class="type">Collectors</span>.toList());
+    }
+    
+    <span class="keyword">public</span> <span class="type">List</span><<span class="type">User</span>> <span class="function">sortByName</span>() {
+        <span class="keyword">return</span> users.stream()
+            .sorted(<span class="type">Comparator</span>.comparing(<span class="type">User</span>::getName))
+            .collect(<span class="type">Collectors</span>.toList());
+    }
+}</pre>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="section">
+            <div class="exercise">
+                <h3>Exercise 3: Error Handling</h3>
+                <p>Add error handling to <code>UserManager</code>:</p>
+                <ul style="color: #ccc; margin-left: 20px; line-height: 1.8;">
+                    <li>Throw <code>IllegalArgumentException</code> if adding user with null name</li>
+                    <li>Return <code>Optional&lt;User&gt;</code> from findById (instead of null)</li>
+                    <li>Create custom <code>UserNotFoundException</code></li>
+                </ul>
+            </div>
+            
+            <details>
+                <summary>👀 Show Solution</summary>
+                <div class="solution">
+                    <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">UserNotFoundException</span> <span class="keyword">extends</span> <span class="type">Exception</span> {
+    <span class="keyword">public</span> <span class="function">UserNotFoundException</span>(<span class="type">String</span> message) {
+        <span class="keyword">super</span>(message);
+    }
+}
+
+<span class="keyword">public class</span> <span class="type">UserManager</span> {
+    <span class="keyword">private</span> <span class="type">List</span><<span class="type">User</span>> users = <span class="keyword">new</span> <span class="type">ArrayList</span><>();
+    
+    <span class="keyword">public void</span> <span class="function">addUser</span>(<span class="type">User</span> user) {
+        <span class="keyword">if</span> (user.getName() == <span class="keyword">null</span> || user.getName().isEmpty()) {
+            <span class="keyword">throw new</span> <span class="type">IllegalArgumentException</span>(<span class="string">"User name cannot be null or empty"</span>);
+        }
+        users.add(user);
+    }
+    
+    <span class="keyword">public</span> <span class="type">Optional</span><<span class="type">User</span>> <span class="function">findById</span>(<span class="keyword">int</span> id) {
+        <span class="keyword">return</span> users.stream()
+            .filter(u -> u.getId() == id)
+            .findFirst();
+    }
+    
+    <span class="keyword">public</span> <span class="type">User</span> <span class="function">getById</span>(<span class="keyword">int</span> id) <span class="keyword">throws</span> <span class="type">UserNotFoundException</span> {
+        <span class="keyword">return</span> findById(id)
+            .orElseThrow(() -> <span class="keyword">new</span> <span class="type">UserNotFoundException</span>(<span class="string">"User not found: "</span> + id));
+    }
+}</pre>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="section">
+            <div class="exercise">
+                <h3>Exercise 4: Async Operation</h3>
+                <p>Simulate an async API call:</p>
+                <ul style="color: #ccc; margin-left: 20px; line-height: 1.8;">
+                    <li>Create a method that "fetches" users (add Thread.sleep to simulate delay)</li>
+                    <li>Run it off the main thread using ExecutorService</li>
+                    <li>Print results when complete</li>
+                </ul>
+            </div>
+            
+            <details>
+                <summary>👀 Show Solution</summary>
+                <div class="solution">
+                    <div class="code-block">
+<pre><span class="keyword">import</span> java.util.concurrent.*;
+
+<span class="keyword">public class</span> <span class="type">AsyncExample</span> {
+    <span class="keyword">private</span> <span class="type">ExecutorService</span> executor = <span class="type">Executors</span>.newSingleThreadExecutor();
+    
+    <span class="keyword">public void</span> <span class="function">fetchUsersAsync</span>() {
+        executor.execute(() -> {
+            <span class="keyword">try</span> {
+                <span class="type">System</span>.out.println(<span class="string">"Fetching on: "</span> + <span class="type">Thread</span>.currentThread().getName());
+                <span class="type">Thread</span>.sleep(<span class="string">2000</span>); <span class="comment">// Simulate network delay</span>
+                
+                <span class="type">List</span><<span class="type">User</span>> users = <span class="type">Arrays</span>.asList(
+                    <span class="keyword">new</span> <span class="type">User</span>(<span class="string">1</span>, <span class="string">"Aaron"</span>, <span class="string">"aaron@test.com"</span>),
+                    <span class="keyword">new</span> <span class="type">User</span>(<span class="string">2</span>, <span class="string">"Bob"</span>, <span class="string">"bob@test.com"</span>)
+                );
+                
+                <span class="type">System</span>.out.println(<span class="string">"Fetched "</span> + users.size() + <span class="string">" users"</span>);
+                users.forEach(<span class="type">System</span>.out::println);
+                
+            } <span class="keyword">catch</span> (<span class="type">InterruptedException</span> e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
+    <span class="keyword">public void</span> <span class="function">shutdown</span>() {
+        executor.shutdown();
+    }
+}</pre>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="section">
+            <h2>✅ Checkpoint</h2>
+            <p style="color: #ccc; margin-bottom: 15px;">After completing these exercises, you should be comfortable with:</p>
+            <ul class="checklist">
+                <li>Java class syntax (fields, constructor, methods)</li>
+                <li>Getters and setters (the verbose way)</li>
+                <li>Collections and streams</li>
+                <li>Lambda expressions</li>
+                <li>Optional for null safety</li>
+                <li>Exception handling (try-catch, custom exceptions)</li>
+                <li>Basic threading with ExecutorService</li>
+            </ul>
+            <p style="color: #00ff88; margin-top: 20px; font-weight: 600;">→ Next: Mini Project 2 — Android API List app</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project 3: iOS API List</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back { color: #fff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; margin-bottom: 20px; transition: all 0.2s; } .back:hover { background: rgba(255,255,255,0.2); border-color: #00d9ff; }
+        h1 { font-size: 2rem; margin-bottom: 10px; color: #FF5722; }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .meta { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .meta-item { background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 8px; }
+        .meta-label { color: #888; font-size: 0.8rem; }
+        .meta-value { color: #fff; font-weight: 600; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 { font-size: 1.2rem; margin-bottom: 15px; color: #FF5722; }
+        .code-block {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre { white-space: pre-wrap; }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            font-weight: 600;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #FF5722, #FF9800);
+            color: #000;
+            border-color: transparent;
+        }
+        .tip {
+            background: rgba(255,87,34,0.1);
+            border-left: 4px solid #FF5722;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong { color: #FF5722; }
+        .highlight {
+            background: linear-gradient(135deg, rgba(255,87,34,0.1), rgba(255,152,0,0.1));
+            border: 1px solid rgba(255,87,34,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+        .comparison-item {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .comparison-item h4 { color: #00d9ff; margin-bottom: 10px; font-size: 0.9rem; }
+        .comparison-item p { color: #ccc; font-size: 0.85rem; }
+        .keyword { color: #ff79c6; }
+        .type { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+        .annotation { color: #ffb86c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🍎 Mini Project 3: iOS API List</h1>
+        <p class="subtitle">Same app in Swift — shows you know both platforms!</p>
+        
+        <div class="meta">
+            <div class="meta-item">
+                <div class="meta-label">Time</div>
+                <div class="meta-value">2-3 hours</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Language</div>
+                <div class="meta-value">Swift</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Frameworks</div>
+                <div class="meta-value">SwiftUI + UIKit</div>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <h3 style="color: #FF5722; margin-bottom: 10px;">🎯 Same App, Different Platform</h3>
+            <p style="color: #ccc;">Building the same app on both platforms demonstrates cross-platform thinking and understanding of platform conventions.</p>
+        </div>
+
+        <div class="section">
+            <h2>📦 Model (Same for Both)</h2>
+            <div class="code-block">
+<pre><span class="keyword">struct</span> <span class="type">Post</span>: <span class="type">Codable</span>, <span class="type">Identifiable</span> {
+    <span class="keyword">let</span> id: <span class="type">Int</span>
+    <span class="keyword">let</span> userId: <span class="type">Int</span>
+    <span class="keyword">let</span> title: <span class="type">String</span>
+    <span class="keyword">let</span> body: <span class="type">String</span>
+}</pre>
+            </div>
+            <div class="tip">
+                <strong>💡 Note:</strong> <code>Codable</code> is Swift's equivalent of Gson — handles JSON parsing automatically!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ ViewModel</h2>
+            <div class="code-block">
+<pre><span class="annotation">@MainActor</span>
+<span class="keyword">class</span> <span class="type">PostsViewModel</span>: <span class="type">ObservableObject</span> {
+    <span class="annotation">@Published</span> <span class="keyword">var</span> posts: [<span class="type">Post</span>] = []
+    <span class="annotation">@Published</span> <span class="keyword">var</span> isLoading = <span class="keyword">false</span>
+    <span class="annotation">@Published</span> <span class="keyword">var</span> errorMessage: <span class="type">String</span>?
+    
+    <span class="keyword">func</span> <span class="function">fetchPosts</span>() <span class="keyword">async</span> {
+        isLoading = <span class="keyword">true</span>
+        errorMessage = <span class="keyword">nil</span>
+        
+        <span class="keyword">do</span> {
+            <span class="keyword">let</span> url = <span class="type">URL</span>(string: <span class="string">"https://jsonplaceholder.typicode.com/posts"</span>)!
+            <span class="keyword">let</span> (data, response) = <span class="keyword">try await</span> <span class="type">URLSession</span>.shared.data(from: url)
+            
+            <span class="keyword">guard let</span> httpResponse = response <span class="keyword">as?</span> <span class="type">HTTPURLResponse</span>,
+                  httpResponse.statusCode == <span class="string">200</span> <span class="keyword">else</span> {
+                <span class="keyword">throw</span> <span class="type">URLError</span>(.badServerResponse)
+            }
+            
+            posts = <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode([<span class="type">Post</span>].<span class="keyword">self</span>, from: data)
+            isLoading = <span class="keyword">false</span>
+            
+        } <span class="keyword">catch</span> {
+            errorMessage = error.localizedDescription
+            isLoading = <span class="keyword">false</span>
+        }
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ SwiftUI Version (Modern)</h2>
+            <div class="code-block">
+<pre><span class="keyword">struct</span> <span class="type">ContentView</span>: <span class="type">View</span> {
+    <span class="annotation">@StateObject</span> <span class="keyword">private var</span> viewModel = <span class="type">PostsViewModel</span>()
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">NavigationStack</span> {
+            <span class="type">Group</span> {
+                <span class="keyword">if</span> viewModel.isLoading {
+                    <span class="type">ProgressView</span>(<span class="string">"Loading..."</span>)
+                } <span class="keyword">else if let</span> error = viewModel.errorMessage {
+                    <span class="type">VStack</span> {
+                        <span class="type">Text</span>(<span class="string">"Error: \(error)"</span>)
+                            .foregroundColor(.red)
+                        <span class="type">Button</span>(<span class="string">"Retry"</span>) {
+                            <span class="type">Task</span> { <span class="keyword">await</span> viewModel.fetchPosts() }
+                        }
+                    }
+                } <span class="keyword">else</span> {
+                    <span class="type">List</span>(viewModel.posts) { post <span class="keyword">in</span>
+                        <span class="type">NavigationLink</span>(destination: <span class="type">DetailView</span>(post: post)) {
+                            <span class="type">PostRow</span>(post: post)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(<span class="string">"Posts"</span>)
+        }
+        .task {
+            <span class="keyword">await</span> viewModel.fetchPosts()
+        }
+    }
+}
+
+<span class="keyword">struct</span> <span class="type">PostRow</span>: <span class="type">View</span> {
+    <span class="keyword">let</span> post: <span class="type">Post</span>
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">VStack</span>(alignment: .leading) {
+            <span class="type">Text</span>(post.title)
+                .font(.headline)
+                .lineLimit(<span class="string">2</span>)
+            <span class="type">Text</span>(<span class="string">"Post #\(post.id)"</span>)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+<span class="keyword">struct</span> <span class="type">DetailView</span>: <span class="type">View</span> {
+    <span class="keyword">let</span> post: <span class="type">Post</span>
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">ScrollView</span> {
+            <span class="type">VStack</span>(alignment: .leading, spacing: <span class="string">16</span>) {
+                <span class="type">Text</span>(post.title)
+                    .font(.title)
+                    .fontWeight(.bold)
+                <span class="type">Text</span>(post.body)
+                    .font(.body)
+            }
+            .padding()
+        }
+        .navigationTitle(<span class="string">"Post #\(post.id)"</span>)
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📱 UIKit Version (Classic)</h2>
+            <div class="code-block">
+<pre><span class="keyword">class</span> <span class="type">PostsViewController</span>: <span class="type">UIViewController</span> {
+    <span class="keyword">private var</span> posts: [<span class="type">Post</span>] = []
+    <span class="keyword">private let</span> tableView = <span class="type">UITableView</span>()
+    <span class="keyword">private let</span> activityIndicator = <span class="type">UIActivityIndicatorView</span>(style: .large)
+    
+    <span class="keyword">override func</span> <span class="function">viewDidLoad</span>() {
+        <span class="keyword">super</span>.viewDidLoad()
+        title = <span class="string">"Posts"</span>
+        setupTableView()
+        fetchPosts()
+    }
+    
+    <span class="keyword">private func</span> <span class="function">setupTableView</span>() {
+        view.addSubview(tableView)
+        tableView.frame = view.bounds
+        tableView.dataSource = <span class="keyword">self</span>
+        tableView.delegate = <span class="keyword">self</span>
+        tableView.register(<span class="type">UITableViewCell</span>.<span class="keyword">self</span>, forCellReuseIdentifier: <span class="string">"Cell"</span>)
+    }
+    
+    <span class="keyword">private func</span> <span class="function">fetchPosts</span>() {
+        activityIndicator.startAnimating()
+        
+        <span class="type">Task</span> {
+            <span class="keyword">do</span> {
+                <span class="keyword">let</span> url = <span class="type">URL</span>(string: <span class="string">"https://jsonplaceholder.typicode.com/posts"</span>)!
+                <span class="keyword">let</span> (data, _) = <span class="keyword">try await</span> <span class="type">URLSession</span>.shared.data(from: url)
+                posts = <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode([<span class="type">Post</span>].<span class="keyword">self</span>, from: data)
+                
+                <span class="keyword">await</span> <span class="type">MainActor</span>.run {
+                    tableView.reloadData()
+                    activityIndicator.stopAnimating()
+                }
+            } <span class="keyword">catch</span> {
+                <span class="comment">// Handle error</span>
+            }
+        }
+    }
+}
+
+<span class="keyword">extension</span> <span class="type">PostsViewController</span>: <span class="type">UITableViewDataSource</span>, <span class="type">UITableViewDelegate</span> {
+    <span class="keyword">func</span> <span class="function">tableView</span>(_ tableView: <span class="type">UITableView</span>, numberOfRowsInSection section: <span class="type">Int</span>) -> <span class="type">Int</span> {
+        <span class="keyword">return</span> posts.count
+    }
+    
+    <span class="keyword">func</span> <span class="function">tableView</span>(_ tableView: <span class="type">UITableView</span>, cellForRowAt indexPath: <span class="type">IndexPath</span>) -> <span class="type">UITableViewCell</span> {
+        <span class="keyword">let</span> cell = tableView.dequeueReusableCell(withIdentifier: <span class="string">"Cell"</span>, for: indexPath)
+        <span class="keyword">let</span> post = posts[indexPath.row]
+        cell.textLabel?.text = post.title
+        cell.accessoryType = .disclosureIndicator
+        <span class="keyword">return</span> cell
+    }
+    
+    <span class="keyword">func</span> <span class="function">tableView</span>(_ tableView: <span class="type">UITableView</span>, didSelectRowAt indexPath: <span class="type">IndexPath</span>) {
+        <span class="keyword">let</span> post = posts[indexPath.row]
+        <span class="keyword">let</span> detailVC = <span class="type">DetailViewController</span>(post: post)
+        navigationController?.pushViewController(detailVC, animated: <span class="keyword">true</span>)
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔄 iOS vs Android Comparison</h2>
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>List View</h4>
+                    <p><strong>iOS:</strong> List (SwiftUI) / UITableView<br><strong>Android:</strong> RecyclerView</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>Networking</h4>
+                    <p><strong>iOS:</strong> URLSession (built-in)<br><strong>Android:</strong> Retrofit (library)</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>JSON Parsing</h4>
+                    <p><strong>iOS:</strong> Codable (built-in)<br><strong>Android:</strong> Gson (library)</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>Async</h4>
+                    <p><strong>iOS:</strong> async/await<br><strong>Android:</strong> Callbacks / Coroutines</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>ViewModel</h4>
+                    <p><strong>iOS:</strong> ObservableObject<br><strong>Android:</strong> ViewModel + LiveData</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>Navigation</h4>
+                    <p><strong>iOS:</strong> NavigationStack / push<br><strong>Android:</strong> Intent / NavController</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Interview Flex:</strong> "I built the same app on both platforms — same API, same architecture, just platform-specific implementations. It shows how the concepts transfer while respecting platform conventions."
+        </div>
+
+        <div class="section">
+            <h2>✅ What You've Covered</h2>
+            <ul style="color: #ccc; line-height: 2; list-style: none;">
+                <li>✓ URLSession networking</li>
+                <li>✓ JSON parsing with Codable</li>
+                <li>✓ SwiftUI List AND UIKit TableView</li>
+                <li>✓ MVVM with ObservableObject</li>
+                <li>✓ Modern async/await</li>
+                <li>✓ Navigation patterns</li>
+            </ul>
+            <p style="color: #00ff88; margin-top: 20px; font-weight: 600; font-size: 1.2rem;">🎉 You're interview-ready!</p>
+        </div>
+    </div>
+</body>
+</html>

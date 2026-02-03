@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Swift Essentials</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .back { color: #fff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; margin-bottom: 20px; transition: all 0.2s; } .back:hover { background: rgba(255,255,255,0.2); border-color: #00d9ff; }
+        .back:hover { text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FF5722, #FF9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #FF5722;
+        }
+        .code-block {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .tip {
+            background: rgba(255,87,34,0.1);
+            border-left: 4px solid #FF5722;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong { color: #FF5722; }
+        .qa {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .qa-q { color: #00d9ff; font-weight: 600; margin-bottom: 10px; }
+        .qa-a { color: #ccc; line-height: 1.6; }
+        .wrapper-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th { color: #FF5722; font-weight: 600; }
+        td { color: #ccc; }
+        code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; }
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .type { color: #8be9fd; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+        .annotation { color: #ffb86c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🍎 iOS Swift Essentials</h1>
+        <p class="subtitle">URLSession, Codable, SwiftUI, UIKit patterns</p>
+
+        <div class="section">
+            <h2>📱 SwiftUI App Structure</h2>
+            <div class="code-block">
+<pre><span class="annotation">@main</span>
+<span class="keyword">struct</span> <span class="type">MyApp</span>: <span class="type">App</span> {
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">Scene</span> {
+        <span class="type">WindowGroup</span> {
+            <span class="type">ContentView</span>()
+        }
+    }
+}
+
+<span class="keyword">struct</span> <span class="type">ContentView</span>: <span class="type">View</span> {
+    <span class="annotation">@State</span> <span class="keyword">private var</span> items: [<span class="type">Item</span>] = []
+    <span class="annotation">@State</span> <span class="keyword">private var</span> isLoading = <span class="keyword">false</span>
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">NavigationStack</span> {
+            <span class="type">List</span>(items) { item <span class="keyword">in</span>
+                <span class="type">NavigationLink</span>(destination: <span class="type">DetailView</span>(item: item)) {
+                    <span class="type">ItemRow</span>(item: item)
+                }
+            }
+            .navigationTitle(<span class="string">"Items"</span>)
+            .task {
+                <span class="keyword">await</span> fetchItems()
+            }
+        }
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌐 Networking — URLSession + async/await</h2>
+            <div class="code-block">
+<pre><span class="keyword">func</span> <span class="function">fetchUsers</span>() <span class="keyword">async throws</span> -> [<span class="type">User</span>] {
+    <span class="keyword">let</span> url = <span class="type">URL</span>(string: <span class="string">"https://api.example.com/users"</span>)!
+    <span class="keyword">let</span> (data, response) = <span class="keyword">try await</span> <span class="type">URLSession</span>.shared.data(from: url)
+    
+    <span class="keyword">guard let</span> httpResponse = response <span class="keyword">as?</span> <span class="type">HTTPURLResponse</span>,
+          httpResponse.statusCode == <span class="string">200</span> <span class="keyword">else</span> {
+        <span class="keyword">throw</span> <span class="type">NetworkError</span>.invalidResponse
+    }
+    
+    <span class="keyword">let</span> users = <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode([<span class="type">User</span>].<span class="keyword">self</span>, from: data)
+    <span class="keyword">return</span> users
+}
+
+<span class="comment">// Call it</span>
+<span class="type">Task</span> {
+    <span class="keyword">do</span> {
+        <span class="keyword">let</span> users = <span class="keyword">try await</span> fetchUsers()
+        <span class="keyword">self</span>.items = users
+    } <span class="keyword">catch</span> {
+        print(<span class="string">"Error: \(error)"</span>)
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📦 JSON Parsing — Codable</h2>
+            <div class="code-block">
+<pre><span class="keyword">struct</span> <span class="type">User</span>: <span class="type">Codable</span> {
+    <span class="keyword">let</span> id: <span class="type">Int</span>
+    <span class="keyword">let</span> name: <span class="type">String</span>
+    <span class="keyword">let</span> email: <span class="type">String</span>
+    
+    <span class="comment">// Custom keys if API uses different names</span>
+    <span class="keyword">enum</span> <span class="type">CodingKeys</span>: <span class="type">String</span>, <span class="type">CodingKey</span> {
+        <span class="keyword">case</span> id
+        <span class="keyword">case</span> name = <span class="string">"full_name"</span>
+        <span class="keyword">case</span> email = <span class="string">"email_address"</span>
+    }
+}
+
+<span class="comment">// Decode</span>
+<span class="keyword">let</span> decoder = <span class="type">JSONDecoder</span>()
+decoder.keyDecodingStrategy = .convertFromSnakeCase
+<span class="keyword">let</span> user = <span class="keyword">try</span> decoder.decode(<span class="type">User</span>.<span class="keyword">self</span>, from: jsonData)</pre>
+            </div>
+            <div class="tip">
+                <strong>💡 Interview Tip:</strong> Codable = Encodable + Decodable. Mention <code>keyDecodingStrategy</code> for snake_case APIs!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ MVVM with ObservableObject</h2>
+            <div class="code-block">
+<pre><span class="annotation">@MainActor</span>
+<span class="keyword">class</span> <span class="type">UserViewModel</span>: <span class="type">ObservableObject</span> {
+    <span class="annotation">@Published</span> <span class="keyword">var</span> users: [<span class="type">User</span>] = []
+    <span class="annotation">@Published</span> <span class="keyword">var</span> isLoading = <span class="keyword">false</span>
+    <span class="annotation">@Published</span> <span class="keyword">var</span> errorMessage: <span class="type">String</span>?
+    
+    <span class="keyword">func</span> <span class="function">fetchUsers</span>() <span class="keyword">async</span> {
+        isLoading = <span class="keyword">true</span>
+        errorMessage = <span class="keyword">nil</span>
+        
+        <span class="keyword">do</span> {
+            <span class="keyword">let</span> url = <span class="type">URL</span>(string: <span class="string">"https://api.example.com/users"</span>)!
+            <span class="keyword">let</span> (data, _) = <span class="keyword">try await</span> <span class="type">URLSession</span>.shared.data(from: url)
+            users = <span class="keyword">try</span> <span class="type">JSONDecoder</span>().decode([<span class="type">User</span>].<span class="keyword">self</span>, from: data)
+            isLoading = <span class="keyword">false</span>
+        } <span class="keyword">catch</span> {
+            errorMessage = error.localizedDescription
+            isLoading = <span class="keyword">false</span>
+        }
+    }
+}
+
+<span class="comment">// SwiftUI View using it</span>
+<span class="keyword">struct</span> <span class="type">UsersView</span>: <span class="type">View</span> {
+    <span class="annotation">@StateObject</span> <span class="keyword">private var</span> viewModel = <span class="type">UserViewModel</span>()
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">List</span>(viewModel.users) { user <span class="keyword">in</span>
+            <span class="type">Text</span>(user.name)
+        }
+        .task {
+            <span class="keyword">await</span> viewModel.fetchUsers()
+        }
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💾 UserDefaults</h2>
+            <div class="code-block">
+<pre><span class="comment">// Save</span>
+<span class="type">UserDefaults</span>.standard.set(<span class="string">"Aaron"</span>, forKey: <span class="string">"username"</span>)
+<span class="type">UserDefaults</span>.standard.set(<span class="string">100</span>, forKey: <span class="string">"score"</span>)
+<span class="type">UserDefaults</span>.standard.set(<span class="keyword">true</span>, forKey: <span class="string">"loggedIn"</span>)
+
+<span class="comment">// Read</span>
+<span class="keyword">let</span> username = <span class="type">UserDefaults</span>.standard.string(forKey: <span class="string">"username"</span>) ?? <span class="string">"default"</span>
+<span class="keyword">let</span> score = <span class="type">UserDefaults</span>.standard.integer(forKey: <span class="string">"score"</span>)
+<span class="keyword">let</span> loggedIn = <span class="type">UserDefaults</span>.standard.bool(forKey: <span class="string">"loggedIn"</span>)</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧭 Navigation</h2>
+            <div class="code-block">
+<pre><span class="comment">// SwiftUI — NavigationStack + NavigationLink</span>
+<span class="type">NavigationStack</span> {
+    <span class="type">List</span>(items) { item <span class="keyword">in</span>
+        <span class="type">NavigationLink</span>(destination: <span class="type">DetailView</span>(item: item)) {
+            <span class="type">Text</span>(item.title)
+        }
+    }
+}
+
+<span class="comment">// UIKit — Programmatic</span>
+<span class="keyword">let</span> detailVC = <span class="type">DetailViewController</span>()
+detailVC.item = selectedItem
+navigationController?.pushViewController(detailVC, animated: <span class="keyword">true</span>)</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏷️ Property Wrappers</h2>
+            <div class="wrapper-table">
+                <table>
+                    <tr>
+                        <th>Wrapper</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td><code>@State</code></td>
+                        <td>Local view state (simple values)</td>
+                    </tr>
+                    <tr>
+                        <td><code>@Binding</code></td>
+                        <td>Two-way connection to parent's @State</td>
+                    </tr>
+                    <tr>
+                        <td><code>@StateObject</code></td>
+                        <td>Own a reference type (ViewModel) — create it</td>
+                    </tr>
+                    <tr>
+                        <td><code>@ObservedObject</code></td>
+                        <td>Observe someone else's reference type — passed in</td>
+                    </tr>
+                    <tr>
+                        <td><code>@EnvironmentObject</code></td>
+                        <td>Shared across view hierarchy</td>
+                    </tr>
+                    <tr>
+                        <td><code>@Published</code></td>
+                        <td>In ObservableObject, triggers view updates</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip">
+                <strong>💡 Interview Favourite:</strong> "What's the difference between @StateObject and @ObservedObject?"<br>
+                Answer: @StateObject <strong>creates and owns</strong> the object. @ObservedObject <strong>observes</strong> one passed in from elsewhere.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ Common Interview Questions</h2>
+            
+            <div class="qa">
+                <div class="qa-q">Q: Difference between struct and class?</div>
+                <div class="qa-a">Structs are <strong>value types</strong> (copied), classes are <strong>reference types</strong> (shared). Structs preferred in Swift for models.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: What's ARC?</div>
+                <div class="qa-a">Automatic Reference Counting — Swift automatically manages memory by counting references. Use <code>weak</code> or <code>unowned</code> to prevent retain cycles.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: Difference between weak and unowned?</div>
+                <div class="qa-a">Both prevent retain cycles. <code>weak</code> is optional and becomes nil when deallocated. <code>unowned</code> is non-optional, crashes if accessed after deallocation.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: What's a closure capture list?</div>
+                <div class="qa-a"><code>[weak self]</code> or <code>[unowned self]</code> in closures to prevent retain cycles when capturing self.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you handle errors in Swift?</div>
+                <div class="qa-a">Use <code>do-try-catch</code>, <code>throws</code> functions, or <code>Result&lt;Success, Failure&gt;</code> type.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

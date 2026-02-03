@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Questions & Answers</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back { color: #fff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; margin-bottom: 20px; transition: all 0.2s; } .back:hover { background: rgba(255,255,255,0.2); border-color: #00d9ff; }
+        .back:hover { text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #00d9ff;
+        }
+        .star-box {
+            background: linear-gradient(135deg, rgba(0,217,255,0.1), rgba(0,255,136,0.1));
+            border: 1px solid rgba(0,217,255,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .star-box h3 { color: #00ff88; margin-bottom: 15px; }
+        .star-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+        .star-letter {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            flex-shrink: 0;
+        }
+        .star-text { color: #ccc; line-height: 1.5; }
+        .qa {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .qa-q {
+            color: #00d9ff;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        .qa-a {
+            color: #ccc;
+            line-height: 1.7;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #00ff88;
+        }
+        .tip {
+            background: rgba(0,217,255,0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong { color: #00d9ff; }
+        .questions-list {
+            list-style: none;
+        }
+        .questions-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+        }
+        .questions-list li:last-child { border-bottom: none; }
+        .questions-list li::before {
+            content: '💬';
+            margin-right: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .badge-important { background: #ff5722; color: #fff; }
+        .badge-common { background: #00d9ff; color: #000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🎤 Interview Questions & Answers</h1>
+        <p class="subtitle">Common questions, STAR method examples, and what to ask them</p>
+
+        <div class="section">
+            <h2>⭐ The STAR Method</h2>
+            <p style="color: #ccc; margin-bottom: 20px;">For behavioural questions, structure your answers like this:</p>
+            <div class="star-box">
+                <div class="star-item">
+                    <div class="star-letter">S</div>
+                    <div class="star-text"><strong>Situation</strong> — Set the scene. What was the context?</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">T</div>
+                    <div class="star-text"><strong>Task</strong> — What was your responsibility? What needed to be done?</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">A</div>
+                    <div class="star-text"><strong>Action</strong> — What did YOU specifically do? (Use "I", not "we")</div>
+                </div>
+                <div class="star-item">
+                    <div class="star-letter">R</div>
+                    <div class="star-text"><strong>Result</strong> — What was the outcome? Quantify if possible.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👋 "Tell me about yourself" <span class="badge badge-important">Always Asked</span></h2>
+            <div class="qa">
+                <div class="qa-q">Template Answer:</div>
+                <div class="qa-a">
+                    "I'm a mobile developer with <strong>7 years of experience</strong> building iOS and Android apps. I've worked primarily with <strong>Swift and Jetpack Compose</strong>, shipping multiple apps to production.
+                    <br><br>
+                    I enjoy the full cycle — from architecture decisions to seeing users actually use what I've built. I particularly like solving complex problems like offline-first data sync and optimising app performance.
+                    <br><br>
+                    I'm looking for a role where I can contribute to a growing team and work on apps that solve real problems — which is what attracted me to Daffodil IT."
+                </div>
+            </div>
+            <div class="tip">
+                <strong>💡 Customise this!</strong> Add specific app examples and mention why Daffodil specifically interests you.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔧 "Tell me about a challenging project" <span class="badge badge-common">Common</span></h2>
+            <div class="qa">
+                <div class="qa-q">STAR Example:</div>
+                <div class="qa-a">
+                    <strong>Situation:</strong> "I was building an app that needed to work offline and sync when back online."
+                    <br><br>
+                    <strong>Task:</strong> "I had to design a system that cached data locally, queued changes, and resolved conflicts when syncing."
+                    <br><br>
+                    <strong>Action:</strong> "I implemented local persistence with CoreData, created a sync queue with timestamps, and built conflict resolution logic that prioritised server data but preserved local changes. I also added retry mechanisms for failed syncs."
+                    <br><br>
+                    <strong>Result:</strong> "Users could use the app without internet, and data synced seamlessly when connectivity returned. We had zero data loss complaints after launch, and user engagement increased 40% because people could use the app on the tube."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🐛 "Tell me about a bug that was hard to find" <span class="badge badge-common">Common</span></h2>
+            <div class="qa">
+                <div class="qa-q">STAR Example:</div>
+                <div class="qa-a">
+                    <strong>Situation:</strong> "We had a crash that only happened on certain devices, and we couldn't reproduce it locally."
+                    <br><br>
+                    <strong>Task:</strong> "I needed to identify the root cause using only crash logs and user reports."
+                    <br><br>
+                    <strong>Action:</strong> "I analysed crash reports, noticed it only happened when resuming from background. I added more granular logging to that flow, pushed a beta, and discovered it was a race condition — a callback was firing before the view was ready."
+                    <br><br>
+                    <strong>Result:</strong> "Fixed the threading issue by ensuring UI updates happened on the main thread with proper guards. Crash rate dropped from 2% to near zero."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⏰ "How do you handle tight deadlines?"</h2>
+            <div class="qa">
+                <div class="qa-a">
+                    "I prioritise ruthlessly — figure out the <strong>must-haves vs nice-to-haves</strong>. I communicate early if scope needs adjusting, rather than surprising stakeholders at the last minute.
+                    <br><br>
+                    I've found that shipping something solid is better than shipping everything broken. I also break work into smaller chunks so there's always something demonstrable — it keeps momentum and makes progress visible."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏢 "Why do you want to work here?"</h2>
+            <div class="qa">
+                <div class="qa-q">For Daffodil IT:</div>
+                <div class="qa-a">
+                    "I'm drawn to the <strong>variety</strong> — the job description mentions projects ranging from consumer apps to enterprise solutions. I enjoy not having the same day twice.
+                    <br><br>
+                    The tech stack aligns with my experience in Swift and Android development, and I like that you're looking for someone who <strong>takes ownership</strong> and gets hands-on. The team culture sounds collaborative, and the benefits like the training budget show you invest in your people."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔍 Technical Questions</h2>
+            
+            <div class="qa">
+                <div class="qa-q">Q: What is MVVM and why use it?</div>
+                <div class="qa-a">
+                    "Model-View-ViewModel separates concerns. <strong>Model</strong> holds data, <strong>View</strong> handles UI, <strong>ViewModel</strong> contains business logic and state.
+                    <br><br>
+                    Benefits: <strong>testable</strong> (test ViewModel without UI), <strong>maintainable</strong> (changes in one layer don't break others), and the View stays simple — it just observes the ViewModel."
+                </div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you handle API errors?</div>
+                <div class="qa-a">
+                    "I check HTTP status codes first (200s = success, 400s = client error, 500s = server error). I parse error responses for user-friendly messages.
+                    <br><br>
+                    For the user, I show appropriate UI — a <strong>retry button</strong> for network issues, clear message for validation errors. I also implement <strong>caching</strong> so users can continue using the app with stale data when offline."
+                </div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you optimise app performance?</div>
+                <div class="qa-a">
+                    "Profile first — use <strong>Instruments</strong> (iOS) or <strong>Android Profiler</strong>. Common culprits:
+                    <br>• Main thread blocking (move network/DB work off UI thread)
+                    <br>• Memory leaks (use weak references, unsubscribe observers)
+                    <br>• Unoptimised images (resize, cache, lazy load)
+                    <br>• Unnecessary re-renders (check diffing, use proper state management)"
+                </div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you ensure code quality?</div>
+                <div class="qa-a">
+                    "Code reviews for every PR. <strong>Unit tests</strong> for business logic, <strong>UI tests</strong> for critical flows. Consistent coding standards (linting). CI/CD to catch issues early. And regular refactoring when code smells accumulate — don't let tech debt compound."
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ Questions to Ask THEM <span class="badge badge-important">Have These Ready!</span></h2>
+            <ul class="questions-list">
+                <li>"What does a typical project lifecycle look like here?"</li>
+                <li>"What's the team structure — how many devs, designers, PMs?"</li>
+                <li>"What's your tech stack currently, and any plans to evolve it?"</li>
+                <li>"How do you handle code reviews and quality assurance?"</li>
+                <li>"What's the biggest challenge the team is facing right now?"</li>
+                <li>"What does success look like in the first 3-6 months?"</li>
+            </ul>
+            <div class="tip">
+                <strong>💡 Pro tip:</strong> Write these down and bring them. Shows you're prepared and genuinely interested.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧠 Personality Profile Tips</h2>
+            <ul style="color: #ccc; line-height: 2; list-style: none;">
+                <li>✓ <strong>Be consistent</strong> — don't contradict yourself</li>
+                <li>✓ <strong>Be authentic</strong> — they're checking fit, not right/wrong</li>
+                <li>✓ <strong>Avoid extremes</strong> — "always" and "never" raise flags</li>
+                <li>✓ <strong>Think about the role</strong> — they want collaborative, detail-oriented, takes ownership</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

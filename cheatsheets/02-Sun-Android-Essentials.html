@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Java Essentials</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .back { color: #fff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; margin-bottom: 20px; transition: all 0.2s; } .back:hover { background: rgba(255,255,255,0.2); border-color: #00d9ff; }
+        .back:hover { text-decoration: underline; }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #3DDC84, #4285F4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #3DDC84;
+        }
+        .code-block {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .lifecycle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .lifecycle-item {
+            background: linear-gradient(135deg, #3DDC84, #00C853);
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .lifecycle-arrow { color: #888; font-size: 1.2rem; }
+        .tip {
+            background: rgba(61,220,132,0.1);
+            border-left: 4px solid #3DDC84;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong { color: #3DDC84; }
+        .qa {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .qa-q {
+            color: #00d9ff;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .qa-a { color: #ccc; line-height: 1.6; }
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .type { color: #8be9fd; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+        .annotation { color: #ffb86c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🤖 Android Java Essentials</h1>
+        <p class="subtitle">Lifecycle, RecyclerView, Retrofit, MVVM — all in Java</p>
+
+        <div class="section">
+            <h2>📱 Activity Lifecycle</h2>
+            <div class="lifecycle">
+                <span class="lifecycle-item">onCreate()</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item">onStart()</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item">onResume()</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item" style="background: linear-gradient(135deg, #4285F4, #1a73e8);">RUNNING</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item">onPause()</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item">onStop()</span>
+                <span class="lifecycle-arrow">→</span>
+                <span class="lifecycle-item">onDestroy()</span>
+            </div>
+            <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">MainActivity</span> <span class="keyword">extends</span> <span class="type">AppCompatActivity</span> {
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onCreate</span>(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        <span class="comment">// Initialize UI, setup views</span>
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onResume</span>() {
+        <span class="keyword">super</span>.onResume();
+        <span class="comment">// Activity in foreground, interactive</span>
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onPause</span>() {
+        <span class="keyword">super</span>.onPause();
+        <span class="comment">// Save data, pause animations</span>
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onDestroy</span>() {
+        <span class="keyword">super</span>.onDestroy();
+        <span class="comment">// Cleanup resources</span>
+    }
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 RecyclerView Adapter</h2>
+            <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">ItemAdapter</span> <span class="keyword">extends</span> <span class="type">RecyclerView.Adapter</span><<span class="type">ItemAdapter.ViewHolder</span>> {
+    
+    <span class="keyword">private</span> <span class="type">List</span><<span class="type">Item</span>> items;
+    <span class="keyword">private</span> <span class="type">OnItemClickListener</span> listener;
+    
+    <span class="comment">// Interface for click handling</span>
+    <span class="keyword">public interface</span> <span class="type">OnItemClickListener</span> {
+        <span class="keyword">void</span> <span class="function">onItemClick</span>(<span class="type">Item</span> item);
+    }
+    
+    <span class="keyword">public</span> <span class="function">ItemAdapter</span>(<span class="type">List</span><<span class="type">Item</span>> items, <span class="type">OnItemClickListener</span> listener) {
+        <span class="keyword">this</span>.items = items;
+        <span class="keyword">this</span>.listener = listener;
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">ViewHolder</span> <span class="function">onCreateViewHolder</span>(<span class="type">ViewGroup</span> parent, <span class="keyword">int</span> viewType) {
+        <span class="type">View</span> view = <span class="type">LayoutInflater</span>.from(parent.getContext())
+            .inflate(R.layout.item_row, parent, <span class="keyword">false</span>);
+        <span class="keyword">return new</span> <span class="type">ViewHolder</span>(view);
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">public void</span> <span class="function">onBindViewHolder</span>(<span class="type">ViewHolder</span> holder, <span class="keyword">int</span> position) {
+        <span class="type">Item</span> item = items.get(position);
+        holder.bind(item, listener);
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">public int</span> <span class="function">getItemCount</span>() {
+        <span class="keyword">return</span> items.size();
+    }
+    
+    <span class="comment">// ViewHolder inner class</span>
+    <span class="keyword">static class</span> <span class="type">ViewHolder</span> <span class="keyword">extends</span> <span class="type">RecyclerView.ViewHolder</span> {
+        <span class="keyword">private</span> <span class="type">TextView</span> titleText;
+        
+        <span class="function">ViewHolder</span>(<span class="type">View</span> itemView) {
+            <span class="keyword">super</span>(itemView);
+            titleText = itemView.findViewById(R.id.title);
+        }
+        
+        <span class="keyword">void</span> <span class="function">bind</span>(<span class="type">Item</span> item, <span class="type">OnItemClickListener</span> listener) {
+            titleText.setText(item.getTitle());
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
+        }
+    }
+}</pre>
+            </div>
+            <div class="tip">
+                <strong>💡 Interview Tip:</strong> Always explain WHY RecyclerView over ListView — it recycles views for better performance!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🌐 Retrofit Networking</h2>
+            <div class="code-block">
+<pre><span class="comment">// 1. API Interface</span>
+<span class="keyword">public interface</span> <span class="type">ApiService</span> {
+    <span class="annotation">@GET</span>(<span class="string">"users"</span>)
+    <span class="type">Call</span><<span class="type">List</span><<span class="type">User</span>>> <span class="function">getUsers</span>();
+    
+    <span class="annotation">@GET</span>(<span class="string">"users/{id}"</span>)
+    <span class="type">Call</span><<span class="type">User</span>> <span class="function">getUser</span>(<span class="annotation">@Path</span>(<span class="string">"id"</span>) <span class="keyword">int</span> userId);
+}
+
+<span class="comment">// 2. Retrofit Client</span>
+<span class="type">Retrofit</span> retrofit = <span class="keyword">new</span> <span class="type">Retrofit.Builder</span>()
+    .baseUrl(<span class="string">"https://api.example.com/"</span>)
+    .addConverterFactory(<span class="type">GsonConverterFactory</span>.create())
+    .build();
+
+<span class="type">ApiService</span> api = retrofit.create(<span class="type">ApiService</span>.class);
+
+<span class="comment">// 3. Make the call</span>
+api.getUsers().enqueue(<span class="keyword">new</span> <span class="type">Callback</span><<span class="type">List</span><<span class="type">User</span>>>() {
+    <span class="annotation">@Override</span>
+    <span class="keyword">public void</span> <span class="function">onResponse</span>(<span class="type">Call</span> call, <span class="type">Response</span> response) {
+        <span class="keyword">if</span> (response.isSuccessful()) {
+            <span class="type">List</span><<span class="type">User</span>> users = response.body();
+            <span class="comment">// Update UI</span>
+        }
+    }
+    
+    <span class="annotation">@Override</span>
+    <span class="keyword">public void</span> <span class="function">onFailure</span>(<span class="type">Call</span> call, <span class="type">Throwable</span> t) {
+        <span class="comment">// Handle error</span>
+    }
+});</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ MVVM with ViewModel</h2>
+            <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">UserViewModel</span> <span class="keyword">extends</span> <span class="type">ViewModel</span> {
+    <span class="keyword">private</span> <span class="type">MutableLiveData</span><<span class="type">List</span><<span class="type">User</span>>> users = <span class="keyword">new</span> <span class="type">MutableLiveData</span><>();
+    <span class="keyword">private</span> <span class="type">MutableLiveData</span><<span class="type">Boolean</span>> isLoading = <span class="keyword">new</span> <span class="type">MutableLiveData</span><>();
+    
+    <span class="keyword">public</span> <span class="type">LiveData</span><<span class="type">List</span><<span class="type">User</span>>> <span class="function">getUsers</span>() { <span class="keyword">return</span> users; }
+    <span class="keyword">public</span> <span class="type">LiveData</span><<span class="type">Boolean</span>> <span class="function">getIsLoading</span>() { <span class="keyword">return</span> isLoading; }
+    
+    <span class="keyword">public void</span> <span class="function">fetchUsers</span>() {
+        isLoading.setValue(<span class="keyword">true</span>);
+        
+        api.getUsers().enqueue(<span class="keyword">new</span> <span class="type">Callback</span><<span class="type">List</span><<span class="type">User</span>>>() {
+            <span class="annotation">@Override</span>
+            <span class="keyword">public void</span> <span class="function">onResponse</span>(...) {
+                isLoading.setValue(<span class="keyword">false</span>);
+                users.setValue(response.body());
+            }
+            
+            <span class="annotation">@Override</span>
+            <span class="keyword">public void</span> <span class="function">onFailure</span>(...) {
+                isLoading.setValue(<span class="keyword">false</span>);
+            }
+        });
+    }
+}
+
+<span class="comment">// In Activity — observe the ViewModel</span>
+viewModel.getUsers().observe(<span class="keyword">this</span>, users -> {
+    adapter.updateData(users);
+});
+
+viewModel.getIsLoading().observe(<span class="keyword">this</span>, isLoading -> {
+    progressBar.setVisibility(isLoading ? <span class="type">View</span>.VISIBLE : <span class="type">View</span>.GONE);
+});</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💾 SharedPreferences</h2>
+            <div class="code-block">
+<pre><span class="comment">// Save data</span>
+<span class="type">SharedPreferences</span> prefs = getSharedPreferences(<span class="string">"MyPrefs"</span>, <span class="type">Context</span>.MODE_PRIVATE);
+<span class="type">SharedPreferences.Editor</span> editor = prefs.edit();
+editor.putString(<span class="string">"username"</span>, <span class="string">"Aaron"</span>);
+editor.putInt(<span class="string">"score"</span>, <span class="string">100</span>);
+editor.putBoolean(<span class="string">"loggedIn"</span>, <span class="keyword">true</span>);
+editor.apply();  <span class="comment">// async (use commit() for sync)</span>
+
+<span class="comment">// Read data</span>
+<span class="type">String</span> username = prefs.getString(<span class="string">"username"</span>, <span class="string">"default"</span>);
+<span class="keyword">int</span> score = prefs.getInt(<span class="string">"score"</span>, <span class="string">0</span>);
+<span class="keyword">boolean</span> loggedIn = prefs.getBoolean(<span class="string">"loggedIn"</span>, <span class="keyword">false</span>);</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧭 Intents — Navigation</h2>
+            <div class="code-block">
+<pre><span class="comment">// Navigate to another Activity</span>
+<span class="type">Intent</span> intent = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="keyword">this</span>, <span class="type">DetailActivity</span>.class);
+intent.putExtra(<span class="string">"USER_ID"</span>, userId);
+intent.putExtra(<span class="string">"USER_NAME"</span>, userName);
+startActivity(intent);
+
+<span class="comment">// Receive data in DetailActivity</span>
+<span class="keyword">int</span> userId = getIntent().getIntExtra(<span class="string">"USER_ID"</span>, -<span class="string">1</span>);
+<span class="type">String</span> userName = getIntent().getStringExtra(<span class="string">"USER_NAME"</span>);</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>❓ Common Interview Questions</h2>
+            
+            <div class="qa">
+                <div class="qa-q">Q: Difference between Activity and Fragment?</div>
+                <div class="qa-a">Activity is a full screen, Fragment is a reusable UI component within an Activity. Fragments have their own lifecycle but depend on host Activity.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: What's the difference between apply() and commit()?</div>
+                <div class="qa-a"><code>apply()</code> is async (non-blocking), <code>commit()</code> is sync (blocking, returns boolean).</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you handle configuration changes (rotation)?</div>
+                <div class="qa-a">Use ViewModel to survive config changes, or <code>onSaveInstanceState()</code> for simple data.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: Serializable vs Parcelable?</div>
+                <div class="qa-a">Serializable uses reflection (slower), Parcelable is Android-specific and faster but more code.</div>
+            </div>
+            
+            <div class="qa">
+                <div class="qa-q">Q: How do you prevent memory leaks?</div>
+                <div class="qa-a">Avoid static references to Context/Activity, unregister listeners in onDestroy(), use WeakReference where appropriate.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

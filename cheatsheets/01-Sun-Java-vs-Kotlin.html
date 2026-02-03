@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java ↔ Kotlin Comparison</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .back {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .back:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #00d9ff;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #f89820, #ff5722);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 768px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .code-header {
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .kotlin-header { background: linear-gradient(90deg, #7F52FF, #C711E1); }
+        .java-header { background: linear-gradient(90deg, #f89820, #e76f00); }
+        .code-content {
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #00d9ff;
+        }
+        .tip {
+            background: rgba(0,217,255,0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong { color: #00d9ff; }
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .type { color: #8be9fd; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>Java ↔ Kotlin Comparison</h1>
+        <p class="subtitle">Side-by-side syntax — your Kotlin → Java translator</p>
+
+        <div class="section">
+            <h2>Variables</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin</div>
+                    <div class="code-content">
+<pre><span class="keyword">val</span> name = <span class="string">"Aaron"</span>          <span class="comment">// immutable</span>
+<span class="keyword">var</span> count = <span class="string">0</span>               <span class="comment">// mutable</span>
+<span class="keyword">val</span> age: <span class="type">Int</span> = <span class="string">37</span>           <span class="comment">// explicit type</span>
+<span class="keyword">var</span> nickname: <span class="type">String?</span> = <span class="keyword">null</span> <span class="comment">// nullable</span></pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java</div>
+                    <div class="code-content">
+<pre><span class="keyword">final</span> <span class="type">String</span> name = <span class="string">"Aaron"</span>;  <span class="comment">// immutable</span>
+<span class="type">int</span> count = <span class="string">0</span>;                <span class="comment">// mutable</span>
+<span class="type">int</span> age = <span class="string">37</span>;                 <span class="comment">// explicit type</span>
+<span class="type">String</span> nickname = <span class="keyword">null</span>;       <span class="comment">// nullable by default</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Null Safety</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin — Built-in null safety</div>
+                    <div class="code-content">
+<pre><span class="keyword">val</span> length = name<span class="function">?.</span>length              <span class="comment">// safe call</span>
+<span class="keyword">val</span> len = name<span class="function">?.</span>length <span class="function">?:</span> <span class="string">0</span>            <span class="comment">// elvis (default)</span>
+<span class="keyword">val</span> forced = name<span class="function">!!</span>.length          <span class="comment">// force unwrap</span></pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java — Manual null checks</div>
+                    <div class="code-content">
+<pre><span class="type">int</span> length = <span class="string">0</span>;
+<span class="keyword">if</span> (name != <span class="keyword">null</span>) {
+    length = name.<span class="function">length</span>();
+}
+
+<span class="comment">// Or with Optional (Java 8+)</span>
+<span class="type">int</span> len = <span class="type">Optional</span>.<span class="function">ofNullable</span>(name)
+    .<span class="function">map</span>(<span class="type">String</span>::length)
+    .<span class="function">orElse</span>(<span class="string">0</span>);</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="tip">
+                <strong>💡 Interview Tip:</strong> Java has no built-in null safety — always do null checks manually or use Optional.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Functions</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin</div>
+                    <div class="code-content">
+<pre><span class="keyword">fun</span> <span class="function">greet</span>(name: <span class="type">String</span>): <span class="type">String</span> {
+    <span class="keyword">return</span> <span class="string">"Hello, $name"</span>
+}
+
+<span class="comment">// Single expression</span>
+<span class="keyword">fun</span> <span class="function">greet</span>(name: <span class="type">String</span>) = <span class="string">"Hello, $name"</span></pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java</div>
+                    <div class="code-content">
+<pre><span class="keyword">public</span> <span class="type">String</span> <span class="function">greet</span>(<span class="type">String</span> name) {
+    <span class="keyword">return</span> <span class="string">"Hello, "</span> + name;
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Classes</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin — Data class (1 line!)</div>
+                    <div class="code-content">
+<pre><span class="keyword">data class</span> <span class="type">User</span>(
+    <span class="keyword">val</span> id: <span class="type">Int</span>,
+    <span class="keyword">val</span> name: <span class="type">String</span>,
+    <span class="keyword">val</span> email: <span class="type">String</span>
+)</pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java — Verbose version</div>
+                    <div class="code-content">
+<pre><span class="keyword">public class</span> <span class="type">User</span> {
+    <span class="keyword">private</span> <span class="type">int</span> id;
+    <span class="keyword">private</span> <span class="type">String</span> name;
+    <span class="keyword">private</span> <span class="type">String</span> email;
+    
+    <span class="keyword">public</span> <span class="function">User</span>(<span class="type">int</span> id, <span class="type">String</span> name, <span class="type">String</span> email) {
+        <span class="keyword">this</span>.id = id;
+        <span class="keyword">this</span>.name = name;
+        <span class="keyword">this</span>.email = email;
+    }
+    
+    <span class="keyword">public</span> <span class="type">int</span> <span class="function">getId</span>() { <span class="keyword">return</span> id; }
+    <span class="keyword">public</span> <span class="type">String</span> <span class="function">getName</span>() { <span class="keyword">return</span> name; }
+    <span class="keyword">public</span> <span class="type">String</span> <span class="function">getEmail</span>() { <span class="keyword">return</span> email; }
+    
+    <span class="comment">// Plus equals(), hashCode(), toString()...</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="tip">
+                <strong>💡 Interview Tip:</strong> Mention Lombok library as an alternative to reduce Java boilerplate.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Lambdas & Collections</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin</div>
+                    <div class="code-content">
+<pre><span class="keyword">val</span> numbers = <span class="function">listOf</span>(<span class="string">1</span>, <span class="string">2</span>, <span class="string">3</span>, <span class="string">4</span>, <span class="string">5</span>)
+
+<span class="keyword">val</span> doubled = numbers.<span class="function">map</span> { it * <span class="string">2</span> }
+<span class="keyword">val</span> evens = numbers.<span class="function">filter</span> { it % <span class="string">2</span> == <span class="string">0</span> }
+
+numbers.<span class="function">forEach</span> { number -> 
+    <span class="function">println</span>(number)
+}</pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java (Java 8+)</div>
+                    <div class="code-content">
+<pre><span class="type">List</span><<span class="type">Integer</span>> numbers = <span class="type">Arrays</span>.<span class="function">asList</span>(<span class="string">1</span>, <span class="string">2</span>, <span class="string">3</span>, <span class="string">4</span>, <span class="string">5</span>);
+
+<span class="type">List</span><<span class="type">Integer</span>> doubled = numbers.<span class="function">stream</span>()
+    .<span class="function">map</span>(n -> n * <span class="string">2</span>)
+    .<span class="function">collect</span>(<span class="type">Collectors</span>.<span class="function">toList</span>());
+
+<span class="type">List</span><<span class="type">Integer</span>> evens = numbers.<span class="function">stream</span>()
+    .<span class="function">filter</span>(n -> n % <span class="string">2</span> == <span class="string">0</span>)
+    .<span class="function">collect</span>(<span class="type">Collectors</span>.<span class="function">toList</span>());
+
+numbers.<span class="function">forEach</span>(number -> {
+    <span class="type">System</span>.out.<span class="function">println</span>(number);
+});</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Async/Threading</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin — Coroutines</div>
+                    <div class="code-content">
+<pre>viewModelScope.<span class="function">launch</span>(<span class="type">Dispatchers</span>.IO) {
+    <span class="keyword">val</span> data = api.<span class="function">fetchData</span>()
+    <span class="function">withContext</span>(<span class="type">Dispatchers</span>.Main) {
+        <span class="function">updateUI</span>(data)
+    }
+}</pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java — ExecutorService</div>
+                    <div class="code-content">
+<pre><span class="type">ExecutorService</span> executor = 
+    <span class="type">Executors</span>.<span class="function">newSingleThreadExecutor</span>();
+<span class="type">Handler</span> mainHandler = 
+    <span class="keyword">new</span> <span class="type">Handler</span>(<span class="type">Looper</span>.<span class="function">getMainLooper</span>());
+
+executor.<span class="function">execute</span>(() -> {
+    <span class="comment">// Background thread</span>
+    <span class="type">Data</span> data = api.<span class="function">fetchData</span>();
+    
+    mainHandler.<span class="function">post</span>(() -> {
+        <span class="comment">// Main thread</span>
+        <span class="function">updateUI</span>(data);
+    });
+});</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>When / Switch</h2>
+            <div class="comparison">
+                <div class="code-block">
+                    <div class="code-header kotlin-header">Kotlin — when expression</div>
+                    <div class="code-content">
+<pre><span class="keyword">val</span> result = <span class="keyword">when</span> (status) {
+    <span class="string">200</span> -> <span class="string">"OK"</span>
+    <span class="string">404</span> -> <span class="string">"Not Found"</span>
+    <span class="string">500</span> -> <span class="string">"Server Error"</span>
+    <span class="keyword">else</span> -> <span class="string">"Unknown"</span>
+}</pre>
+                    </div>
+                </div>
+                <div class="code-block">
+                    <div class="code-header java-header">Java — switch statement</div>
+                    <div class="code-content">
+<pre><span class="type">String</span> result;
+<span class="keyword">switch</span> (status) {
+    <span class="keyword">case</span> <span class="string">200</span>:
+        result = <span class="string">"OK"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">404</span>:
+        result = <span class="string">"Not Found"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">500</span>:
+        result = <span class="string">"Server Error"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">default</span>:
+        result = <span class="string">"Unknown"</span>;
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Key Interview Points</h2>
+            <ul style="color: #ccc; line-height: 2;">
+                <li>Java is more verbose but follows the same patterns</li>
+                <li>Null safety is <strong>manual</strong> in Java — always check!</li>
+                <li><code>final</code> in Java = <code>val</code> in Kotlin</li>
+                <li>No data classes — write getters/setters manually (or mention Lombok)</li>
+                <li>Threading uses ExecutorService, not coroutines</li>
+                <li>Lambdas require Java 8+ and use <code>-></code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Quiz - Android & iOS</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .back:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #00d9ff;
+        }
+        h1 { 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            text-align: center;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #888;
+        }
+        .score-display span { color: #00ff88; font-weight: 600; }
+        
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .question-number {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .tag-ios { background: #FF5722; }
+        .tag-android { background: #4CAF50; color: #000; }
+        .tag-general { background: #00d9ff; color: #000; }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .option:hover:not(.disabled) {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .option.selected {
+            border-color: #00d9ff;
+            background: rgba(0,217,255,0.1);
+        }
+        .option.correct {
+            border-color: #00ff88;
+            background: rgba(0,255,136,0.1);
+        }
+        .option.incorrect {
+            border-color: #ff4444;
+            background: rgba(255,68,68,0.1);
+        }
+        .option.disabled { cursor: default; }
+        
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .option.correct .option-letter { background: #00ff88; color: #000; }
+        .option.incorrect .option-letter { background: #ff4444; }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,217,255,0.1);
+            border-left: 4px solid #00d9ff;
+            border-radius: 0 12px 12px 0;
+            display: none;
+        }
+        .explanation.show { display: block; }
+        .explanation strong { color: #00d9ff; }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            color: #000;
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        
+        .results {
+            text-align: center;
+            display: none;
+        }
+        .results.show { display: block; }
+        .results h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .results .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+        }
+        .results .message {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .review-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin: 10px;
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back">✕</a>
+        <h1>📝 Interview Quiz</h1>
+        <p class="subtitle">Test your Android & iOS knowledge</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        
+        <div class="score-display">
+            Question <span id="currentQ">1</span> of <span id="totalQ">20</span> | 
+            Score: <span id="score">0</span>
+        </div>
+        
+        <div id="quiz-container">
+            <!-- Questions loaded by JS -->
+        </div>
+        
+        <div class="results" id="results">
+            <h2>Quiz Complete!</h2>
+            <div class="final-score" id="finalScore">0%</div>
+            <p class="message" id="resultMessage"></p>
+            <button class="review-btn" onclick="restartQuiz()">Try Again</button>
+            <a href="index.html" class="review-btn" style="background: rgba(255,255,255,0.1); color: #fff;">Back to Prep</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // iOS Questions
+            {
+                tag: 'ios',
+                question: 'What is the main difference between UIKit and SwiftUI?',
+                options: [
+                    'UIKit is newer than SwiftUI',
+                    'UIKit is imperative, SwiftUI is declarative',
+                    'SwiftUI only works on iPad',
+                    'UIKit uses Swift, SwiftUI uses Objective-C'
+                ],
+                correct: 1,
+                explanation: 'UIKit is imperative — you tell it HOW to build the UI step by step. SwiftUI is declarative — you describe WHAT the UI should look like, and SwiftUI figures out how to render it.'
+            },
+            {
+                tag: 'ios',
+                question: 'What does ARC stand for in iOS memory management?',
+                options: [
+                    'Apple Resource Controller',
+                    'Automatic Reference Counting',
+                    'Advanced Runtime Compiler',
+                    'Asynchronous Request Cache'
+                ],
+                correct: 1,
+                explanation: 'ARC (Automatic Reference Counting) tracks how many references point to an object. When the count hits zero, the object is deallocated automatically.'
+            },
+            {
+                tag: 'ios',
+                question: 'How do you prevent retain cycles in closures?',
+                options: [
+                    'Use @escaping keyword',
+                    'Use [weak self] or [unowned self] in capture list',
+                    'Always use structs instead of classes',
+                    'Call deinit manually'
+                ],
+                correct: 1,
+                explanation: '[weak self] captures self weakly (becomes optional, may be nil). [unowned self] doesn\'t increase retain count but crashes if accessed after deallocation.'
+            },
+            {
+                tag: 'ios',
+                question: 'Which iOS app state means the app is in foreground but NOT receiving events?',
+                options: [
+                    'Active',
+                    'Background',
+                    'Inactive',
+                    'Suspended'
+                ],
+                correct: 2,
+                explanation: 'Inactive means the app is in the foreground but not receiving events — for example, during an incoming call or when a system alert appears.'
+            },
+            {
+                tag: 'ios',
+                question: 'In MVVM architecture on iOS, which layer does the ViewController belong to?',
+                options: [
+                    'Model',
+                    'View',
+                    'ViewModel',
+                    'Controller (separate layer)'
+                ],
+                correct: 1,
+                explanation: 'In MVVM, the ViewController is considered part of the View layer. The ViewModel contains the presentation logic that would otherwise bloat the VC.'
+            },
+            {
+                tag: 'ios',
+                question: 'What is the correct way to store sensitive data like auth tokens on iOS?',
+                options: [
+                    'UserDefaults',
+                    'Core Data',
+                    'Keychain',
+                    'FileManager documents directory'
+                ],
+                correct: 2,
+                explanation: 'Keychain is the secure storage for sensitive data (tokens, passwords). It\'s encrypted and persists across app reinstalls. Never use UserDefaults for sensitive data.'
+            },
+            {
+                tag: 'ios',
+                question: 'Which framework provides reactive programming on iOS 13+?',
+                options: [
+                    'RxSwift',
+                    'Combine',
+                    'SwiftUI',
+                    'Foundation'
+                ],
+                correct: 1,
+                explanation: 'Combine is Apple\'s native reactive programming framework (iOS 13+). It handles async events as streams of values over time, with Publishers, Subscribers, and Operators.'
+            },
+            
+            // Android Questions
+            {
+                tag: 'android',
+                question: 'What are the four fundamental Android components?',
+                options: [
+                    'Activity, Fragment, View, Intent',
+                    'Activity, Service, Broadcast Receiver, Content Provider',
+                    'MainActivity, Application, Context, Bundle',
+                    'View, ViewModel, Repository, Database'
+                ],
+                correct: 1,
+                explanation: 'The four fundamental components are: Activity (UI screen), Service (background work), Broadcast Receiver (system events), and Content Provider (shared data).'
+            },
+            {
+                tag: 'android',
+                question: 'Which Activity lifecycle method is called when the activity becomes visible?',
+                options: [
+                    'onCreate()',
+                    'onStart()',
+                    'onResume()',
+                    'onVisible()'
+                ],
+                correct: 1,
+                explanation: 'onStart() is called when the activity is becoming visible. onResume() is called when it becomes interactive (foreground). onCreate() is for initial setup.'
+            },
+            {
+                tag: 'android',
+                question: 'What is the main advantage of Kotlin over Java for Android?',
+                options: [
+                    'Kotlin is faster at runtime',
+                    'Kotlin has null safety built-in',
+                    'Kotlin doesn\'t need the JVM',
+                    'Kotlin uses less memory'
+                ],
+                correct: 1,
+                explanation: 'Kotlin has null safety built into the type system. Nullable types (String?) must be explicitly handled, preventing NullPointerException at compile time.'
+            },
+            {
+                tag: 'android',
+                question: 'Why does RecyclerView perform better than ListView?',
+                options: [
+                    'RecyclerView uses less XML',
+                    'RecyclerView recycles views and uses ViewHolder pattern',
+                    'RecyclerView is written in Kotlin',
+                    'RecyclerView doesn\'t support animations'
+                ],
+                correct: 1,
+                explanation: 'RecyclerView reuses off-screen item views for new items and caches view references with ViewHolder to avoid repeated findViewById calls.'
+            },
+            {
+                tag: 'android',
+                question: 'What is the purpose of ViewModel in Android Architecture Components?',
+                options: [
+                    'To display views on screen',
+                    'To survive configuration changes and hold UI state',
+                    'To make network requests',
+                    'To store data in SQLite'
+                ],
+                correct: 1,
+                explanation: 'ViewModel survives configuration changes (like rotation) and holds UI state. It doesn\'t reference the View directly, making it testable and lifecycle-aware.'
+            },
+            {
+                tag: 'android',
+                question: 'Which Kotlin feature simplifies asynchronous programming?',
+                options: [
+                    'Data classes',
+                    'Extension functions',
+                    'Coroutines',
+                    'Sealed classes'
+                ],
+                correct: 2,
+                explanation: 'Coroutines make async code read like synchronous code using suspend functions. Combined with Dispatchers (Main, IO, Default), they replace callbacks and RxJava for many use cases.'
+            },
+            {
+                tag: 'android',
+                question: 'What is the recommended DI framework for Android?',
+                options: [
+                    'Koin',
+                    'Dagger',
+                    'Hilt',
+                    'Guice'
+                ],
+                correct: 2,
+                explanation: 'Hilt is Google\'s recommended DI framework for Android. Built on Dagger, it reduces boilerplate and provides scopes for Android components (Activity, Fragment, ViewModel).'
+            },
+            {
+                tag: 'android',
+                question: 'What does R8 do in the Android build process?',
+                options: [
+                    'Compiles Java to bytecode',
+                    'Shrinks, obfuscates, and optimizes code',
+                    'Generates data binding classes',
+                    'Creates APK signatures'
+                ],
+                correct: 1,
+                explanation: 'R8 (replaced ProGuard) shrinks unused code/resources, obfuscates names to deter reverse engineering, and optimizes bytecode for smaller, faster APKs.'
+            },
+            
+            // General / Architecture Questions
+            {
+                tag: 'general',
+                question: 'What does MVVM stand for?',
+                options: [
+                    'Model-View-Virtual Machine',
+                    'Model-View-ViewModel',
+                    'Multiple Views Virtual Model',
+                    'Mobile View Visual Manager'
+                ],
+                correct: 1,
+                explanation: 'Model-View-ViewModel. The ViewModel holds presentation logic and UI state, exposing data for the View to observe. This separates concerns and improves testability.'
+            },
+            {
+                tag: 'general',
+                question: 'What is the main benefit of Dependency Injection?',
+                options: [
+                    'Faster app startup',
+                    'Smaller APK/IPA size',
+                    'Easier testing with mock objects',
+                    'Better UI animations'
+                ],
+                correct: 2,
+                explanation: 'DI makes testing easier by allowing you to inject mock/fake dependencies. It also improves flexibility (swap implementations) and decouples components.'
+            },
+            {
+                tag: 'general',
+                question: 'Which testing type verifies individual functions in isolation?',
+                options: [
+                    'UI Tests',
+                    'Integration Tests',
+                    'Unit Tests',
+                    'End-to-End Tests'
+                ],
+                correct: 2,
+                explanation: 'Unit Tests test individual functions/classes in isolation, using mocks for dependencies. They\'re fast and should cover business logic in ViewModels and services.'
+            },
+            {
+                tag: 'general',
+                question: 'What is certificate pinning used for?',
+                options: [
+                    'Encrypting local database',
+                    'Preventing man-in-the-middle attacks',
+                    'Signing the app for store release',
+                    'Storing passwords securely'
+                ],
+                correct: 1,
+                explanation: 'Certificate pinning verifies the server\'s SSL certificate against a known value, preventing MITM attacks even if a rogue CA issues a fake certificate.'
+            },
+            {
+                tag: 'general',
+                question: 'In Clean Architecture, which layer should have NO framework dependencies?',
+                options: [
+                    'Presentation',
+                    'Data',
+                    'Domain',
+                    'UI'
+                ],
+                correct: 2,
+                explanation: 'The Domain layer contains business logic, use cases, and entities. It should be pure Kotlin/Swift with no Android/iOS framework dependencies, making it highly testable.'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+        let shuffledQuestions = [];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function init() {
+            shuffledQuestions = shuffleArray(questions);
+            document.getElementById('totalQ').textContent = shuffledQuestions.length;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = shuffledQuestions[currentQuestion];
+            const tagClass = q.tag === 'ios' ? 'tag-ios' : q.tag === 'android' ? 'tag-android' : 'tag-general';
+            const tagLabel = q.tag === 'ios' ? '🍎 iOS' : q.tag === 'android' ? '🤖 Android' : '📱 General';
+            
+            const html = `
+                <div class="question-card">
+                    <span class="question-number ${tagClass}">${tagLabel}</span>
+                    <p class="question-text">${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <div class="option" onclick="selectOption(${i})" data-index="${i}">
+                                <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+                                <span>${opt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <strong>💡 Explanation:</strong> ${q.explanation}
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                            ${currentQuestion === shuffledQuestions.length - 1 ? 'See Results' : 'Next Question'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('quiz-container').innerHTML = html;
+            document.getElementById('currentQ').textContent = currentQuestion + 1;
+            document.getElementById('progress').style.width = ((currentQuestion + 1) / shuffledQuestions.length * 100) + '%';
+            answered = false;
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            answered = true;
+            
+            const q = shuffledQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.correct) {
+                    opt.classList.add('correct');
+                } else if (i === index && index !== q.correct) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            if (index === q.correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+            }
+            
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= shuffledQuestions.length) {
+                showResults();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('results').classList.add('show');
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            document.getElementById('finalScore').textContent = percentage + '%';
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🔥 Excellent! You\'re ready to crush this interview!';
+            } else if (percentage >= 70) {
+                message = '👍 Good job! Review the topics you missed and you\'ll be solid.';
+            } else if (percentage >= 50) {
+                message = '📚 Getting there! Spend some time with the reading guides.';
+            } else {
+                message = '💪 Keep studying! Go through the cheat sheets again.';
+            }
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('score').textContent = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('results').classList.remove('show');
+            init();
+        }
+
+        init();
+    </script>
+</body>
+</html>

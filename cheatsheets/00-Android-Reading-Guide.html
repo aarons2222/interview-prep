@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Reading Guide - Concepts & Theory</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .back:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #00d9ff;
+        }
+        h1 { font-size: 2rem; margin-bottom: 10px; color: #4CAF50; text-align: center; }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; }
+        .level {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .level-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .level-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .basic .level-badge { background: #4CAF50; color: #000; }
+        .mid .level-badge { background: #FF9800; color: #000; }
+        .advanced .level-badge { background: #f44336; color: #fff; }
+        .level h2 { font-size: 1.3rem; }
+        .topic {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .topic h3 {
+            color: #00d9ff;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .topic p {
+            color: #ccc;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .topic ul {
+            color: #ccc;
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .key-point {
+            background: rgba(76,175,80,0.1);
+            border-left: 4px solid #4CAF50;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        .key-point strong { color: #4CAF50; }
+        .interview-tip {
+            background: rgba(0,217,255,0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        .interview-tip strong { color: #00d9ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🤖 Android Reading Guide</h1>
+        <p class="subtitle">Concepts & theory — no code, just understanding</p>
+
+        <!-- BASIC LEVEL -->
+        <div class="level basic">
+            <div class="level-header">
+                <span class="level-badge">🟢 BASIC</span>
+                <h2>Foundation Concepts</h2>
+            </div>
+
+            <div class="topic">
+                <h3>What is Android?</h3>
+                <p>Android is Google's mobile operating system, based on a modified Linux kernel. Unlike iOS, it's open source (AOSP — Android Open Source Project), which means manufacturers can customise it (Samsung One UI, Xiaomi MIUI, etc.).</p>
+                <p>Apps are distributed through Google Play Store (primary) but also via direct APK installation (sideloading) or alternative stores. No mandatory review process like Apple — apps go live faster but with less vetting.</p>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Android's fragmentation means you support many OS versions and screen sizes. Always check your minSdk and test on multiple devices/emulators.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Java vs Kotlin</h3>
+                <p><strong>Java</strong> was the original Android language (since 2008). Verbose but well-understood, with massive ecosystem and tooling. Still used in legacy codebases and some enterprise apps.</p>
+                <p><strong>Kotlin</strong> became Google's preferred language in 2019. It's more concise, safer (null safety built-in), and fully interoperable with Java. Modern Android development is Kotlin-first.</p>
+                <ul>
+                    <li>Kotlin has null safety — nullable types prevent NullPointerException</li>
+                    <li>Kotlin has data classes — auto-generates equals, hashCode, toString</li>
+                    <li>Kotlin has coroutines — simpler async programming than Java threads</li>
+                    <li>100% interoperable — call Java from Kotlin and vice versa</li>
+                </ul>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I prefer Kotlin for new development but I'm comfortable with Java for maintaining legacy code. The interoperability makes transitions smooth."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Android Components</h3>
+                <p>Android apps are built from four fundamental components:</p>
+                <ul>
+                    <li><strong>Activity:</strong> A single screen with UI. The entry point for user interaction.</li>
+                    <li><strong>Service:</strong> Runs in background without UI. For long-running operations (music playback, downloads).</li>
+                    <li><strong>Broadcast Receiver:</strong> Responds to system-wide events (battery low, SMS received, boot completed).</li>
+                    <li><strong>Content Provider:</strong> Manages shared app data. How apps expose data to other apps (contacts, media).</li>
+                </ul>
+                <p>Each component is declared in the AndroidManifest.xml file, which describes your app to the system.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Activity Lifecycle</h3>
+                <p>Activities go through defined states as users navigate your app:</p>
+                <ul>
+                    <li><strong>onCreate():</strong> Activity created — initialise UI, bind data</li>
+                    <li><strong>onStart():</strong> Activity becoming visible</li>
+                    <li><strong>onResume():</strong> Activity in foreground, interactive — start animations, acquire resources</li>
+                    <li><strong>onPause():</strong> Losing focus — pause animations, save draft data</li>
+                    <li><strong>onStop():</strong> No longer visible — release heavy resources</li>
+                    <li><strong>onDestroy():</strong> Activity being destroyed — final cleanup</li>
+                </ul>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I save UI state in onPause() and release resources in onStop(). For configuration changes like rotation, I use ViewModel to survive the recreation."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Views vs Jetpack Compose</h3>
+                <p><strong>View System (XML)</strong> is the traditional UI toolkit. You define layouts in XML files and inflate them in code. Uses imperative updates — you tell the view exactly how to change.</p>
+                <p><strong>Jetpack Compose</strong> (2021) is the modern declarative UI toolkit. You describe what the UI should look like based on state, and Compose handles the updates. Similar to SwiftUI and React.</p>
+                <ul>
+                    <li>Views: Mature, more resources/libraries, familiar to most Android devs</li>
+                    <li>Compose: Less boilerplate, easier state management, but requires Kotlin and Android 5.0+</li>
+                </ul>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Most production apps still use Views or a hybrid approach. Compose is the future but you'll encounter XML layouts in existing codebases.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Gradle Build System</h3>
+                <p>Android uses Gradle to build apps. Key files:</p>
+                <ul>
+                    <li><strong>settings.gradle:</strong> Defines which modules are in the project</li>
+                    <li><strong>build.gradle (project):</strong> Project-wide config, repositories, classpaths</li>
+                    <li><strong>build.gradle (module/app):</strong> App-specific config — dependencies, SDK versions, flavours</li>
+                </ul>
+                <p>Important version numbers: <strong>minSdk</strong> (lowest supported), <strong>targetSdk</strong> (tested against), <strong>compileSdk</strong> (API used for compilation).</p>
+            </div>
+        </div>
+
+        <!-- MID LEVEL -->
+        <div class="level mid">
+            <div class="level-header">
+                <span class="level-badge">🟠 INTERMEDIATE</span>
+                <h2>Core Concepts</h2>
+            </div>
+
+            <div class="topic">
+                <h3>MVVM Architecture</h3>
+                <p>Model-View-ViewModel is the recommended architecture for Android (part of Jetpack guidelines):</p>
+                <ul>
+                    <li><strong>Model:</strong> Data layer — repositories, data sources, business logic</li>
+                    <li><strong>View:</strong> UI layer — Activities, Fragments, Composables. Observes ViewModel.</li>
+                    <li><strong>ViewModel:</strong> Holds UI state, survives configuration changes, exposes data via LiveData/StateFlow</li>
+                </ul>
+                <p>The ViewModel doesn't reference the View — it just exposes observable data. This separation enables testing and survives rotation.</p>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Never pass Context to ViewModel (causes memory leaks). Use AndroidViewModel if you need application context.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Fragments</h3>
+                <p>Fragments are reusable UI components within an Activity. They have their own lifecycle (similar to Activity) and can be added/removed dynamically.</p>
+                <ul>
+                    <li>Enable single-Activity architecture with Navigation Component</li>
+                    <li>Survive configuration changes when properly managed</li>
+                    <li>Can communicate via shared ViewModel or interfaces</li>
+                </ul>
+                <p>Modern approach: Use the Navigation Component with single Activity + multiple Fragments. Reduces complexity versus multiple Activities.</p>
+            </div>
+
+            <div class="topic">
+                <h3>RecyclerView</h3>
+                <p>The standard way to display scrolling lists. More efficient than ListView because it:</p>
+                <ul>
+                    <li><strong>Recycles views:</strong> Reuses off-screen item views for new items</li>
+                    <li><strong>Uses ViewHolder pattern:</strong> Caches view references to avoid repeated findViewById</li>
+                    <li><strong>Flexible layouts:</strong> Linear, Grid, Staggered via LayoutManagers</li>
+                </ul>
+                <p>Components: Adapter (binds data to views), ViewHolder (holds view references), LayoutManager (positions items).</p>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I use DiffUtil with RecyclerView to calculate minimal updates efficiently, which improves performance and enables animations."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Intents & Navigation</h3>
+                <p><strong>Intents</strong> are messaging objects for requesting actions:</p>
+                <ul>
+                    <li><strong>Explicit Intent:</strong> Targets a specific component (start MyActivity)</li>
+                    <li><strong>Implicit Intent:</strong> Declares action, system finds handler (share text, open URL)</li>
+                </ul>
+                <p><strong>Navigation Component</strong> (Jetpack) manages fragment navigation declaratively via a nav_graph.xml. Handles back stack, animations, deep links, and safe args.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Coroutines & Threading</h3>
+                <p>Android's main thread handles UI. Blocking it causes ANR (Application Not Responding). Use background threads for:</p>
+                <ul>
+                    <li>Network requests</li>
+                    <li>Database operations</li>
+                    <li>Heavy computation</li>
+                </ul>
+                <p><strong>Kotlin Coroutines</strong> simplify async code. Key concepts:</p>
+                <ul>
+                    <li><strong>suspend functions:</strong> Can pause without blocking thread</li>
+                    <li><strong>Dispatchers:</strong> Main (UI), IO (network/disk), Default (CPU work)</li>
+                    <li><strong>Scopes:</strong> viewModelScope, lifecycleScope — auto-cancel on destroy</li>
+                </ul>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Always use lifecycleScope or viewModelScope to launch coroutines. They auto-cancel when the lifecycle ends, preventing leaks.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Data Persistence</h3>
+                <ul>
+                    <li><strong>SharedPreferences:</strong> Key-value pairs for small data (settings, flags). Not for large or structured data.</li>
+                    <li><strong>Room:</strong> SQLite abstraction with compile-time verification. Entities, DAOs, Database. Part of Jetpack.</li>
+                    <li><strong>DataStore:</strong> Modern replacement for SharedPreferences. Uses coroutines, supports Proto (typed) or Preferences (key-value).</li>
+                    <li><strong>File storage:</strong> Internal (private to app), External (shared, needs permissions), Cache (temporary).</li>
+                </ul>
+                <p>For sensitive data: Use EncryptedSharedPreferences or Android Keystore.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Dependency Injection with Hilt</h3>
+                <p>Hilt is the recommended DI framework for Android (built on Dagger). Benefits:</p>
+                <ul>
+                    <li>Reduces boilerplate versus manual DI</li>
+                    <li>Compile-time validation catches errors early</li>
+                    <li>Scoped to Android components (Activity, Fragment, ViewModel)</li>
+                    <li>Easy testing — swap real dependencies for fakes</li>
+                </ul>
+                <p>Key annotations: @HiltAndroidApp (Application), @AndroidEntryPoint (Activity/Fragment), @Inject (constructor/field), @Module/@Provides (how to create instances).</p>
+            </div>
+        </div>
+
+        <!-- ADVANCED LEVEL -->
+        <div class="level advanced">
+            <div class="level-header">
+                <span class="level-badge">🔴 ADVANCED</span>
+                <h2>Deep Knowledge</h2>
+            </div>
+
+            <div class="topic">
+                <h3>Clean Architecture</h3>
+                <p>Separates app into layers with strict dependency rules:</p>
+                <ul>
+                    <li><strong>Presentation:</strong> UI + ViewModel. Depends on Domain.</li>
+                    <li><strong>Domain:</strong> Business logic, use cases, entities. No Android dependencies — pure Kotlin.</li>
+                    <li><strong>Data:</strong> Repositories, data sources, API/DB implementations. Implements Domain interfaces.</li>
+                </ul>
+                <p>Benefits: Testable business logic, swappable data sources, separation of concerns. Trade-off: More files and boilerplate for small apps.</p>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I use Clean Architecture for larger projects where testability and maintainability matter. For smaller apps, MVVM with Repository pattern is sufficient."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Jetpack Libraries</h3>
+                <p>Android Jetpack is a suite of libraries for common tasks:</p>
+                <ul>
+                    <li><strong>ViewModel:</strong> Survives configuration changes, holds UI state</li>
+                    <li><strong>LiveData:</strong> Lifecycle-aware observable. Updates UI only when active.</li>
+                    <li><strong>Room:</strong> SQLite database with compile-time checks</li>
+                    <li><strong>Navigation:</strong> Fragment navigation with type-safe arguments</li>
+                    <li><strong>WorkManager:</strong> Background tasks that survive app restart</li>
+                    <li><strong>Paging:</strong> Load data incrementally for large lists</li>
+                    <li><strong>CameraX:</strong> Consistent camera API across devices</li>
+                </ul>
+            </div>
+
+            <div class="topic">
+                <h3>Kotlin Flow & StateFlow</h3>
+                <p><strong>Flow</strong> is Kotlin's reactive stream type, similar to RxJava Observable but using coroutines:</p>
+                <ul>
+                    <li><strong>Cold flows:</strong> Emit when collected. Each collector triggers new emission.</li>
+                    <li><strong>Hot flows (SharedFlow/StateFlow):</strong> Emit regardless of collectors. Share among subscribers.</li>
+                </ul>
+                <p><strong>StateFlow</strong> is perfect for UI state — always has a value, conflates (skips intermediate values), and integrates with Compose.</p>
+                <p>Prefer StateFlow over LiveData in new Kotlin codebases. LiveData is fine for Java or simpler cases.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Performance Optimisation</h3>
+                <ul>
+                    <li><strong>Layout:</strong> Flatten hierarchy, use ConstraintLayout, avoid nested LinearLayouts</li>
+                    <li><strong>RecyclerView:</strong> Use DiffUtil, setHasFixedSize, cache view holders</li>
+                    <li><strong>Memory:</strong> Avoid memory leaks (static references to Context, unregistered listeners)</li>
+                    <li><strong>Images:</strong> Use Coil/Glide for caching, resize before loading, use placeholders</li>
+                    <li><strong>Startup:</strong> Defer non-critical init, use App Startup library, lazy load modules</li>
+                    <li><strong>Baseline Profiles:</strong> Pre-compile hot paths for faster startup (Android 12+)</li>
+                </ul>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Use Android Studio Profiler (CPU, Memory, Network) to find actual bottlenecks. Don't optimise blindly.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>ProGuard & R8</h3>
+                <p><strong>R8</strong> (replaced ProGuard) is Android's code shrinker and obfuscator:</p>
+                <ul>
+                    <li><strong>Code shrinking:</strong> Removes unused code and resources</li>
+                    <li><strong>Obfuscation:</strong> Renames classes/methods to make reverse engineering harder</li>
+                    <li><strong>Optimisation:</strong> Inlines methods, removes dead branches</li>
+                </ul>
+                <p>Configured via proguard-rules.pro. Keep rules prevent stripping of classes used via reflection (JSON parsing, view binding).</p>
+            </div>
+
+            <div class="topic">
+                <h3>Security Best Practices</h3>
+                <ul>
+                    <li><strong>Network:</strong> Use HTTPS only. Network Security Config can enforce this.</li>
+                    <li><strong>Storage:</strong> EncryptedSharedPreferences for sensitive data. Never log credentials.</li>
+                    <li><strong>Keystore:</strong> Store cryptographic keys in Android Keystore (hardware-backed on supported devices).</li>
+                    <li><strong>Certificate Pinning:</strong> Validate server certificates to prevent MITM.</li>
+                    <li><strong>Root Detection:</strong> Detect rooted devices for high-security apps.</li>
+                    <li><strong>WebView:</strong> Disable JavaScript if not needed. Don't load untrusted URLs.</li>
+                </ul>
+            </div>
+
+            <div class="topic">
+                <h3>Testing Strategy</h3>
+                <ul>
+                    <li><strong>Unit Tests:</strong> JUnit + Mockito/MockK. Test ViewModels, repositories, use cases.</li>
+                    <li><strong>Integration Tests:</strong> Test components together (Room + Repository).</li>
+                    <li><strong>UI Tests:</strong> Espresso for Views, Compose Testing for Compose. Run on device/emulator.</li>
+                    <li><strong>End-to-End:</strong> Full user flows. Slower but catch integration issues.</li>
+                </ul>
+                <p>Use Hilt for test DI — swap real implementations for fakes. Robolectric runs Android tests on JVM (faster but less accurate).</p>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I focus unit tests on business logic in ViewModels and repositories. For critical flows, I add Espresso tests. I aim for meaningful coverage — testing behaviour, not implementation details."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>CI/CD & Distribution</h3>
+                <ul>
+                    <li><strong>GitHub Actions / Bitrise / CircleCI:</strong> Build, test, deploy on every push</li>
+                    <li><strong>Fastlane:</strong> Automates screenshots, signing, Play Store uploads</li>
+                    <li><strong>Firebase App Distribution:</strong> Beta testing without Play Store</li>
+                    <li><strong>Play Console:</strong> Internal → Closed → Open testing → Production</li>
+                </ul>
+                <p>Typical pipeline: Build → Lint → Unit tests → UI tests → Generate APK/AAB → Upload to Firebase/Play Store.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Modularisation</h3>
+                <p>Breaking a monolithic app into Gradle modules:</p>
+                <ul>
+                    <li><strong>:app</strong> — Application module, depends on features</li>
+                    <li><strong>:feature:*</strong> — Feature modules (login, profile, settings)</li>
+                    <li><strong>:core:*</strong> — Shared code (network, database, UI components)</li>
+                </ul>
+                <p>Benefits: Faster builds (parallel compilation), enforced boundaries, dynamic feature delivery. Use navigation across modules with deep links.</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

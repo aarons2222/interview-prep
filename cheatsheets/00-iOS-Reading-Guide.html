@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Reading Guide - Concepts & Theory</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .back:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #00d9ff;
+        }
+        h1 { font-size: 2rem; margin-bottom: 10px; color: #FF5722; text-align: center; }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; }
+        .level {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .level-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .level-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .basic .level-badge { background: #4CAF50; color: #000; }
+        .mid .level-badge { background: #FF9800; color: #000; }
+        .advanced .level-badge { background: #f44336; color: #fff; }
+        .level h2 { font-size: 1.3rem; }
+        .topic {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .topic h3 {
+            color: #00d9ff;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .topic p {
+            color: #ccc;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .topic ul {
+            color: #ccc;
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .key-point {
+            background: rgba(255,87,34,0.1);
+            border-left: 4px solid #FF5722;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        .key-point strong { color: #FF5722; }
+        .interview-tip {
+            background: rgba(0,217,255,0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+        .interview-tip strong { color: #00d9ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back">✕</a>
+        <h1>🍎 iOS Reading Guide</h1>
+        <p class="subtitle">Concepts & theory — no code, just understanding</p>
+
+        <!-- BASIC LEVEL -->
+        <div class="level basic">
+            <div class="level-header">
+                <span class="level-badge">🟢 BASIC</span>
+                <h2>Foundation Concepts</h2>
+            </div>
+
+            <div class="topic">
+                <h3>What is iOS?</h3>
+                <p>iOS is Apple's mobile operating system that runs on iPhone and iPod Touch. It's derived from macOS and shares the same Darwin foundation (Unix-based). iPadOS is a variant optimised for iPad's larger screen.</p>
+                <p>iOS apps are distributed through the App Store, which requires Apple's approval process. This "walled garden" approach ensures quality and security but means longer review times.</p>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> iOS prioritises user privacy and security. Apps must request permission for camera, location, photos, etc.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Swift vs Objective-C</h3>
+                <p><strong>Objective-C</strong> was Apple's original language (since 1984). It's a superset of C with object-oriented features. Still found in legacy codebases.</p>
+                <p><strong>Swift</strong> was introduced in 2014 as a modern replacement. It's safer (no pointers, optionals prevent null crashes), faster, and more readable. Swift is now the standard for iOS development.</p>
+                <ul>
+                    <li>Swift is type-safe — catches errors at compile time</li>
+                    <li>Swift has optionals — explicit handling of "no value"</li>
+                    <li>Swift uses ARC — Automatic Reference Counting for memory</li>
+                </ul>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I work primarily in Swift but understand Objective-C concepts for maintaining legacy code."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>UIKit vs SwiftUI</h3>
+                <p><strong>UIKit</strong> is the original framework (since 2008). It's imperative — you tell it HOW to build the UI step by step. Uses view controllers, storyboards, and delegates.</p>
+                <p><strong>SwiftUI</strong> launched in 2019. It's declarative — you describe WHAT the UI should look like, and SwiftUI figures out how to render it. Uses structs, property wrappers, and live previews.</p>
+                <ul>
+                    <li>UIKit: More control, more code, larger community, proven in production</li>
+                    <li>SwiftUI: Less code, faster prototyping, requires iOS 13+, still maturing</li>
+                </ul>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Most production apps use UIKit or a hybrid. SwiftUI is great for new projects but you'll encounter UIKit in existing codebases.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>App Lifecycle</h3>
+                <p>iOS apps have distinct states that the system manages:</p>
+                <ul>
+                    <li><strong>Not Running:</strong> App hasn't started or was terminated</li>
+                    <li><strong>Inactive:</strong> App is in foreground but not receiving events (e.g., incoming call)</li>
+                    <li><strong>Active:</strong> App is in foreground and receiving events — normal state</li>
+                    <li><strong>Background:</strong> App is in background, executing code (limited time)</li>
+                    <li><strong>Suspended:</strong> App is in background, not executing, can be purged</li>
+                </ul>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I use lifecycle methods to save state when backgrounding and restore it when returning to foreground."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>MVC Architecture</h3>
+                <p>Model-View-Controller is the traditional iOS architecture:</p>
+                <ul>
+                    <li><strong>Model:</strong> Data and business logic (User, Product, API responses)</li>
+                    <li><strong>View:</strong> UI elements (buttons, labels, table cells)</li>
+                    <li><strong>Controller:</strong> Mediates between Model and View (UIViewController)</li>
+                </ul>
+                <p>The problem? Controllers often become "Massive View Controllers" — handling too much. This led to alternatives like MVVM.</p>
+            </div>
+        </div>
+
+        <!-- MID LEVEL -->
+        <div class="level mid">
+            <div class="level-header">
+                <span class="level-badge">🟠 INTERMEDIATE</span>
+                <h2>Core Concepts</h2>
+            </div>
+
+            <div class="topic">
+                <h3>MVVM Architecture</h3>
+                <p>Model-View-ViewModel addresses MVC's bloated controller problem:</p>
+                <ul>
+                    <li><strong>Model:</strong> Same as MVC — data structures</li>
+                    <li><strong>View:</strong> UI + ViewController (yes, VC is part of View layer!)</li>
+                    <li><strong>ViewModel:</strong> Presentation logic, data transformation, state management</li>
+                </ul>
+                <p>The ViewModel doesn't know about the View — it just exposes data. The View observes the ViewModel and updates when data changes. This separation makes testing easier.</p>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> In MVVM, the ViewController is considered part of the View layer. The ViewModel contains the logic that would otherwise bloat the VC.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Memory Management & ARC</h3>
+                <p><strong>ARC (Automatic Reference Counting)</strong> tracks how many references point to an object. When the count hits zero, the object is deallocated.</p>
+                <p><strong>Strong references</strong> increase the count. <strong>Weak references</strong> don't — they become nil when the object is deallocated. <strong>Unowned references</strong> are like weak but non-optional (crash if accessed after deallocation).</p>
+                <p><strong>Retain cycles</strong> occur when two objects strongly reference each other — neither can be deallocated. Common in closures that capture self.</p>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I use [weak self] in closures to prevent retain cycles, especially in networking callbacks and delegates."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Delegates & Protocols</h3>
+                <p><strong>Protocols</strong> define a contract — a set of methods/properties that conforming types must implement. Like interfaces in other languages.</p>
+                <p><strong>Delegation</strong> is a design pattern where one object delegates responsibility to another. The delegate conforms to a protocol. Examples: UITableViewDelegate, UITextFieldDelegate.</p>
+                <p>This keeps objects loosely coupled — the delegating object doesn't need to know the concrete type of its delegate, just that it conforms to the protocol.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Closures & Capture Lists</h3>
+                <p><strong>Closures</strong> are self-contained blocks of code that can be passed around. They "capture" variables from their surrounding context.</p>
+                <p>By default, closures capture references strongly. In a closure that outlives its creation context (like a network callback), capturing self strongly can cause retain cycles.</p>
+                <p><strong>Capture lists</strong> like [weak self] or [unowned self] specify how to capture values:</p>
+                <ul>
+                    <li><strong>[weak self]:</strong> Captures self weakly — self becomes optional, may be nil</li>
+                    <li><strong>[unowned self]:</strong> Captures self without increasing retain count — crashes if nil</li>
+                </ul>
+            </div>
+
+            <div class="topic">
+                <h3>Concurrency & Threading</h3>
+                <p>iOS apps have a <strong>main thread</strong> (UI thread) where all UI updates must happen. Blocking it causes the app to freeze.</p>
+                <p><strong>Grand Central Dispatch (GCD)</strong> manages concurrent operations. You dispatch work to queues:</p>
+                <ul>
+                    <li><strong>Main queue:</strong> Serial, runs on main thread — for UI updates</li>
+                    <li><strong>Global queues:</strong> Concurrent, different priority levels — for background work</li>
+                    <li><strong>Custom queues:</strong> You create them, serial or concurrent</li>
+                </ul>
+                <p><strong>async/await</strong> (Swift 5.5+) makes async code read like sync code. The compiler handles the complexity.</p>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Never do network calls or heavy processing on the main thread. Always dispatch UI updates back to the main thread.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Data Persistence Options</h3>
+                <ul>
+                    <li><strong>UserDefaults:</strong> Key-value storage for small data (settings, preferences). Not secure.</li>
+                    <li><strong>Keychain:</strong> Secure storage for sensitive data (tokens, passwords). Encrypted.</li>
+                    <li><strong>Core Data:</strong> Apple's ORM framework. Object graph management with SQLite backend.</li>
+                    <li><strong>FileManager:</strong> Direct file system access. Good for documents, caches.</li>
+                    <li><strong>CloudKit:</strong> Apple's cloud storage. Syncs across user's devices.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ADVANCED LEVEL -->
+        <div class="level advanced">
+            <div class="level-header">
+                <span class="level-badge">🔴 ADVANCED</span>
+                <h2>Deep Knowledge</h2>
+            </div>
+
+            <div class="topic">
+                <h3>App Architecture Patterns</h3>
+                <p>Beyond MVC and MVVM, larger apps may use:</p>
+                <ul>
+                    <li><strong>VIPER:</strong> View, Interactor, Presenter, Entity, Router. Very modular, lots of files.</li>
+                    <li><strong>Clean Architecture:</strong> Layers with strict dependency rules. Domain logic isolated from frameworks.</li>
+                    <li><strong>Redux/Unidirectional:</strong> Single source of truth, state flows one way. Popular with SwiftUI.</li>
+                    <li><strong>Coordinator:</strong> Separates navigation logic from view controllers.</li>
+                </ul>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I choose architecture based on project size. MVVM for most apps, but I'd consider VIPER or Coordinators for large team projects where module separation matters."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>Dependency Injection</h3>
+                <p>Instead of objects creating their own dependencies, they receive them from outside. Benefits:</p>
+                <ul>
+                    <li><strong>Testability:</strong> Inject mock objects for unit testing</li>
+                    <li><strong>Flexibility:</strong> Swap implementations without changing code</li>
+                    <li><strong>Decoupling:</strong> Objects don't know concrete types of dependencies</li>
+                </ul>
+                <p>Can be done via initializer injection, property injection, or DI frameworks (Swinject, Resolver).</p>
+            </div>
+
+            <div class="topic">
+                <h3>Combine Framework</h3>
+                <p>Apple's reactive programming framework (iOS 13+). Handles async events as streams of values over time.</p>
+                <ul>
+                    <li><strong>Publishers:</strong> Emit values over time (like network responses, UI events)</li>
+                    <li><strong>Subscribers:</strong> Receive and react to values</li>
+                    <li><strong>Operators:</strong> Transform, filter, combine streams (map, filter, merge)</li>
+                </ul>
+                <p>Combine integrates tightly with SwiftUI's @Published and ObservableObject.</p>
+            </div>
+
+            <div class="topic">
+                <h3>Performance Optimisation</h3>
+                <p>Common performance issues and solutions:</p>
+                <ul>
+                    <li><strong>Table/Collection view cells:</strong> Reuse cells, prepare data off main thread, use estimated heights</li>
+                    <li><strong>Images:</strong> Resize before displaying, cache aggressively, use thumbnails for lists</li>
+                    <li><strong>Memory:</strong> Profile with Instruments, watch for leaks and abandoned memory</li>
+                    <li><strong>Launch time:</strong> Defer non-essential work, lazy load resources</li>
+                    <li><strong>Battery:</strong> Minimise location updates, batch network requests, reduce animations</li>
+                </ul>
+                <div class="key-point">
+                    <strong>💡 Key Point:</strong> Always profile before optimising. Instruments shows you where the actual bottlenecks are — don't guess.
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>App Security Best Practices</h3>
+                <ul>
+                    <li><strong>Keychain:</strong> Store sensitive data (tokens, credentials) in Keychain, never UserDefaults</li>
+                    <li><strong>Transport Security:</strong> Use HTTPS only. ATS (App Transport Security) enforces this by default.</li>
+                    <li><strong>Certificate Pinning:</strong> Verify server certificates to prevent MITM attacks</li>
+                    <li><strong>Jailbreak Detection:</strong> Detect compromised devices for sensitive apps</li>
+                    <li><strong>Code Obfuscation:</strong> Makes reverse engineering harder (not foolproof)</li>
+                    <li><strong>Biometric Auth:</strong> Use LocalAuthentication for Face ID / Touch ID</li>
+                </ul>
+            </div>
+
+            <div class="topic">
+                <h3>Testing Strategy</h3>
+                <ul>
+                    <li><strong>Unit Tests:</strong> Test individual functions/classes in isolation. Use mocks for dependencies.</li>
+                    <li><strong>Integration Tests:</strong> Test multiple components working together.</li>
+                    <li><strong>UI Tests:</strong> Automate user interactions using XCUITest.</li>
+                    <li><strong>Snapshot Tests:</strong> Capture UI screenshots, compare against baselines.</li>
+                </ul>
+                <p>Good test coverage focuses on business logic (ViewModels, services) rather than UI code which changes frequently.</p>
+                <div class="interview-tip">
+                    <strong>🎤 Interview:</strong> "I prioritise unit tests for business logic in ViewModels and services. For critical user flows, I add UI tests. I aim for meaningful coverage, not 100%."
+                </div>
+            </div>
+
+            <div class="topic">
+                <h3>CI/CD for iOS</h3>
+                <p>Continuous Integration / Continuous Deployment automates building, testing, and releasing:</p>
+                <ul>
+                    <li><strong>Xcode Cloud:</strong> Apple's native CI/CD, integrated with App Store Connect</li>
+                    <li><strong>Fastlane:</strong> Ruby-based automation toolkit. Handles signing, screenshots, deployment.</li>
+                    <li><strong>GitHub Actions / Bitrise / CircleCI:</strong> Generic CI platforms with iOS support</li>
+                </ul>
+                <p>Typical pipeline: Build → Run tests → Generate screenshots → Upload to TestFlight → Notify team</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

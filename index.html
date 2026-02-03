@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Prep - Daffodil IT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; font-size: 1.1rem; margin-bottom: 40px; }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,217,255,0.1);
+        }
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h2 .emoji { font-size: 1.6rem; }
+        .schedule {
+            display: grid;
+            gap: 15px;
+        }
+        .day {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+        }
+        .day-name {
+            font-weight: 600;
+            color: #00d9ff;
+        }
+        .day-tasks { color: #ccc; }
+        .day-tasks ul { list-style: none; }
+        .day-tasks li { padding: 5px 0; padding-left: 25px; position: relative; }
+        .day-tasks li::before {
+            content: '○';
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .link-card {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s;
+        }
+        .link-card:hover {
+            background: rgba(0,217,255,0.1);
+            border-color: #00d9ff;
+        }
+        .link-card h3 { margin-bottom: 8px; font-size: 1.1rem; }
+        .link-card p { color: #888; font-size: 0.9rem; }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .badge-java { background: #f89820; color: #000; }
+        .badge-swift { background: #ff5722; color: #fff; }
+        .badge-interview { background: #00d9ff; color: #000; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: #888; font-size: 0.85rem; margin-top: 5px; }
+        .interview-info {
+            background: linear-gradient(135deg, rgba(0,217,255,0.1), rgba(0,255,136,0.1));
+            border: 1px solid rgba(0,217,255,0.3);
+        }
+        .phases { margin-top: 20px; }
+        .phase {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .phase:last-child { border-bottom: none; }
+        .phase-num {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00d9ff, #00ff88);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+        }
+        .bring-list { margin-top: 15px; }
+        .bring-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #ccc;
+        }
+        .bring-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Interview Prep Pack</h1>
+        <p class="subtitle">Daffodil IT — Mobile App Developer</p>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">Thu</div>
+                <div class="stat-label">Interview Day</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">£37k</div>
+                <div class="stat-label">Top Salary</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">7</div>
+                <div class="stat-label">Years Exp</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Days to Prep</div>
+            </div>
+        </div>
+
+        <div class="card interview-info">
+            <h2><span class="emoji">🎯</span> Interview Structure</h2>
+            <div class="phases">
+                <div class="phase">
+                    <div class="phase-num">1</div>
+                    <div><strong>Face-to-face discussion</strong> — Your experience, projects, approach</div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">2</div>
+                    <div><strong>Personality profile exam</strong> — Be consistent, be yourself</div>
+                </div>
+                <div class="phase">
+                    <div class="phase-num">3</div>
+                    <div><strong>App development test</strong> — Likely a coding task</div>
+                </div>
+            </div>
+            <ul class="bring-list">
+                <li>Portfolio (apps you've built)</li>
+                <li>Certifications</li>
+                <li>Questions to ask them</li>
+                <li>Confidence 😎</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">📅</span> 4-Day Prep Plan</h2>
+            <div class="schedule">
+                <div class="day">
+                    <div class="day-name">Sunday<br><small>Tonight</small></div>
+                    <div class="day-tasks">
+                        <ul>
+                            <li>Read Java ↔ Kotlin comparison</li>
+                            <li>Skim Android Java essentials</li>
+                            <li>Read interview questions</li>
+                            <li>Get good sleep 😴</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="day">
+                    <div class="day-name">Monday<br><small>Feb 3</small></div>
+                    <div class="day-tasks">
+                        <ul>
+                            <li>Mini Project 1: Java basics</li>
+                            <li>Mini Project 2: Android API app</li>
+                            <li>Practice explaining MVVM</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="day">
+                    <div class="day-name">Tuesday<br><small>Feb 4</small></div>
+                    <div class="day-tasks">
+                        <ul>
+                            <li>Review iOS/Swift essentials</li>
+                            <li>Mini Project 3: iOS API app</li>
+                            <li>Mock interview with Milo</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="day">
+                    <div class="day-name">Wednesday<br><small>Feb 5</small></div>
+                    <div class="day-tasks">
+                        <ul>
+                            <li>Quick cheat sheet review</li>
+                            <li>Prepare portfolio</li>
+                            <li>Gather certifications</li>
+                            <li>Early night! 😴</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="background: linear-gradient(135deg, rgba(0,217,255,0.15), rgba(0,255,136,0.15)); border-color: rgba(0,255,136,0.3);">
+            <h2><span class="emoji">📝</span> Test Yourself</h2>
+            <p style="color: #ccc; margin-bottom: 20px;">20 questions covering iOS, Android, and general mobile architecture. Randomised each time.</p>
+            <a href="quiz.html" style="display: inline-block; padding: 16px 40px; background: linear-gradient(90deg, #00d9ff, #00ff88); color: #000; text-decoration: none; border-radius: 12px; font-weight: 600;">Start Quiz →</a>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">📚</span> Cheat Sheets</h2>
+            <div class="links">
+                <a href="cheatsheets/00-iOS-Reading-Guide.html" class="link-card">
+                    <h3><span class="badge badge-swift">Anytime</span> iOS Reading Guide</h3>
+                    <p>Basic → Intermediate → Advanced concepts (no code)</p>
+                </a>
+                <a href="cheatsheets/00-Android-Reading-Guide.html" class="link-card">
+                    <h3><span class="badge badge-java">Anytime</span> Android Reading Guide</h3>
+                    <p>Basic → Intermediate → Advanced concepts (no code)</p>
+                </a>
+                <a href="cheatsheets/01-Sun-Java-vs-Kotlin.html" class="link-card">
+                    <h3><span class="badge badge-java">Sunday</span> Java ↔ Kotlin</h3>
+                    <p>Side-by-side syntax comparison</p>
+                </a>
+                <a href="cheatsheets/02-Sun-Android-Essentials.html" class="link-card">
+                    <h3><span class="badge badge-java">Sunday</span> Android Essentials</h3>
+                    <p>Lifecycle, RecyclerView, Retrofit, MVVM</p>
+                </a>
+                <a href="cheatsheets/03-Sun-Interview-Questions.html" class="link-card">
+                    <h3><span class="badge badge-interview">Sunday</span> Interview Questions</h3>
+                    <p>Common questions, STAR method, what to ask</p>
+                </a>
+                <a href="cheatsheets/04-Tue-iOS-Essentials.html" class="link-card">
+                    <h3><span class="badge badge-swift">Tuesday</span> iOS Essentials</h3>
+                    <p>URLSession, Codable, SwiftUI, UIKit</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">🛠️</span> Mini Projects</h2>
+            <div class="links">
+                <a href="mini-projects/05-Mon-Java-Basics-Project.html" class="link-card">
+                    <h3>Monday — Java Basics</h3>
+                    <p>Warm-up exercises: classes, collections, lambdas</p>
+                </a>
+                <a href="mini-projects/06-Mon-Android-API-Project.html" class="link-card">
+                    <h3>Monday — Android API List</h3>
+                    <p>Full app: Retrofit → RecyclerView → Detail</p>
+                </a>
+                <a href="mini-projects/07-Tue-iOS-API-Project.html" class="link-card">
+                    <h3>Tuesday — iOS API List</h3>
+                    <p>Same app in SwiftUI & UIKit</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="emoji">💪</span> Confidence Boosters</h2>
+            <p style="color: #ccc; line-height: 1.8;">
+                ✅ <strong>7 years</strong> industry experience<br>
+                ✅ <strong>Shipped multiple apps</strong> (Swift + Jetpack)<br>
+                ✅ <strong>Real production experience</strong><br>
+                ✅ <strong>Problem-solving instincts</strong> you can't teach<br><br>
+                <em style="color: #00d9ff;">Everyone Googles syntax — that's normal. They want to see HOW you think, not memorised APIs.</em>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
