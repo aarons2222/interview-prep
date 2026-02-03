@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strengths & Weaknesses Matrix</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .back {
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+        .back:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #00d9ff;
+        }
+        h1 { 
+            font-size: 2rem; 
+            margin-bottom: 10px; 
+            text-align: center;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 600px) {
+            .summary-cards { grid-template-columns: 1fr; }
+        }
+        .summary-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .summary-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .summary-card .label { color: #888; }
+        .summary-card.ios .value { color: #FF5722; }
+        .summary-card.android .value { color: #4CAF50; }
+        .summary-card.general .value { color: #00d9ff; }
+        
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .topic-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .topic-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 80px;
+            gap: 15px;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+        .topic-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topic-tag {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .topic-tag.ios { background: #FF5722; }
+        .topic-tag.android { background: #4CAF50; }
+        .topic-tag.general { background: #00d9ff; }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            height: 12px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .progress-fill.excellent { background: linear-gradient(90deg, #00ff88, #00d9ff); }
+        .progress-fill.good { background: #FF9800; }
+        .progress-fill.needs-work { background: #ff4444; }
+        
+        .topic-score {
+            text-align: right;
+            font-weight: 600;
+        }
+        .topic-score.excellent { color: #00ff88; }
+        .topic-score.good { color: #FF9800; }
+        .topic-score.needs-work { color: #ff4444; }
+        
+        .missed-questions {
+            margin-top: 15px;
+        }
+        .missed-item {
+            background: rgba(255,68,68,0.1);
+            border-left: 3px solid #ff4444;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+        .missed-item .question { margin-bottom: 8px; }
+        .missed-item .answer {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .missed-item .correct-answer {
+            color: #00ff88;
+            margin-top: 5px;
+        }
+        
+        .recommendations {
+            margin-top: 25px;
+        }
+        .rec-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0,217,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .rec-item .icon {
+            font-size: 1.5rem;
+        }
+        .rec-item .text {
+            flex: 1;
+        }
+        .rec-item a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+        .rec-item a:hover { text-decoration: underline; }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        .no-data h2 { color: #fff; margin-bottom: 15px; }
+        .no-data a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 16px 40px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .action-btn {
+            padding: 16px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .action-btn.primary {
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            color: #000;
+        }
+        .action-btn.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="quiz.html" class="back">✕</a>
+        <h1>📊 Strengths & Weaknesses</h1>
+        <p class="subtitle">Based on your quiz results</p>
+        
+        <div id="content">
+            <!-- Loaded by JS -->
+        </div>
+    </div>
+
+    <script>
+        function loadMatrix() {
+            const results = JSON.parse(localStorage.getItem('lastQuizResults') || '[]');
+            const container = document.getElementById('content');
+            
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h2>No quiz data yet</h2>
+                        <p>Complete the quiz first to see your strengths and weaknesses.</p>
+                        <a href="quiz.html">Take the Quiz</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calculate stats by platform
+            const platforms = { ios: { correct: 0, total: 0 }, android: { correct: 0, total: 0 }, general: { correct: 0, total: 0 } };
+            const topics = {};
+            const missed = [];
+            
+            results.forEach(r => {
+                platforms[r.tag].total++;
+                if (r.correct) platforms[r.tag].correct++;
+                
+                const key = `${r.tag}-${r.topic}`;
+                if (!topics[key]) {
+                    topics[key] = { tag: r.tag, topic: r.topic, correct: 0, total: 0 };
+                }
+                topics[key].total++;
+                if (r.correct) {
+                    topics[key].correct++;
+                } else {
+                    missed.push(r);
+                }
+            });
+            
+            // Calculate percentages
+            const iosPercent = platforms.ios.total ? Math.round((platforms.ios.correct / platforms.ios.total) * 100) : 0;
+            const androidPercent = platforms.android.total ? Math.round((platforms.android.correct / platforms.android.total) * 100) : 0;
+            const generalPercent = platforms.general.total ? Math.round((platforms.general.correct / platforms.general.total) * 100) : 0;
+            
+            // Sort topics by score (weakest first)
+            const topicArray = Object.values(topics).map(t => ({
+                ...t,
+                percent: Math.round((t.correct / t.total) * 100)
+            })).sort((a, b) => a.percent - b.percent);
+            
+            // Find weak topics
+            const weakTopics = topicArray.filter(t => t.percent < 70);
+            const strongTopics = topicArray.filter(t => t.percent >= 80);
+            
+            // Generate recommendations
+            const recommendations = [];
+            if (iosPercent < 70) {
+                recommendations.push({ icon: '🍎', text: 'Review the <a href="cheatsheets/00-iOS-Reading-Guide.html">iOS Reading Guide</a> — focus on fundamentals' });
+            }
+            if (androidPercent < 70) {
+                recommendations.push({ icon: '🤖', text: 'Review the <a href="cheatsheets/00-Android-Reading-Guide.html">Android Reading Guide</a> — focus on core concepts' });
+            }
+            weakTopics.forEach(t => {
+                if (t.topic === 'Memory') {
+                    recommendations.push({ icon: '🧠', text: `Focus on <strong>${t.topic}</strong> — ARC, retain cycles, weak/unowned references` });
+                } else if (t.topic === 'Lifecycle') {
+                    recommendations.push({ icon: '🔄', text: `Review <strong>${t.topic}</strong> — understand state transitions and when methods are called` });
+                } else if (t.topic === 'Concurrency') {
+                    recommendations.push({ icon: '⚡', text: `Study <strong>${t.topic}</strong> — GCD, Coroutines, threading rules` });
+                } else if (t.topic === 'Architecture') {
+                    recommendations.push({ icon: '🏗️', text: `Deep dive into <strong>${t.topic}</strong> — MVVM, Clean Architecture, separation of concerns` });
+                }
+            });
+            if (recommendations.length === 0) {
+                recommendations.push({ icon: '🎯', text: 'Great job! Keep practicing to maintain your knowledge.' });
+            }
+            
+            container.innerHTML = `
+                <div class="summary-cards">
+                    <div class="summary-card ios">
+                        <div class="value">${iosPercent}%</div>
+                        <div class="label">iOS (${platforms.ios.correct}/${platforms.ios.total})</div>
+                    </div>
+                    <div class="summary-card android">
+                        <div class="value">${androidPercent}%</div>
+                        <div class="label">Android (${platforms.android.correct}/${platforms.android.total})</div>
+                    </div>
+                    <div class="summary-card general">
+                        <div class="value">${generalPercent}%</div>
+                        <div class="label">General (${platforms.general.correct}/${platforms.general.total})</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>📈 Performance by Topic</h2>
+                    <div class="topic-grid">
+                        ${topicArray.map(t => {
+                            const scoreClass = t.percent >= 80 ? 'excellent' : t.percent >= 50 ? 'good' : 'needs-work';
+                            return `
+                                <div class="topic-row">
+                                    <div class="topic-name">
+                                        <span class="topic-tag ${t.tag}"></span>
+                                        ${t.topic}
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill ${scoreClass}" style="width: ${t.percent}%"></div>
+                                    </div>
+                                    <div class="topic-score ${scoreClass}">${t.percent}%</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                ${weakTopics.length > 0 ? `
+                <div class="section" style="border-color: rgba(255,68,68,0.3);">
+                    <h2>⚠️ Areas Needing Work</h2>
+                    <p style="color: #888; margin-bottom: 15px;">These topics scored below 70% — focus your study here:</p>
+                    <div class="topic-grid">
+                        ${weakTopics.map(t => `
+                            <div class="topic-row" style="background: rgba(255,68,68,0.1);">
+                                <div class="topic-name">
+                                    <span class="topic-tag ${t.tag}"></span>
+                                    ${t.topic}
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill needs-work" style="width: ${t.percent}%"></div>
+                                </div>
+                                <div class="topic-score needs-work">${t.correct}/${t.total}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${strongTopics.length > 0 ? `
+                <div class="section" style="border-color: rgba(0,255,136,0.3);">
+                    <h2>💪 Your Strengths</h2>
+                    <p style="color: #888; margin-bottom: 15px;">These topics scored 80%+ — you've got these down:</p>
+                    <div class="topic-grid">
+                        ${strongTopics.map(t => `
+                            <div class="topic-row" style="background: rgba(0,255,136,0.1);">
+                                <div class="topic-name">
+                                    <span class="topic-tag ${t.tag}"></span>
+                                    ${t.topic}
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill excellent" style="width: ${t.percent}%"></div>
+                                </div>
+                                <div class="topic-score excellent">${t.correct}/${t.total}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${missed.length > 0 ? `
+                <div class="section">
+                    <h2>❌ Questions You Missed (${missed.length})</h2>
+                    <div class="missed-questions">
+                        ${missed.map(m => `
+                            <div class="missed-item">
+                                <div class="question"><strong>${m.tag.toUpperCase()} — ${m.topic}:</strong> ${m.question}</div>
+                                <div class="answer">Your answer: ${m.userAnswer}</div>
+                                <div class="correct-answer">✓ Correct: ${m.correctAnswer}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="section">
+                    <h2>📋 Recommendations</h2>
+                    <div class="recommendations">
+                        ${recommendations.map(r => `
+                            <div class="rec-item">
+                                <span class="icon">${r.icon}</span>
+                                <span class="text">${r.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="quiz.html" class="action-btn primary">Retake Quiz</a>
+                    <a href="index.html" class="action-btn secondary">Back to Prep</a>
+                </div>
+            `;
+        }
+        
+        loadMatrix();
+    </script>
+</body>
+</html>
