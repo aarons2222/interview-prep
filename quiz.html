@@ -41,7 +41,19 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .subtitle { color: #888; margin-bottom: 30px; text-align: center; }
+        .subtitle { color: #888; margin-bottom: 20px; text-align: center; }
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: #888;
+        }
+        .stats-bar strong { color: #00ff88; }
         
         .progress-bar {
             background: rgba(255,255,255,0.1);
@@ -281,6 +293,11 @@
         <a href="index.html" class="back">✕</a>
         <h1>📝 Interview Quiz</h1>
         <p class="subtitle">20 random questions from 400+ question bank</p>
+        
+        <div class="stats-bar" id="statsBar">
+            <span>🏆 Quizzes completed: <strong id="quizCount">0</strong></span>
+            <span>📊 Best score: <strong id="bestScore">-</strong></span>
+        </div>
         
         <div class="progress-bar">
             <div class="progress-fill" id="progress"></div>
@@ -825,6 +842,7 @@
             document.getElementById('totalQ').textContent = QUESTIONS_PER_ROUND;
             document.getElementById('bankInfo').textContent = `Question bank: ${questionBank.length} questions`;
             results = [];
+            updateStats();
             showQuestion();
         }
 
@@ -993,6 +1011,26 @@
             if (history.length > 10) history.pop();
             localStorage.setItem('quizHistory', JSON.stringify(history));
             localStorage.setItem('lastQuizResults', JSON.stringify(results));
+            
+            // Update quiz count
+            const quizCount = parseInt(localStorage.getItem('quizCount') || '0') + 1;
+            localStorage.setItem('quizCount', quizCount.toString());
+            
+            // Update best score
+            const bestScore = parseInt(localStorage.getItem('bestScore') || '0');
+            if (percentage > bestScore) {
+                localStorage.setItem('bestScore', percentage.toString());
+            }
+            
+            // Update display
+            updateStats();
+        }
+        
+        function updateStats() {
+            const quizCount = localStorage.getItem('quizCount') || '0';
+            const bestScore = localStorage.getItem('bestScore');
+            document.getElementById('quizCount').textContent = quizCount;
+            document.getElementById('bestScore').textContent = bestScore ? bestScore + '%' : '-';
         }
         
         function displayHistory() {
