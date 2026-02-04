@@ -1470,27 +1470,249 @@ GET    /users/123/posts → Get posts by user 123</code></pre>
 
             <h2>Git Essentials</h2>
             
-            <h3>Key Commands</h3>
+            <p>Git is the industry standard for version control. Every mobile developer needs to be comfortable with branching, merging, and resolving conflicts.</p>
+            
+            <h3>Core Concepts</h3>
             <table>
-                <tr><td><code>git pull</code></td><td>Fetch + merge remote</td></tr>
-                <tr><td><code>git fetch</code></td><td>Download remote (don't merge)</td></tr>
-                <tr><td><code>git stash</code></td><td>Save uncommitted changes</td></tr>
+                <tr><th>Term</th><th>Meaning</th></tr>
+                <tr><td><span class="key">Repository</span></td><td>Project folder tracked by Git</td></tr>
+                <tr><td><span class="key">Commit</span></td><td>Snapshot of changes with message</td></tr>
+                <tr><td><span class="key">Branch</span></td><td>Independent line of development</td></tr>
+                <tr><td><span class="key">HEAD</span></td><td>Pointer to current commit/branch</td></tr>
+                <tr><td><span class="key">Remote</span></td><td>Server copy (GitHub, GitLab, Bitbucket)</td></tr>
+                <tr><td><span class="key">Origin</span></td><td>Default name for remote repository</td></tr>
+            </table>
+
+            <h3>Essential Commands</h3>
+            <table>
+                <tr><td><code>git clone URL</code></td><td>Download repository</td></tr>
+                <tr><td><code>git status</code></td><td>Show changed files</td></tr>
+                <tr><td><code>git add .</code></td><td>Stage all changes</td></tr>
+                <tr><td><code>git commit -m "msg"</code></td><td>Commit staged changes</td></tr>
+                <tr><td><code>git push</code></td><td>Upload commits to remote</td></tr>
+                <tr><td><code>git pull</code></td><td>Download + merge remote changes</td></tr>
+                <tr><td><code>git fetch</code></td><td>Download without merging</td></tr>
+                <tr><td><code>git branch name</code></td><td>Create new branch</td></tr>
+                <tr><td><code>git checkout name</code></td><td>Switch to branch</td></tr>
+                <tr><td><code>git checkout -b name</code></td><td>Create and switch to branch</td></tr>
+                <tr><td><code>git stash</code></td><td>Save uncommitted changes temporarily</td></tr>
                 <tr><td><code>git stash pop</code></td><td>Restore stashed changes</td></tr>
-                <tr><td><code>git rebase main</code></td><td>Replay commits on main</td></tr>
-                <tr><td><code>git cherry-pick SHA</code></td><td>Copy specific commit</td></tr>
             </table>
 
             <h3>Merge vs Rebase</h3>
-            <p><strong>Merge:</strong> Creates merge commit, preserves history</p>
-            <p><strong>Rebase:</strong> Replays commits, creates linear history</p>
+            
+            <h4>Merge</h4>
+            <p>Combines branches with a <strong>merge commit</strong>. Preserves complete history.</p>
+            <pre><code>git checkout main
+git merge feature-branch
+# Creates a merge commit combining both branches</code></pre>
+            
+            <h4>Rebase</h4>
+            <p>Replays your commits on top of another branch. Creates <strong>linear history</strong>.</p>
+            <pre><code>git checkout feature-branch
+git rebase main
+# Your commits are now on top of main's latest</code></pre>
+            
             <div class="warning">
-                <strong>⚠️ Never rebase shared commits.</strong> Rebase rewrites history — only use on local branches.
+                <strong>⚠️ Golden Rule of Rebase:</strong> Never rebase commits that have been pushed and shared with others. Rebase rewrites history — if others have those commits, you'll cause conflicts.
+            </div>
+            
+            <div class="tip">
+                <strong>When to use which:</strong> Use merge for shared branches (main, develop). Use rebase for local feature branches before merging to keep history clean.
             </div>
 
             <h3>Undoing Things</h3>
-            <pre><code>git reset --soft HEAD~1   // Undo commit, keep staged
-git reset --hard HEAD~1   // Undo commit, discard changes
-git revert SHA            // Create new commit that undoes (safe)</code></pre>
+            <pre><code># Undo staged file (before commit)
+git reset HEAD file.txt
+
+# Undo uncommitted changes to file
+git checkout -- file.txt
+
+# Undo last commit, keep changes staged
+git reset --soft HEAD~1
+
+# Undo last commit, keep changes unstaged
+git reset HEAD~1
+
+# Undo last commit, DISCARD changes (dangerous!)
+git reset --hard HEAD~1
+
+# Undo a pushed commit (safe - creates new commit)
+git revert SHA</code></pre>
+            
+            <div class="highlight">
+                <strong>reset vs revert:</strong><br>
+                <strong>reset</strong> = rewrites history (dangerous for shared branches)<br>
+                <strong>revert</strong> = creates new commit that undoes (safe for shared branches)
+            </div>
+
+            <h3>Branching Strategies</h3>
+            
+            <h4>Feature Branch Workflow</h4>
+            <p>Simple and widely used:</p>
+            <ul>
+                <li>Create branch for each feature: <code>feature/login-screen</code></li>
+                <li>Work on branch, commit regularly</li>
+                <li>Open Pull Request when ready</li>
+                <li>Code review, then merge to main</li>
+            </ul>
+            
+            <h4>GitFlow</h4>
+            <p>More structured, good for release cycles:</p>
+            <ul>
+                <li><code>main</code> — Production releases only</li>
+                <li><code>develop</code> — Integration branch</li>
+                <li><code>feature/*</code> — New features (branch from develop)</li>
+                <li><code>release/*</code> — Release preparation</li>
+                <li><code>hotfix/*</code> — Emergency production fixes</li>
+            </ul>
+
+            <h3>Resolving Conflicts</h3>
+            <p>Conflicts happen when two branches change the same lines:</p>
+            <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+your changes
+=======
+their changes
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-branch</code></pre>
+            <p>To resolve: Edit file to keep correct code, remove markers, then <code>git add</code> and <code>git commit</code>.</p>
+
+            <h2>CI/CD Pipelines</h2>
+            
+            <p>CI/CD automates building, testing, and deploying your app. Essential for professional mobile development.</p>
+            
+            <h3>What is CI/CD?</h3>
+            <table>
+                <tr><th>Term</th><th>Meaning</th></tr>
+                <tr><td><span class="key">CI</span> (Continuous Integration)</td><td>Automatically build and test on every commit</td></tr>
+                <tr><td><span class="key">CD</span> (Continuous Delivery)</td><td>Automatically prepare releases (deploy with approval)</td></tr>
+                <tr><td><span class="key">CD</span> (Continuous Deployment)</td><td>Automatically deploy to production</td></tr>
+            </table>
+
+            <h3>Why CI/CD Matters</h3>
+            <ul>
+                <li><strong>Catch bugs early</strong> — Tests run on every commit</li>
+                <li><strong>Consistent builds</strong> — Same environment every time</li>
+                <li><strong>Faster releases</strong> — Automated, not manual</li>
+                <li><strong>Team confidence</strong> — Know if code breaks something</li>
+            </ul>
+
+            <h3>Typical Mobile CI/CD Pipeline</h3>
+            <div class="diagram">
+                <strong>Push Code</strong> →
+                <strong>Build</strong> →
+                <strong>Unit Tests</strong> →
+                <strong>UI Tests</strong> →
+                <strong>Code Analysis</strong> →
+                <strong>Build APK/IPA</strong> →
+                <strong>Deploy to TestFlight/Firebase</strong>
+            </div>
+
+            <h3>Popular CI/CD Tools</h3>
+            <table>
+                <tr><th>Tool</th><th>Notes</th></tr>
+                <tr><td><span class="key">GitHub Actions</span></td><td>Built into GitHub, YAML config, free tier</td></tr>
+                <tr><td><span class="key">Bitrise</span></td><td>Mobile-focused, visual workflow builder</td></tr>
+                <tr><td><span class="key">CircleCI</span></td><td>Fast, good parallelization</td></tr>
+                <tr><td><span class="key">Jenkins</span></td><td>Self-hosted, highly customizable</td></tr>
+                <tr><td><span class="key">Fastlane</span></td><td>Mobile automation (screenshots, signing, deploy)</td></tr>
+                <tr><td><span class="key">GitLab CI</span></td><td>Built into GitLab, YAML config</td></tr>
+            </table>
+
+            <h3>GitHub Actions Example</h3>
+            <pre><code># .github/workflows/android.yml
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+    
+    - name: Build with Gradle
+      run: ./gradlew build
+    
+    - name: Run tests
+      run: ./gradlew test
+    
+    - name: Build APK
+      run: ./gradlew assembleDebug
+    
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/</code></pre>
+
+            <h3>iOS CI/CD with Fastlane</h3>
+            <pre><code># Fastfile
+default_platform(:ios)
+
+platform :ios do
+  desc "Run tests"
+  lane :test do
+    run_tests(scheme: "MyApp")
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    increment_build_number
+    build_app(scheme: "MyApp")
+    upload_to_testflight
+  end
+
+  desc "Deploy to App Store"
+  lane :release do
+    build_app(scheme: "MyApp")
+    upload_to_app_store
+  end
+end</code></pre>
+
+            <h3>Code Signing in CI/CD</h3>
+            <p>Mobile apps need signing certificates. In CI/CD:</p>
+            
+            <h4>Android</h4>
+            <ul>
+                <li>Store keystore file securely (encrypted secrets)</li>
+                <li>Pass signing config via environment variables</li>
+                <li>Never commit keystores to repo</li>
+            </ul>
+            
+            <h4>iOS</h4>
+            <ul>
+                <li>Use <strong>Fastlane Match</strong> to manage certificates</li>
+                <li>Certificates stored in private Git repo or cloud</li>
+                <li>Provisioning profiles synced automatically</li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <div class="tip">
+                <strong>1. Fast feedback</strong> — Run quick tests first, slow tests later
+            </div>
+            <div class="tip">
+                <strong>2. Fail fast</strong> — Stop pipeline on first failure
+            </div>
+            <div class="tip">
+                <strong>3. Cache dependencies</strong> — Don't re-download every build
+            </div>
+            <div class="tip">
+                <strong>4. Separate environments</strong> — Dev, staging, production
+            </div>
+            <div class="tip">
+                <strong>5. Secure secrets</strong> — Never hardcode keys, use CI secrets
+            </div>
         </div>
 
         <!-- ==================== Q&A ==================== -->
