@@ -1377,6 +1377,341 @@ git revert SHA            // Create new commit that undoes (safe)</code></pre>
                 </div></div>
             </div>
 
+            <h2>🤖 More Android Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What's the difference between implicit and explicit intents?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Explicit:</strong> You specify the exact component (class name).</p>
+                    <pre><code>new Intent(this, DetailActivity.class)</code></pre>
+                    <p><strong>Implicit:</strong> You declare an action, system finds a matching handler.</p>
+                    <pre><code>new Intent(Intent.ACTION_VIEW, Uri.parse("https://..."))</code></pre>
+                    <p>Explicit = internal navigation. Implicit = system features (camera, share, browser).</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is a ContentProvider and when would you use one?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>A ContentProvider manages <strong>shared app data</strong>. Standard way to share data between applications.</p>
+                    <ul>
+                        <li>Expose your app's data to other apps</li>
+                        <li>Access system data (Contacts, MediaStore, Calendar)</li>
+                        <li>Abstract data source from the rest of your app</li>
+                    </ul>
+                    <p>Access via ContentResolver using URIs like <code>content://com.example.provider/items</code></p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between Service, IntentService, and JobScheduler?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Service:</strong> Runs on main thread by default. You manage threading.</p>
+                    <p><strong>IntentService:</strong> (Deprecated) Runs on background thread, auto-stops when done.</p>
+                    <p><strong>JobScheduler:</strong> System-managed, battery-efficient. Schedule work with constraints (network, charging).</p>
+                    <p>Modern approach: Use <strong>WorkManager</strong> — handles backward compatibility and constraints.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain the Android build process</div>
+                <div class="answer"><div class="answer-content">
+                    <ol>
+                        <li><strong>Compile</strong> — Java/Kotlin → bytecode</li>
+                        <li><strong>DEX</strong> — Bytecode → Dalvik Executable</li>
+                        <li><strong>Package</strong> — DEX + resources → APK</li>
+                        <li><strong>Sign</strong> — APK signed with keystore</li>
+                        <li><strong>Align</strong> — zipalign for optimization</li>
+                    </ol>
+                    <p>Gradle orchestrates all of this. Debug vs Release builds have different signing.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is ProGuard/R8 and why use it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Code shrinking and obfuscation</strong> for release builds.</p>
+                    <ul>
+                        <li><strong>Shrink:</strong> Remove unused code and resources</li>
+                        <li><strong>Obfuscate:</strong> Rename classes/methods to short names</li>
+                        <li><strong>Optimize:</strong> Inline methods, remove dead code</li>
+                    </ul>
+                    <p>R8 is the newer, faster replacement for ProGuard. Enabled by default in Android Gradle Plugin 3.4+.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between View.GONE and View.INVISIBLE?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>INVISIBLE:</strong> View is hidden but still takes up space in layout.</p>
+                    <p><strong>GONE:</strong> View is hidden and takes up no space (as if it doesn't exist).</p>
+                    <p>Use GONE when you want layout to reflow. Use INVISIBLE to hide but preserve layout.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you handle configuration changes?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Configuration changes (rotation, locale, screen size) destroy and recreate Activity by default.</p>
+                    <p><strong>Options:</strong></p>
+                    <ul>
+                        <li><strong>ViewModel:</strong> Survives config changes automatically (recommended)</li>
+                        <li><strong>onSaveInstanceState:</strong> Save small UI state to Bundle</li>
+                        <li><strong>android:configChanges:</strong> Handle manually (not recommended)</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is ANR and how do you prevent it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Application Not Responding</strong> — dialog shown when main thread is blocked too long.</p>
+                    <ul>
+                        <li>Input event not processed within 5 seconds</li>
+                        <li>BroadcastReceiver not finished in 10 seconds</li>
+                    </ul>
+                    <p><strong>Prevention:</strong> Never do heavy work on main thread. Use background threads for network, database, file I/O.</p>
+                </div></div>
+            </div>
+
+            <h2>🍎 More iOS Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What are the differences between let and var?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>let:</strong> Constant — value cannot be changed after assignment.</p>
+                    <p><strong>var:</strong> Variable — value can be changed.</p>
+                    <p>Best practice: Use <code>let</code> by default. Only use <code>var</code> when you need to mutate.</p>
+                    <p>For classes, <code>let</code> means you can't reassign the reference, but you CAN modify the object's properties.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is @escaping and when do you use it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>@escaping</strong> marks a closure that outlives the function it's passed to.</p>
+                    <pre><code>func fetchData(completion: @escaping (Data) -> Void) {
+    // completion will be called AFTER function returns
+    DispatchQueue.global().async {
+        let data = loadData()
+        completion(data)  // Called later
+    }
+}</code></pre>
+                    <p>Required for: async callbacks, stored closures, delayed execution.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is a computed property vs stored property?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Stored:</strong> Holds a value in memory.</p>
+                    <pre><code>var name: String = "John"</code></pre>
+                    <p><strong>Computed:</strong> Calculates value each time it's accessed.</p>
+                    <pre><code>var fullName: String {
+    return "\(firstName) \(lastName)"
+}</code></pre>
+                    <p>Use computed for derived values. Can have getter and setter.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between Any and AnyObject?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Any:</strong> Can represent any type (class, struct, enum, function, etc.)</p>
+                    <p><strong>AnyObject:</strong> Can only represent class instances (reference types).</p>
+                    <p>Use <code>Any</code> when you need to store mixed types. Use <code>AnyObject</code> for class-only constraints.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain the responder chain</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Events (touches, presses) travel up the <strong>responder chain</strong> until handled.</p>
+                    <p>Chain: View → Superview → ... → ViewController → Window → Application</p>
+                    <p>Each responder can handle the event or pass it up via <code>next</code> responder.</p>
+                    <p>Used for: touch handling, menu actions, keyboard input.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is KVO (Key-Value Observing)?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Mechanism to observe changes to an object's properties.</p>
+                    <pre><code>observation = object.observe(\.property) { obj, change in
+    print("Property changed to \(obj.property)")
+}</code></pre>
+                    <p>Property must be marked <code>@objc dynamic</code>. Modern alternative: Combine framework.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is method swizzling?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Runtime technique to swap method implementations. Used for:</p>
+                    <ul>
+                        <li>Analytics — intercept viewDidAppear</li>
+                        <li>Debugging — add logging to framework methods</li>
+                        <li>Patching bugs in frameworks</li>
+                    </ul>
+                    <p>⚠️ Use sparingly — can cause hard-to-debug issues. Not possible with Swift-only code.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What are property wrappers?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Custom attributes that add behavior to properties.</p>
+                    <pre><code>@State var count = 0        // SwiftUI state
+@Published var name = ""    // Combine publisher
+@AppStorage("key") var x    // UserDefaults backed</code></pre>
+                    <p>You can create custom ones with <code>@propertyWrapper</code> for validation, transformation, etc.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is Core Data and when would you use it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Apple's <strong>object graph and persistence framework</strong>. Not just a database — manages object relationships.</p>
+                    <ul>
+                        <li>Complex data with relationships</li>
+                        <li>Undo/redo support</li>
+                        <li>iCloud sync</li>
+                        <li>Lazy loading, faulting</li>
+                    </ul>
+                    <p>For simple key-value: UserDefaults. For simple tables: SQLite/Realm. For complex object graphs: Core Data.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain App Transport Security (ATS)</div>
+                <div class="answer"><div class="answer-content">
+                    <p>iOS feature requiring <strong>HTTPS</strong> for all network connections by default.</p>
+                    <p>Enforces: TLS 1.2+, forward secrecy, valid certificates.</p>
+                    <p>Can add exceptions in Info.plist for specific domains, but Apple discourages this for App Store apps.</p>
+                </div></div>
+            </div>
+
+            <h2>🌐 More General Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What is dependency injection and why use it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Pass dependencies in from outside instead of creating them inside.</p>
+                    <pre><code>// Instead of: let api = APIClient()
+// Do: init(api: APIClient) { self.api = api }</code></pre>
+                    <p><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Testability — inject mocks for testing</li>
+                        <li>Flexibility — swap implementations easily</li>
+                        <li>Decoupling — class doesn't know concrete types</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain MVVM architecture</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Model:</strong> Data and business logic</p>
+                    <p><strong>View:</strong> UI layer (dumb)</p>
+                    <p><strong>ViewModel:</strong> Prepares data for display, handles UI logic</p>
+                    <p>View observes ViewModel. ViewModel doesn't know about View. Benefits: testable, separated concerns.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you debug a crash?</div>
+                <div class="answer"><div class="answer-content">
+                    <ol>
+                        <li>Read the stack trace — find your code</li>
+                        <li>Reproduce — can you make it crash again?</li>
+                        <li>Check obvious: nil/null, index bounds, threading</li>
+                        <li>Add logging to narrow down location</li>
+                        <li>Use debugger — breakpoints, step through</li>
+                        <li>Check recent changes — git diff</li>
+                    </ol>
+                    <p>Mention tools: Firebase Crashlytics, Sentry.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between authentication and authorization?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Authentication:</strong> Verifying WHO you are (login, credentials).</p>
+                    <p><strong>Authorization:</strong> Verifying WHAT you can access (permissions, roles).</p>
+                    <p>Example: Logging in = authentication. Checking if you can delete a post = authorization.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain OAuth 2.0 flow</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Authorization framework for third-party access without sharing credentials.</p>
+                    <ol>
+                        <li>App redirects user to auth server (Google, Facebook)</li>
+                        <li>User logs in and grants permission</li>
+                        <li>Auth server redirects back with authorization code</li>
+                        <li>App exchanges code for access token</li>
+                        <li>App uses token to access protected resources</li>
+                    </ol>
+                    <p>Access tokens expire. Refresh tokens get new access tokens.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is a race condition?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Bug where behavior depends on timing of uncontrolled events (thread scheduling).</p>
+                    <p>Example: Two threads incrementing counter without synchronization — some increments get lost.</p>
+                    <p><strong>Solutions:</strong> Mutexes/locks, serial queues, atomic operations, immutable data.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is a deadlock?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Two or more threads waiting for each other forever.</p>
+                    <p>Example: Thread A holds lock 1, waits for lock 2. Thread B holds lock 2, waits for lock 1.</p>
+                    <p><strong>Prevention:</strong> Always acquire locks in same order. Use timeouts. Avoid nested locks.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain the Repository pattern</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Abstraction layer between data sources and business logic.</p>
+                    <pre><code>protocol UserRepository {
+    func getUser(id: Int) -> User
+    func saveUser(_ user: User)
+}</code></pre>
+                    <p>Implementation can fetch from network, database, or cache. Business logic doesn't know or care where data comes from.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is CI/CD?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Continuous Integration:</strong> Automatically build and test on every commit.</p>
+                    <p><strong>Continuous Delivery:</strong> Automatically prepare releases (deploy with manual approval).</p>
+                    <p><strong>Continuous Deployment:</strong> Automatically deploy to production.</p>
+                    <p>Tools: GitHub Actions, Jenkins, Fastlane, Bitrise, CircleCI.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you approach code reviews?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>As reviewer:</strong></p>
+                    <ul>
+                        <li>Check logic correctness first</li>
+                        <li>Look for edge cases, error handling</li>
+                        <li>Consider performance and memory</li>
+                        <li>Ensure tests cover changes</li>
+                        <li>Be constructive, suggest alternatives</li>
+                    </ul>
+                    <p><strong>As author:</strong> Keep PRs small, write good descriptions, respond to feedback gracefully.</p>
+                </div></div>
+            </div>
+
             <h2>💬 Behavioral Questions</h2>
             
             <div class="qa">
@@ -1403,6 +1738,62 @@ git revert SHA            // Create new commit that undoes (safe)</code></pre>
                         <li>Communities: Reddit, Twitter</li>
                     </ul>
                     <p>Be specific — mention a recent feature you learned.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Describe a time you disagreed with a teammate</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Key points to hit:</p>
+                    <ul>
+                        <li>Listened to understand their perspective</li>
+                        <li>Focused on what's best for product/users</li>
+                        <li>Used data or prototypes to test ideas</li>
+                        <li>Compromised or committed to team decision</li>
+                    </ul>
+                    <p>Shows: communication, collaboration, ego management.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you prioritize when everything is urgent?</div>
+                <div class="answer"><div class="answer-content">
+                    <ul>
+                        <li>Clarify actual deadlines and impact</li>
+                        <li>Identify dependencies — what blocks others?</li>
+                        <li>Communicate with stakeholders about tradeoffs</li>
+                        <li>Focus on high-impact items first</li>
+                        <li>Say no or negotiate scope when needed</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Tell me about a project you're proud of</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Structure your answer:</p>
+                    <ul>
+                        <li>What was the project and your role?</li>
+                        <li>What challenges did you face?</li>
+                        <li>What technical decisions did you make and why?</li>
+                        <li>What was the outcome/impact?</li>
+                        <li>What would you do differently?</li>
+                    </ul>
+                    <p>Shows: ownership, technical depth, self-reflection.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Why are you looking for a new role?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Good answers focus on <strong>what you want</strong>, not what you're escaping:</p>
+                    <ul>
+                        <li>Looking for new challenges / growth</li>
+                        <li>Interested in this company's product/mission</li>
+                        <li>Want to work with specific technologies</li>
+                        <li>Seeking more impact / responsibility</li>
+                    </ul>
+                    <p>Avoid: badmouthing current employer, focusing only on money.</p>
                 </div></div>
             </div>
         </div>
