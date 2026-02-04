@@ -786,6 +786,123 @@ private static class MyTask extends AsyncTask<...> {
             <div class="tip">
                 <strong>💡 Tool:</strong> Mention <strong>LeakCanary</strong> in interviews — shows you know about memory profiling tools.
             </div>
+
+            <h2>Interfaces</h2>
+            <p>Interfaces define a contract — methods a class must implement. Similar to Swift protocols.</p>
+            <pre><code>// Define interface
+public interface Clickable {
+    void onClick();
+    void onLongClick();
+}
+
+// Implement interface
+public class Button implements Clickable {
+    @Override
+    public void onClick() {
+        System.out.println("Clicked!");
+    }
+    
+    @Override
+    public void onLongClick() {
+        System.out.println("Long clicked!");
+    }
+}
+
+// Use as type
+public void handleClick(Clickable item) {
+    item.onClick();
+}</code></pre>
+
+            <h4>Default Methods (Java 8+)</h4>
+            <pre><code>public interface Clickable {
+    void onClick();
+    
+    // Default implementation - classes get this for free
+    default void onDoubleClick() {
+        onClick();
+        onClick();
+    }
+}</code></pre>
+
+            <h4>Multiple Interfaces</h4>
+            <pre><code>public interface Drawable { void draw(); }
+public interface Clickable { void onClick(); }
+
+// A class can implement multiple interfaces
+public class IconButton implements Drawable, Clickable {
+    public void draw() { /* ... */ }
+    public void onClick() { /* ... */ }
+}</code></pre>
+
+            <h2>Generics (Java)</h2>
+            <p>Write code that works with any type while maintaining type safety:</p>
+            <pre><code>// Generic class
+public class Box<T> {
+    private T content;
+    
+    public void set(T content) {
+        this.content = content;
+    }
+    
+    public T get() {
+        return content;
+    }
+}
+
+Box<String> stringBox = new Box<>();
+stringBox.set("Hello");
+String value = stringBox.get();  // No cast needed
+
+Box<Integer> intBox = new Box<>();
+intBox.set(42);</code></pre>
+
+            <h4>Generic Methods</h4>
+            <pre><code>public <T> void printArray(T[] array) {
+    for (T item : array) {
+        System.out.println(item);
+    }
+}
+
+// Type inferred from argument
+printArray(new String[]{"a", "b", "c"});
+printArray(new Integer[]{1, 2, 3});</code></pre>
+
+            <h4>Bounded Type Parameters</h4>
+            <pre><code>// T must extend Number (or be Number)
+public <T extends Number> double sum(T a, T b) {
+    return a.doubleValue() + b.doubleValue();
+}
+
+// Multiple bounds
+public <T extends Comparable<T> & Serializable> T findMax(T a, T b) {
+    return a.compareTo(b) > 0 ? a : b;
+}</code></pre>
+
+            <h4>Wildcards</h4>
+            <pre><code>// Unknown type
+List<?> unknownList;
+
+// Upper bound - accepts Number or any subclass
+public void processNumbers(List<? extends Number> list) {
+    for (Number n : list) {
+        System.out.println(n.doubleValue());
+    }
+}
+
+// Lower bound - accepts Integer or any superclass
+public void addIntegers(List<? super Integer> list) {
+    list.add(1);
+    list.add(2);
+}</code></pre>
+
+            <div class="highlight">
+                <strong>Generics Key Points:</strong><br>
+                • <code>&lt;T&gt;</code> = type parameter (any reference type)<br>
+                • <code>&lt;T extends X&gt;</code> = T must be X or subclass<br>
+                • <code>&lt;?&gt;</code> = unknown type (read-only)<br>
+                • <code>&lt;? extends X&gt;</code> = unknown type, upper bounded<br>
+                • <code>&lt;? super X&gt;</code> = unknown type, lower bounded
+            </div>
         </div>
 
         <!-- ==================== iOS ==================== -->
@@ -1047,6 +1164,7 @@ guard let name = name else { return }  // Early exit</code></pre>
             </div>
 
             <h3>Protocols</h3>
+            <p>A protocol defines a blueprint of methods and properties. Types <strong>conform</strong> to protocols by implementing requirements.</p>
             <pre><code>protocol Drawable {
     var color: String { get }
     func draw()
@@ -1057,12 +1175,95 @@ struct Circle: Drawable {
     func draw() { print("Drawing circle") }
 }
 
-// Protocol extension - default implementation
-extension Drawable {
+// Protocol as type
+func render(item: Drawable) {
+    item.draw()
+}</code></pre>
+
+            <h4>Protocol Extensions (Default Implementations)</h4>
+            <p>Add functionality to all conforming types without inheritance:</p>
+            <pre><code>extension Drawable {
     func describe() {
         print("A \(color) shape")
     }
+}
+// Now ALL Drawable types get describe() for free!</code></pre>
+
+            <h4>Protocol-Oriented Programming</h4>
+            <p>Swift favors <strong>composition over inheritance</strong>. Use protocols to share behavior:</p>
+            <pre><code>protocol Flyable { func fly() }
+protocol Swimmable { func swim() }
+
+struct Duck: Flyable, Swimmable {
+    func fly() { print("Flying") }
+    func swim() { print("Swimming") }
+}
+
+// vs inheritance where you'd need a complex hierarchy</code></pre>
+
+            <h4>Associated Types</h4>
+            <p>Placeholder type within a protocol — conforming types specify the actual type:</p>
+            <pre><code>protocol Container {
+    associatedtype Item
+    var items: [Item] { get }
+    mutating func add(_ item: Item)
+}
+
+struct IntBox: Container {
+    typealias Item = Int  // Can often be inferred
+    var items: [Int] = []
+    mutating func add(_ item: Int) {
+        items.append(item)
+    }
 }</code></pre>
+
+            <h3>Generics</h3>
+            <p>Write flexible, reusable code that works with any type:</p>
+            <pre><code>// Generic function
+func swapValues<T>(_ a: inout T, _ b: inout T) {
+    let temp = a
+    a = b
+    b = temp
+}
+
+// Generic type
+struct Stack<Element> {
+    private var items: [Element] = []
+    
+    mutating func push(_ item: Element) {
+        items.append(item)
+    }
+    
+    mutating func pop() -> Element? {
+        return items.popLast()
+    }
+}
+
+var intStack = Stack<Int>()
+var stringStack = Stack<String>()</code></pre>
+
+            <h4>Generic Constraints</h4>
+            <p>Restrict generics to types that meet certain requirements:</p>
+            <pre><code>// Must conform to Comparable
+func findMax<T: Comparable>(_ a: T, _ b: T) -> T {
+    return a > b ? a : b
+}
+
+// Multiple constraints
+func process<T: Codable & Hashable>(_ item: T) { }
+
+// Where clause for complex constraints
+func merge<T, U>(_ a: T, _ b: U) -> String 
+    where T: CustomStringConvertible, U: CustomStringConvertible {
+    return a.description + b.description
+}</code></pre>
+
+            <div class="highlight">
+                <strong>Protocols vs Generics:</strong><br>
+                <strong>Protocols</strong> = "this type CAN DO these things" (behavior)<br>
+                <strong>Generics</strong> = "this works with ANY type" (flexibility)<br>
+                Often used together: <code>func sort&lt;T: Comparable&gt;(_ items: [T])</code>
+            </div>
 
             <h3>Delegates vs Closures</h3>
             <table>
@@ -1380,6 +1581,55 @@ git revert SHA            // Create new commit that undoes (safe)</code></pre>
             <h2>🤖 More Android Questions</h2>
             
             <div class="qa">
+                <div class="question">What are generics in Java and why use them?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Generics</strong> allow you to write code that works with any type while maintaining type safety.</p>
+                    <pre><code>List&lt;String&gt; names = new ArrayList&lt;&gt;();
+names.add("John");
+String name = names.get(0);  // No cast needed!</code></pre>
+                    <p><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Compile-time type checking — catch errors early</li>
+                        <li>No casting required when retrieving elements</li>
+                        <li>Code reusability — write once, use with any type</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between interface and abstract class?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Interface:</strong></p>
+                    <ul>
+                        <li>Only abstract methods (until Java 8 default methods)</li>
+                        <li>No instance fields (only static final)</li>
+                        <li>Class can implement MULTIPLE interfaces</li>
+                        <li>Defines "can do" relationship</li>
+                    </ul>
+                    <p><strong>Abstract class:</strong></p>
+                    <ul>
+                        <li>Can have both abstract and concrete methods</li>
+                        <li>Can have instance fields</li>
+                        <li>Class can extend only ONE abstract class</li>
+                        <li>Defines "is a" relationship</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What are wildcard generics (? extends, ? super)?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong><code>? extends T</code></strong> (upper bound): Accepts T or any subtype. Use for READING.</p>
+                    <pre><code>List&lt;? extends Number&gt; nums;  // Can hold List&lt;Integer&gt;, List&lt;Double&gt;
+Number n = nums.get(0);  // OK - reading</code></pre>
+                    <p><strong><code>? super T</code></strong> (lower bound): Accepts T or any supertype. Use for WRITING.</p>
+                    <pre><code>List&lt;? super Integer&gt; list;  // Can hold List&lt;Integer&gt;, List&lt;Number&gt;
+list.add(42);  // OK - writing</code></pre>
+                    <p>Remember: <strong>PECS</strong> = Producer Extends, Consumer Super</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
                 <div class="question">What's the difference between implicit and explicit intents?</div>
                 <div class="answer"><div class="answer-content">
                     <p><strong>Explicit:</strong> You specify the exact component (class name).</p>
@@ -1475,6 +1725,56 @@ git revert SHA            // Create new commit that undoes (safe)</code></pre>
             </div>
 
             <h2>🍎 More iOS Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What are protocols and how are they different from classes?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Protocols</strong> define a blueprint of methods and properties — a contract that types must fulfill.</p>
+                    <p><strong>Key differences from classes:</strong></p>
+                    <ul>
+                        <li>Protocols have no implementation (just requirements)</li>
+                        <li>Structs, enums, AND classes can conform to protocols</li>
+                        <li>A type can conform to multiple protocols (vs single inheritance)</li>
+                        <li>Protocol extensions can add default implementations</li>
+                    </ul>
+                    <p>This enables <strong>protocol-oriented programming</strong> — composition over inheritance.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What are generics and why use them?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Generics</strong> let you write flexible, reusable code that works with any type.</p>
+                    <pre><code>func swap<T>(_ a: inout T, _ b: inout T) {
+    let temp = a; a = b; b = temp
+}</code></pre>
+                    <p><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Type safety — compiler catches errors</li>
+                        <li>No code duplication — one function works for all types</li>
+                        <li>Performance — no runtime type casting</li>
+                    </ul>
+                    <p>Example: <code>Array&lt;Element&gt;</code>, <code>Dictionary&lt;Key, Value&gt;</code></p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What are associated types in protocols?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>A placeholder type within a protocol. The conforming type specifies the actual type.</p>
+                    <pre><code>protocol Container {
+    associatedtype Item
+    func add(_ item: Item)
+    var count: Int { get }
+}
+
+struct IntStack: Container {
+    typealias Item = Int  // Specifies the type
+    func add(_ item: Int) { ... }
+}</code></pre>
+                    <p>Think of it as "generics for protocols."</p>
+                </div></div>
+            </div>
             
             <div class="qa">
                 <div class="question">What are the differences between let and var?</div>
