@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Interview Cheat Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+        }
+        
+        .card.android h2 { color: #3ddc84; }
+        .card.ios h2 { color: #007aff; }
+        .card.general h2 { color: #ff9500; }
+        
+        .card h3 {
+            color: #ccc;
+            font-size: 1rem;
+            margin: 16px 0 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+        
+        .lifecycle {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .lifecycle .arrow { color: #666; }
+        .lifecycle .method { color: #7ec8e3; }
+        .lifecycle .running { color: #3ddc84; font-weight: bold; }
+        
+        ul {
+            list-style: none;
+            margin: 10px 0;
+        }
+        
+        li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
+        
+        .key { 
+            color: #f8b500; 
+            font-weight: 600;
+        }
+        
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .warning {
+            background: rgba(255, 87, 87, 0.2);
+            border-left: 3px solid #ff5757;
+            padding: 10px 14px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tip {
+            background: rgba(61, 220, 132, 0.15);
+            border-left: 3px solid #3ddc84;
+            padding: 10px 14px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            color: #888;
+            font-weight: normal;
+        }
+        
+        .highlight {
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), rgba(123, 44, 191, 0.2));
+            padding: 16px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+        
+        .section-divider {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.5rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .grid { grid-template-columns: 1fr; }
+            .card { padding: 16px; }
+        }
+        
+        @media print {
+            body { background: white; color: black; }
+            .card { border: 1px solid #ccc; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Mobile Interview Cheat Sheet</h1>
+        <p class="subtitle">Android (Java) + iOS (Swift) — The Essentials</p>
+        
+        <div class="grid">
+            <!-- ANDROID SECTION -->
+            <div class="card android">
+                <h2>🤖 Activity Lifecycle</h2>
+                <div class="lifecycle">
+                    <span class="method">onCreate</span> <span class="arrow">→</span>
+                    <span class="method">onStart</span> <span class="arrow">→</span>
+                    <span class="method">onResume</span> <span class="arrow">→</span>
+                    <span class="running">[RUNNING]</span> <span class="arrow">→</span>
+                    <span class="method">onPause</span> <span class="arrow">→</span>
+                    <span class="method">onStop</span> <span class="arrow">→</span>
+                    <span class="method">onDestroy</span>
+                </div>
+                <ul>
+                    <li><span class="key">onCreate</span> — Initialize, setContentView</li>
+                    <li><span class="key">onStart</span> — Visible but not interactive</li>
+                    <li><span class="key">onResume</span> — Foreground, interactive</li>
+                    <li><span class="key">onPause</span> — Losing focus</li>
+                    <li><span class="key">onStop</span> — No longer visible</li>
+                    <li><span class="key">onDestroy</span> — Being killed</li>
+                </ul>
+                <div class="tip">Home button: onPause → onStop<br>Rotation: full destroy + recreate</div>
+            </div>
+            
+            <div class="card android">
+                <h2>🤖 The 4 Components</h2>
+                <table>
+                    <tr><th>Component</th><th>Purpose</th></tr>
+                    <tr><td><span class="key">Activity</span></td><td>Single screen with UI</td></tr>
+                    <tr><td><span class="key">Service</span></td><td>Background work, no UI</td></tr>
+                    <tr><td><span class="key">BroadcastReceiver</span></td><td>Responds to system events</td></tr>
+                    <tr><td><span class="key">ContentProvider</span></td><td>Share data between apps</td></tr>
+                </table>
+                
+                <h3>Started vs Bound Service</h3>
+                <ul>
+                    <li><span class="key">Started</span> — Fire and forget, runs independently</li>
+                    <li><span class="key">Bound</span> — Client-server, dies when all unbind</li>
+                </ul>
+            </div>
+            
+            <div class="card android">
+                <h2>🤖 Threading</h2>
+                <div class="warning">❌ Never touch UI from background thread — UI toolkit isn't thread-safe</div>
+                <p>Get back to main thread:</p>
+                <div class="lifecycle">
+                    runOnUiThread(() -> { });<br>
+                    new Handler(Looper.getMainLooper()).post(() -> { });
+                </div>
+            </div>
+            
+            <div class="card android">
+                <h2>🤖 Context & Memory</h2>
+                <ul>
+                    <li><span class="key">Activity context</span> — Dies with Activity. Use for UI.</li>
+                    <li><span class="key">Application context</span> — Lives forever. Use for singletons.</li>
+                </ul>
+                <div class="warning">⚠️ Passing Activity context to singleton = memory leak</div>
+                
+                <h3>AsyncTask Leak</h3>
+                <p>Inner class holds reference to outer Activity → leak if Activity dies but task runs</p>
+                <div class="tip">Fix: static inner class + WeakReference</div>
+            </div>
+            
+            <!-- iOS SECTION -->
+            <div class="section-divider">───── 🍎 iOS ─────</div>
+            
+            <div class="card ios">
+                <h2>🍎 ViewController Lifecycle</h2>
+                <div class="lifecycle">
+                    <span class="method">viewDidLoad</span> <span class="arrow">→</span>
+                    <span class="method">viewWillAppear</span> <span class="arrow">→</span>
+                    <span class="method">viewDidAppear</span> <span class="arrow">→</span>
+                    <span class="method">viewWillDisappear</span> <span class="arrow">→</span>
+                    <span class="method">viewDidDisappear</span>
+                </div>
+                <ul>
+                    <li><span class="key">viewDidLoad</span> — Once, after view loaded. Setup.</li>
+                    <li><span class="key">viewWillAppear</span> — Every time before visible. Refresh.</li>
+                    <li><span class="key">viewDidAppear</span> — Now visible. Start animations.</li>
+                    <li><span class="key">viewWillDisappear</span> — About to hide. Save state.</li>
+                </ul>
+            </div>
+            
+            <div class="card ios">
+                <h2>🍎 App Lifecycle</h2>
+                <div class="lifecycle">
+                    Not Running <span class="arrow">→</span>
+                    Inactive <span class="arrow">→</span>
+                    <span class="running">Active</span> <span class="arrow">→</span>
+                    Background <span class="arrow">→</span>
+                    Suspended
+                </div>
+                <ul>
+                    <li><span class="key">didFinishLaunching</span> — App starting</li>
+                    <li><span class="key">willResignActive</span> — Losing focus</li>
+                    <li><span class="key">didEnterBackground</span> — Now in background</li>
+                    <li><span class="key">willEnterForeground</span> — Coming back</li>
+                    <li><span class="key">didBecomeActive</span> — Now active</li>
+                </ul>
+            </div>
+            
+            <div class="card ios">
+                <h2>🍎 Memory Management (ARC)</h2>
+                <p>Automatic Reference Counting — compiler inserts retain/release</p>
+                <table>
+                    <tr><th>Type</th><th>Behavior</th></tr>
+                    <tr><td><span class="key">strong</span></td><td>Default. Keeps object alive.</td></tr>
+                    <tr><td><span class="key">weak</span></td><td>Optional, becomes nil when dealloced</td></tr>
+                    <tr><td><span class="key">unowned</span></td><td>Non-optional, crashes if dealloced</td></tr>
+                </table>
+                
+                <h3>Retain Cycles</h3>
+                <p>Two objects hold strong references → neither deallocates</p>
+                <div class="lifecycle">
+                    // ❌ Leak<br>
+                    closure { self.doThing() }<br><br>
+                    // ✅ Fixed<br>
+                    closure { [weak self] in self?.doThing() }
+                </div>
+            </div>
+            
+            <div class="card ios">
+                <h2>🍎 Concurrency</h2>
+                <h3>GCD (Grand Central Dispatch)</h3>
+                <div class="lifecycle">
+                    DispatchQueue.global().async {<br>
+                    &nbsp;&nbsp;let data = fetchData()<br>
+                    &nbsp;&nbsp;DispatchQueue.main.async {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;updateUI(data)<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </div>
+                
+                <h3>async/await (iOS 15+)</h3>
+                <div class="lifecycle">
+                    Task {<br>
+                    &nbsp;&nbsp;let data = await fetchData()<br>
+                    &nbsp;&nbsp;updateUI(data) // MainActor<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="card ios">
+                <h2>🍎 Optionals</h2>
+                <div class="lifecycle">
+                    var name: String? = nil &nbsp;// Might be nil<br>
+                    name! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Force unwrap (crashes if nil)<br>
+                    name? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Optional chaining<br>
+                    name ?? "default" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Nil coalescing<br>
+                    if let name = name { } &nbsp;// Safe unwrap<br>
+                    guard let name else { return }
+                </div>
+            </div>
+            
+            <!-- GENERAL SECTION -->
+            <div class="section-divider">───── 🌐 General ─────</div>
+            
+            <div class="card general">
+                <h2>🌐 REST API</h2>
+                <table>
+                    <tr><th>Method</th><th>Purpose</th></tr>
+                    <tr><td><span class="key">GET</span></td><td>Read data</td></tr>
+                    <tr><td><span class="key">POST</span></td><td>Create data</td></tr>
+                    <tr><td><span class="key">PUT</span></td><td>Update (replace)</td></tr>
+                    <tr><td><span class="key">PATCH</span></td><td>Update (partial)</td></tr>
+                    <tr><td><span class="key">DELETE</span></td><td>Remove data</td></tr>
+                </table>
+                
+                <h3>HTTP Status Codes</h3>
+                <ul>
+                    <li><span class="key">2xx</span> — Success (200 OK, 201 Created)</li>
+                    <li><span class="key">4xx</span> — Client error (400, 401, 404)</li>
+                    <li><span class="key">5xx</span> — Server error (500)</li>
+                </ul>
+            </div>
+            
+            <div class="card general">
+                <h2>🌐 SOLID Principles</h2>
+                <ul>
+                    <li><span class="key">S</span>ingle Responsibility — One class, one job</li>
+                    <li><span class="key">O</span>pen/Closed — Open for extension, closed for modification</li>
+                    <li><span class="key">L</span>iskov Substitution — Subtypes replaceable for parents</li>
+                    <li><span class="key">I</span>nterface Segregation — Small focused interfaces</li>
+                    <li><span class="key">D</span>ependency Inversion — Depend on abstractions</li>
+                </ul>
+            </div>
+            
+            <div class="card general">
+                <h2>🌐 Architecture Patterns</h2>
+                <ul>
+                    <li><span class="key">MVC</span> — Model-View-Controller (Apple default)</li>
+                    <li><span class="key">MVVM</span> — Model-View-ViewModel (better separation)</li>
+                    <li><span class="key">MVP</span> — Model-View-Presenter</li>
+                    <li><span class="key">Clean</span> — Layers: Domain, Data, Presentation</li>
+                </ul>
+                <div class="tip">MVVM is the safe interview answer for both platforms</div>
+            </div>
+            
+            <!-- QUICK REFERENCE -->
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2>⚡ Quick Fire Answers</h2>
+                <div class="highlight">
+                    <table>
+                        <tr>
+                            <td width="50%"><span class="key">Home button (Android)?</span><br>onPause → onStop</td>
+                            <td><span class="key">weak vs unowned?</span><br>weak = optional, becomes nil<br>unowned = non-optional, crashes</td>
+                        </tr>
+                        <tr>
+                            <td><span class="key">Why no background UI?</span><br>UI toolkit isn't thread-safe</td>
+                            <td><span class="key">What causes retain cycle?</span><br>Two objects with strong refs to each other</td>
+                        </tr>
+                        <tr>
+                            <td><span class="key">Context leak?</span><br>Activity context in singleton</td>
+                            <td><span class="key">viewDidLoad vs viewWillAppear?</span><br>didLoad = once, willAppear = every time</td>
+                        </tr>
+                        <tr>
+                            <td><span class="key">Started vs Bound service?</span><br>Started = independent, Bound = connected</td>
+                            <td><span class="key">Delegate vs closure?</span><br>Delegate = protocol, Closure = inline callback</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 40px; color: #666;">
+            You've built apps in production. You know this stuff — now you can name it. 💪
+        </p>
+    </div>
+</body>
+</html>
