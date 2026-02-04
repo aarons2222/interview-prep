@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Interview Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title.android { background: rgba(61, 220, 132, 0.15); color: #3ddc84; }
+        .section-title.ios { background: rgba(0, 122, 255, 0.15); color: #007aff; }
+        .section-title.general { background: rgba(255, 149, 0, 0.15); color: #ff9500; }
+        .section-title.behavioral { background: rgba(175, 82, 222, 0.15); color: #af52de; }
+        
+        .qa {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .question {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .question::after {
+            content: "+";
+            font-size: 1.5rem;
+            color: #666;
+            transition: transform 0.3s;
+        }
+        
+        .qa.open .question::after {
+            transform: rotate(45deg);
+        }
+        
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .qa.open .answer {
+            max-height: 500px;
+        }
+        
+        .answer-content {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .answer-content p {
+            margin-bottom: 10px;
+        }
+        
+        .answer-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .key { color: #feca57; font-weight: 600; }
+        .code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .tip {
+            background: rgba(61, 220, 132, 0.1);
+            border-left: 3px solid #3ddc84;
+            padding: 10px 14px;
+            margin-top: 10px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+        
+        .nav a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❓ Common Interview Questions</h1>
+        <p class="subtitle">Click to reveal answers</p>
+        
+        <div class="nav">
+            <a href="index.html">Quiz</a>
+            <a href="cheatsheet.html">Cheat Sheet</a>
+            <a href="patterns.html">Code Patterns</a>
+        </div>
+
+        <!-- ANDROID -->
+        <div class="section">
+            <div class="section-title android">🤖 Android Questions</div>
+            
+            <div class="qa">
+                <div class="question">What happens when you rotate an Android device?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>The Activity is <span class="key">destroyed and recreated</span>. Full lifecycle: onPause → onStop → onDestroy → onCreate → onStart → onResume.</p>
+                    <p>To preserve data across rotation:</p>
+                    <p>• Use <span class="code">onSaveInstanceState()</span> for small UI state</p>
+                    <p>• Use <span class="key">ViewModel</span> — survives configuration changes</p>
+                    <p>• Use <span class="code">android:configChanges</span> in manifest (not recommended)</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between Serializable and Parcelable?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Serializable</span>: Java standard, uses reflection, slower, easy to implement (just implement interface).</p>
+                    <p><span class="key">Parcelable</span>: Android-specific, manual implementation, much faster, optimized for IPC.</p>
+                    <div class="tip">Always say Parcelable for Android interviews — it's the "correct" answer. 10x faster than Serializable.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain the Android Activity lifecycle</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">onCreate</span> — Activity created. Initialize UI, bind views, restore state.</p>
+                    <p><span class="key">onStart</span> — Becoming visible but not interactive yet.</p>
+                    <p><span class="key">onResume</span> — In foreground, user can interact. Start animations.</p>
+                    <p><span class="key">onPause</span> — Losing focus (dialog, partial cover). Pause animations, save drafts.</p>
+                    <p><span class="key">onStop</span> — No longer visible. Release heavy resources.</p>
+                    <p><span class="key">onDestroy</span> — Being destroyed. Final cleanup.</p>
+                    <div class="tip">Mention onSaveInstanceState (called before onStop) for bonus points.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What is a ContentProvider and when would you use one?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>A <span class="key">ContentProvider</span> manages shared app data. It's the standard way to share data between applications.</p>
+                    <p>Use cases:</p>
+                    <p>• Expose your app's data to other apps</p>
+                    <p>• Access system data (Contacts, MediaStore, Calendar)</p>
+                    <p>• Abstract data source from the rest of your app</p>
+                    <p>Access via <span class="code">ContentResolver</span> using URIs like <span class="code">content://com.example.provider/items</span></p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between implicit and explicit intents?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Explicit</span>: You specify the exact component (class name).</p>
+                    <p><span class="code">new Intent(this, DetailActivity.class)</span></p>
+                    <p><span class="key">Implicit</span>: You declare an action, system finds a matching handler.</p>
+                    <p><span class="code">new Intent(Intent.ACTION_VIEW, Uri.parse("https://..."))</span></p>
+                    <div class="tip">Explicit = internal navigation. Implicit = system features (camera, share, browser).</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you handle memory leaks in Android?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Common causes:</p>
+                    <p>• <span class="key">Static references</span> to Activity/Context</p>
+                    <p>• <span class="key">Inner classes</span> (AsyncTask, Handler) holding Activity reference</p>
+                    <p>• <span class="key">Unregistered listeners</span> (broadcast receivers, location)</p>
+                    <p>Prevention:</p>
+                    <p>• Use Application context for singletons</p>
+                    <p>• Make inner classes static + WeakReference</p>
+                    <p>• Unregister in onStop/onDestroy</p>
+                    <p>• Use ViewModel instead of retained fragments</p>
+                    <p>• Use LeakCanary to detect leaks</p>
+                </div></div>
+            </div>
+        </div>
+        
+        <!-- iOS -->
+        <div class="section">
+            <div class="section-title ios">🍎 iOS Questions</div>
+            
+            <div class="qa">
+                <div class="question">Explain ARC and how it works</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Automatic Reference Counting</span> — compiler inserts retain/release calls at compile time.</p>
+                    <p>Each object has a reference count. When it hits zero, object is deallocated.</p>
+                    <p>• <span class="key">strong</span> (default): Increments count, keeps object alive</p>
+                    <p>• <span class="key">weak</span>: Doesn't increment, becomes nil when deallocated</p>
+                    <p>• <span class="key">unowned</span>: Doesn't increment, crashes if accessed after dealloc</p>
+                    <div class="tip">It's NOT garbage collection — no runtime overhead, deterministic deallocation.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's a retain cycle and how do you fix it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>A <span class="key">retain cycle</span> happens when two objects hold strong references to each other — neither can deallocate.</p>
+                    <p>Common in closures:</p>
+                    <p><span class="code">self.closure = { self.doSomething() }</span> — self → closure → self</p>
+                    <p>Fix with capture list:</p>
+                    <p><span class="code">{ [weak self] in self?.doSomething() }</span></p>
+                    <p>Use <span class="key">weak</span> when the captured object might become nil.</p>
+                    <p>Use <span class="key">unowned</span> when you're certain it will outlive the closure.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between frame and bounds?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">frame</span>: Position and size in the <em>superview's</em> coordinate system. Where the view sits in its parent.</p>
+                    <p><span class="key">bounds</span>: Position and size in the view's <em>own</em> coordinate system. Usually origin is (0,0).</p>
+                    <p>Use <span class="key">frame</span> to position a view in its parent.</p>
+                    <p>Use <span class="key">bounds</span> to draw content inside the view or scroll content.</p>
+                    <div class="tip">Changing bounds.origin is how UIScrollView scrolls — it shifts the internal coordinate system.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain the iOS app lifecycle</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Not Running</span> → <span class="key">Inactive</span> → <span class="key">Active</span> → <span class="key">Background</span> → <span class="key">Suspended</span></p>
+                    <p>Key callbacks:</p>
+                    <p>• <span class="code">didFinishLaunchingWithOptions</span> — App starting, one-time setup</p>
+                    <p>• <span class="code">applicationWillResignActive</span> — About to lose focus</p>
+                    <p>• <span class="code">applicationDidEnterBackground</span> — Save state, release resources</p>
+                    <p>• <span class="code">applicationWillEnterForeground</span> — Coming back, refresh UI</p>
+                    <p>• <span class="code">applicationDidBecomeActive</span> — Now active, restart tasks</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between struct and class in Swift?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Struct</span>: Value type, copied on assignment, stack allocated, no inheritance.</p>
+                    <p><span class="key">Class</span>: Reference type, shared on assignment, heap allocated, supports inheritance.</p>
+                    <p>Apple recommends <span class="key">struct by default</span> — use class when you need:</p>
+                    <p>• Identity (=== comparison)</p>
+                    <p>• Inheritance</p>
+                    <p>• Shared mutable state</p>
+                    <div class="tip">SwiftUI uses structs for views because they're value types — safer, faster, no reference issues.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What are protocols and protocol extensions?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>A <span class="key">protocol</span> defines a contract — required methods/properties without implementation.</p>
+                    <p>A <span class="key">protocol extension</span> provides default implementations — adopters get functionality for free.</p>
+                    <p>This enables "protocol-oriented programming" — share behavior without inheritance.</p>
+                    <p>Example: <span class="code">Equatable</span> protocol + extension gives you <span class="code">!=</span> for free when you implement <span class="code">==</span>.</p>
+                </div></div>
+            </div>
+        </div>
+        
+        <!-- GENERAL -->
+        <div class="section">
+            <div class="section-title general">🌐 General Questions</div>
+            
+            <div class="qa">
+                <div class="question">What is dependency injection and why use it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Dependency Injection</span>: Pass dependencies in from outside instead of creating them inside.</p>
+                    <p>Instead of: <span class="code">class UserService { let api = APIClient() }</span></p>
+                    <p>Do: <span class="code">class UserService { let api: APIClient; init(api: APIClient) }</span></p>
+                    <p>Benefits:</p>
+                    <p>• <span class="key">Testability</span> — inject mock dependencies in tests</p>
+                    <p>• <span class="key">Flexibility</span> — swap implementations easily</p>
+                    <p>• <span class="key">Decoupling</span> — class doesn't know concrete types</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain MVVM architecture</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">Model</span>: Data and business logic</p>
+                    <p><span class="key">View</span>: UI layer (Activity/ViewController/SwiftUI View)</p>
+                    <p><span class="key">ViewModel</span>: Prepares data for display, handles UI logic, exposes observable state</p>
+                    <p>The View observes the ViewModel. ViewModel doesn't know about the View.</p>
+                    <p>Benefits over MVC:</p>
+                    <p>• Testable — ViewModel has no UI dependencies</p>
+                    <p>• Separation — View is dumb, ViewModel is smart</p>
+                    <p>• Reactive — data binding keeps UI in sync</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between REST and GraphQL?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><span class="key">REST</span>: Multiple endpoints, fixed data shape, over/under-fetching common.</p>
+                    <p><span class="code">GET /users/1</span>, <span class="code">GET /users/1/posts</span></p>
+                    <p><span class="key">GraphQL</span>: Single endpoint, client specifies exact data needed, one request.</p>
+                    <p><span class="code">query { user(id: 1) { name posts { title } } }</span></p>
+                    <p>GraphQL = flexible but complex. REST = simple but rigid.</p>
+                    <div class="tip">Most mobile apps use REST. GraphQL is growing but not universal yet.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you approach debugging a crash?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>1. <span class="key">Read the stack trace</span> — find your code in the call stack</p>
+                    <p>2. <span class="key">Reproduce</span> — can you make it crash again?</p>
+                    <p>3. <span class="key">Check the obvious</span> — nil/null, index out of bounds, threading</p>
+                    <p>4. <span class="key">Add logging</span> — narrow down where it fails</p>
+                    <p>5. <span class="key">Use debugger</span> — breakpoints, step through</p>
+                    <p>6. <span class="key">Check recent changes</span> — git diff, what changed?</p>
+                    <div class="tip">Mention crash reporting tools: Firebase Crashlytics, Sentry, Bugsnag.</div>
+                </div></div>
+            </div>
+        </div>
+        
+        <!-- BEHAVIORAL -->
+        <div class="section">
+            <div class="section-title behavioral">💬 Behavioral Questions</div>
+            
+            <div class="qa">
+                <div class="question">Tell me about a challenging bug you solved</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Use the <span class="key">STAR method</span>:</p>
+                    <p><span class="key">Situation</span>: What was the context?</p>
+                    <p><span class="key">Task</span>: What was the problem?</p>
+                    <p><span class="key">Action</span>: What did YOU do?</p>
+                    <p><span class="key">Result</span>: What was the outcome?</p>
+                    <div class="tip">Good examples: race conditions, memory leaks, weird device-specific bugs, third-party SDK issues.</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you stay current with mobile development?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Good answers:</p>
+                    <p>• Watch <span class="key">WWDC / Google I/O</span> sessions</p>
+                    <p>• Follow official blogs (Swift blog, Android Developers)</p>
+                    <p>• Read release notes for new OS versions</p>
+                    <p>• Side projects to try new APIs</p>
+                    <p>• Communities: Reddit, Twitter, newsletters</p>
+                    <div class="tip">Be specific — mention a recent feature you learned about (SwiftUI updates, Jetpack Compose, etc.)</div>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you handle disagreements with teammates?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Key points:</p>
+                    <p>• <span class="key">Listen first</span> — understand their perspective</p>
+                    <p>• <span class="key">Focus on the goal</span> — what's best for the product/users?</p>
+                    <p>• <span class="key">Use data</span> — benchmark, prototype, test hypothesis</p>
+                    <p>• <span class="key">Compromise</span> — find middle ground when possible</p>
+                    <p>• <span class="key">Disagree and commit</span> — once decided, support the decision</p>
+                    <div class="tip">Have a real example ready — shows self-awareness and maturity.</div>
+                </div></div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        document.querySelectorAll('.qa').forEach(qa => {
+            qa.querySelector('.question').addEventListener('click', () => {
+                qa.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

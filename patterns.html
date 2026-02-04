@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Patterns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+        
+        .nav a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .tab {
+            padding: 10px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.05);
+            color: #888;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tab.active.android {
+            background: rgba(61, 220, 132, 0.2);
+            color: #3ddc84;
+        }
+        
+        .tab.active.ios {
+            background: rgba(0, 122, 255, 0.2);
+            color: #007aff;
+        }
+        
+        .platform {
+            display: none;
+        }
+        
+        .platform.active {
+            display: block;
+        }
+        
+        .pattern {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .pattern-header {
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .pattern-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .pattern-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        pre {
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        /* Syntax highlighting */
+        .keyword { color: #ff79c6; }
+        .type { color: #8be9fd; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .function { color: #50fa7b; }
+        .number { color: #bd93f9; }
+        .annotation { color: #ffb86c; }
+        
+        .note {
+            background: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .note strong {
+            color: #feca57;
+        }
+
+        @media (max-width: 768px) {
+            pre { font-size: 0.75rem; }
+            .pattern-header { padding: 12px 16px; }
+            .code-block { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Code Patterns</h1>
+        <p class="subtitle">Common patterns in Android (Java) and iOS (Swift)</p>
+        
+        <div class="nav">
+            <a href="index.html">Quiz</a>
+            <a href="cheatsheet.html">Cheat Sheet</a>
+            <a href="questions.html">Q&A</a>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active android" onclick="showPlatform('android')">🤖 Android (Java)</button>
+            <button class="tab ios" onclick="showPlatform('ios')">🍎 iOS (Swift)</button>
+        </div>
+        
+        <!-- ANDROID PATTERNS -->
+        <div id="android" class="platform active">
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Activity Lifecycle Basics</div>
+                    <div class="pattern-desc">Standard lifecycle method overrides</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">MainActivity</span> <span class="keyword">extends</span> <span class="type">AppCompatActivity</span> {
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onCreate</span>(<span class="type">Bundle</span> savedInstanceState) {
+        <span class="keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        <span class="comment">// Initialize views, setup UI</span>
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onResume</span>() {
+        <span class="keyword">super</span>.onResume();
+        <span class="comment">// Refresh data, start animations</span>
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onPause</span>() {
+        <span class="keyword">super</span>.onPause();
+        <span class="comment">// Pause animations, save drafts</span>
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">protected void</span> <span class="function">onDestroy</span>() {
+        <span class="keyword">super</span>.onDestroy();
+        <span class="comment">// Cleanup resources</span>
+    }
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Background Thread → UI Thread</div>
+                    <div class="pattern-desc">Safe way to update UI from background work</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Option 1: runOnUiThread</span>
+<span class="keyword">new</span> <span class="type">Thread</span>(() -> {
+    <span class="type">String</span> result = fetchDataFromNetwork();
+    
+    runOnUiThread(() -> {
+        textView.setText(result);
+    });
+}).start();
+
+<span class="comment">// Option 2: Handler</span>
+<span class="type">Handler</span> mainHandler = <span class="keyword">new</span> <span class="type">Handler</span>(<span class="type">Looper</span>.getMainLooper());
+
+<span class="keyword">new</span> <span class="type">Thread</span>(() -> {
+    <span class="type">String</span> result = fetchDataFromNetwork();
+    
+    mainHandler.post(() -> {
+        textView.setText(result);
+    });
+}).start();</pre>
+                </div>
+                <div class="note"><strong>Remember:</strong> Never touch UI from background thread — app will crash.</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">RecyclerView Adapter</div>
+                    <div class="pattern-desc">Basic adapter pattern for lists</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">MyAdapter</span> <span class="keyword">extends</span> <span class="type">RecyclerView.Adapter</span>&lt;<span class="type">MyAdapter.ViewHolder</span>&gt; {
+    
+    <span class="keyword">private</span> <span class="type">List</span>&lt;<span class="type">Item</span>&gt; items;
+
+    <span class="keyword">public</span> <span class="function">MyAdapter</span>(<span class="type">List</span>&lt;<span class="type">Item</span>&gt; items) {
+        <span class="keyword">this</span>.items = items;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="type">ViewHolder</span> <span class="function">onCreateViewHolder</span>(<span class="type">ViewGroup</span> parent, <span class="keyword">int</span> viewType) {
+        <span class="type">View</span> view = <span class="type">LayoutInflater</span>.from(parent.getContext())
+            .inflate(R.layout.item_layout, parent, <span class="keyword">false</span>);
+        <span class="keyword">return new</span> <span class="type">ViewHolder</span>(view);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public void</span> <span class="function">onBindViewHolder</span>(<span class="type">ViewHolder</span> holder, <span class="keyword">int</span> position) {
+        <span class="type">Item</span> item = items.get(position);
+        holder.titleText.setText(item.getTitle());
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public int</span> <span class="function">getItemCount</span>() {
+        <span class="keyword">return</span> items.size();
+    }
+
+    <span class="keyword">static class</span> <span class="type">ViewHolder</span> <span class="keyword">extends</span> <span class="type">RecyclerView.ViewHolder</span> {
+        <span class="type">TextView</span> titleText;
+        
+        <span class="function">ViewHolder</span>(<span class="type">View</span> view) {
+            <span class="keyword">super</span>(view);
+            titleText = view.findViewById(R.id.title);
+        }
+    }
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Intent: Start Activity with Data</div>
+                    <div class="pattern-desc">Pass data between activities</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Sending data</span>
+<span class="type">Intent</span> intent = <span class="keyword">new</span> <span class="type">Intent</span>(<span class="keyword">this</span>, <span class="type">DetailActivity</span>.<span class="keyword">class</span>);
+intent.putExtra(<span class="string">"USER_ID"</span>, <span class="number">123</span>);
+intent.putExtra(<span class="string">"USER_NAME"</span>, <span class="string">"John"</span>);
+startActivity(intent);
+
+<span class="comment">// Receiving data (in DetailActivity)</span>
+<span class="annotation">@Override</span>
+<span class="keyword">protected void</span> <span class="function">onCreate</span>(<span class="type">Bundle</span> savedInstanceState) {
+    <span class="keyword">super</span>.onCreate(savedInstanceState);
+    
+    <span class="keyword">int</span> userId = getIntent().getIntExtra(<span class="string">"USER_ID"</span>, -<span class="number">1</span>);
+    <span class="type">String</span> userName = getIntent().getStringExtra(<span class="string">"USER_NAME"</span>);
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Singleton Pattern</div>
+                    <div class="pattern-desc">Thread-safe singleton for managers/repositories</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">public class</span> <span class="type">DataManager</span> {
+    
+    <span class="keyword">private static volatile</span> <span class="type">DataManager</span> instance;
+    
+    <span class="keyword">private</span> <span class="function">DataManager</span>() {
+        <span class="comment">// Private constructor</span>
+    }
+    
+    <span class="keyword">public static</span> <span class="type">DataManager</span> <span class="function">getInstance</span>() {
+        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) {
+            <span class="keyword">synchronized</span> (<span class="type">DataManager</span>.<span class="keyword">class</span>) {
+                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) {
+                    instance = <span class="keyword">new</span> <span class="type">DataManager</span>();
+                }
+            }
+        }
+        <span class="keyword">return</span> instance;
+    }
+}</pre>
+                </div>
+                <div class="note"><strong>Double-checked locking</strong> — volatile + synchronized ensures thread safety.</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">SharedPreferences</div>
+                    <div class="pattern-desc">Simple key-value storage</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Save data</span>
+<span class="type">SharedPreferences</span> prefs = getSharedPreferences(<span class="string">"MyPrefs"</span>, MODE_PRIVATE);
+prefs.edit()
+    .putString(<span class="string">"username"</span>, <span class="string">"john"</span>)
+    .putInt(<span class="string">"loginCount"</span>, <span class="number">5</span>)
+    .putBoolean(<span class="string">"isLoggedIn"</span>, <span class="keyword">true</span>)
+    .apply();  <span class="comment">// or commit() for synchronous</span>
+
+<span class="comment">// Read data</span>
+<span class="type">String</span> username = prefs.getString(<span class="string">"username"</span>, <span class="string">""</span>);  <span class="comment">// default value</span>
+<span class="keyword">int</span> count = prefs.getInt(<span class="string">"loginCount"</span>, <span class="number">0</span>);
+<span class="keyword">boolean</span> loggedIn = prefs.getBoolean(<span class="string">"isLoggedIn"</span>, <span class="keyword">false</span>);</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">HTTP Request (HttpURLConnection)</div>
+                    <div class="pattern-desc">Basic network request without libraries</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Must be called from background thread!</span>
+<span class="keyword">public</span> <span class="type">String</span> <span class="function">fetchData</span>(<span class="type">String</span> urlString) <span class="keyword">throws</span> <span class="type">IOException</span> {
+    <span class="type">URL</span> url = <span class="keyword">new</span> <span class="type">URL</span>(urlString);
+    <span class="type">HttpURLConnection</span> conn = (<span class="type">HttpURLConnection</span>) url.openConnection();
+    
+    <span class="keyword">try</span> {
+        conn.setRequestMethod(<span class="string">"GET"</span>);
+        conn.setConnectTimeout(<span class="number">10000</span>);
+        
+        <span class="type">BufferedReader</span> reader = <span class="keyword">new</span> <span class="type">BufferedReader</span>(
+            <span class="keyword">new</span> <span class="type">InputStreamReader</span>(conn.getInputStream()));
+        
+        <span class="type">StringBuilder</span> result = <span class="keyword">new</span> <span class="type">StringBuilder</span>();
+        <span class="type">String</span> line;
+        <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) {
+            result.append(line);
+        }
+        <span class="keyword">return</span> result.toString();
+        
+    } <span class="keyword">finally</span> {
+        conn.disconnect();
+    }
+}</pre>
+                </div>
+                <div class="note"><strong>In practice:</strong> Use Retrofit or OkHttp. But know this for interviews.</div>
+            </div>
+            
+        </div>
+        
+        <!-- iOS PATTERNS -->
+        <div id="ios" class="platform">
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">ViewController Lifecycle</div>
+                    <div class="pattern-desc">Standard lifecycle method overrides</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">class</span> <span class="type">ViewController</span>: <span class="type">UIViewController</span> {
+
+    <span class="keyword">override func</span> <span class="function">viewDidLoad</span>() {
+        <span class="keyword">super</span>.viewDidLoad()
+        <span class="comment">// Called once. Setup UI, initialize data.</span>
+    }
+    
+    <span class="keyword">override func</span> <span class="function">viewWillAppear</span>(_ animated: <span class="type">Bool</span>) {
+        <span class="keyword">super</span>.viewWillAppear(animated)
+        <span class="comment">// Called every time. Refresh data.</span>
+    }
+    
+    <span class="keyword">override func</span> <span class="function">viewDidAppear</span>(_ animated: <span class="type">Bool</span>) {
+        <span class="keyword">super</span>.viewDidAppear(animated)
+        <span class="comment">// Now visible. Start animations.</span>
+    }
+    
+    <span class="keyword">override func</span> <span class="function">viewWillDisappear</span>(_ animated: <span class="type">Bool</span>) {
+        <span class="keyword">super</span>.viewWillDisappear(animated)
+        <span class="comment">// About to hide. Save state, stop tasks.</span>
+    }
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">GCD: Background → Main Thread</div>
+                    <div class="pattern-desc">Safe way to update UI after background work</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Do work on background queue, update UI on main</span>
+<span class="type">DispatchQueue</span>.global(qos: .userInitiated).async {
+    <span class="comment">// Background thread - do heavy work</span>
+    <span class="keyword">let</span> data = <span class="keyword">self</span>.fetchDataFromNetwork()
+    
+    <span class="type">DispatchQueue</span>.main.async {
+        <span class="comment">// Main thread - update UI</span>
+        <span class="keyword">self</span>.label.text = data
+        <span class="keyword">self</span>.activityIndicator.stopAnimating()
+    }
+}
+
+<span class="comment">// Delayed execution</span>
+<span class="type">DispatchQueue</span>.main.asyncAfter(deadline: .now() + <span class="number">2.0</span>) {
+    <span class="keyword">self</span>.showAlert()
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">async/await (iOS 15+)</div>
+                    <div class="pattern-desc">Modern concurrency pattern</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// Define async function</span>
+<span class="keyword">func</span> <span class="function">fetchUser</span>() <span class="keyword">async throws</span> -> <span class="type">User</span> {
+    <span class="keyword">let</span> (data, _) = <span class="keyword">try await</span> <span class="type">URLSession</span>.shared.data(from: url)
+    <span class="keyword">return try</span> <span class="type">JSONDecoder</span>().decode(<span class="type">User</span>.<span class="keyword">self</span>, from: data)
+}
+
+<span class="comment">// Call from Task</span>
+<span class="type">Task</span> {
+    <span class="keyword">do</span> {
+        <span class="keyword">let</span> user = <span class="keyword">try await</span> fetchUser()
+        <span class="comment">// Already on MainActor if in SwiftUI/UIViewController</span>
+        nameLabel.text = user.name
+    } <span class="keyword">catch</span> {
+        print(<span class="string">"Error: </span>\(error)<span class="string">"</span>)
+    }
+}</pre>
+                </div>
+                <div class="note"><strong>@MainActor</strong> ensures code runs on main thread. SwiftUI views are implicitly @MainActor.</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">TableView DataSource</div>
+                    <div class="pattern-desc">Basic UITableView setup</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">class</span> <span class="type">ViewController</span>: <span class="type">UIViewController</span>, <span class="type">UITableViewDataSource</span> {
+    
+    <span class="keyword">var</span> items: [<span class="type">String</span>] = [<span class="string">"Item 1"</span>, <span class="string">"Item 2"</span>, <span class="string">"Item 3"</span>]
+    
+    <span class="keyword">func</span> <span class="function">tableView</span>(_ tableView: <span class="type">UITableView</span>, 
+                    numberOfRowsInSection section: <span class="type">Int</span>) -> <span class="type">Int</span> {
+        <span class="keyword">return</span> items.count
+    }
+    
+    <span class="keyword">func</span> <span class="function">tableView</span>(_ tableView: <span class="type">UITableView</span>, 
+                    cellForRowAt indexPath: <span class="type">IndexPath</span>) -> <span class="type">UITableViewCell</span> {
+        <span class="keyword">let</span> cell = tableView.dequeueReusableCell(
+            withIdentifier: <span class="string">"Cell"</span>, 
+            for: indexPath
+        )
+        cell.textLabel?.text = items[indexPath.row]
+        <span class="keyword">return</span> cell
+    }
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Delegate Pattern</div>
+                    <div class="pattern-desc">Custom delegate for communication</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// 1. Define protocol</span>
+<span class="keyword">protocol</span> <span class="type">ItemSelectionDelegate</span>: <span class="type">AnyObject</span> {
+    <span class="keyword">func</span> <span class="function">didSelectItem</span>(_ item: <span class="type">Item</span>)
+}
+
+<span class="comment">// 2. Child class with delegate</span>
+<span class="keyword">class</span> <span class="type">ItemListViewController</span>: <span class="type">UIViewController</span> {
+    <span class="keyword">weak var</span> delegate: <span class="type">ItemSelectionDelegate</span>?
+    
+    <span class="keyword">func</span> <span class="function">itemTapped</span>(_ item: <span class="type">Item</span>) {
+        delegate?.didSelectItem(item)
+    }
+}
+
+<span class="comment">// 3. Parent class implements delegate</span>
+<span class="keyword">class</span> <span class="type">MainViewController</span>: <span class="type">UIViewController</span>, <span class="type">ItemSelectionDelegate</span> {
+    
+    <span class="keyword">func</span> <span class="function">showList</span>() {
+        <span class="keyword">let</span> listVC = <span class="type">ItemListViewController</span>()
+        listVC.delegate = <span class="keyword">self</span>  <span class="comment">// Set delegate</span>
+        present(listVC, animated: <span class="keyword">true</span>)
+    }
+    
+    <span class="keyword">func</span> <span class="function">didSelectItem</span>(_ item: <span class="type">Item</span>) {
+        print(<span class="string">"Selected: </span>\(item.name)<span class="string">"</span>)
+    }
+}</pre>
+                </div>
+                <div class="note"><strong>weak var delegate</strong> prevents retain cycle — parent owns child, so delegate must be weak.</div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">Closure Callback (with weak self)</div>
+                    <div class="pattern-desc">Avoiding retain cycles in closures</div>
+                </div>
+                <div class="code-block">
+<pre><span class="comment">// ❌ BAD - creates retain cycle</span>
+networkManager.fetchData { data <span class="keyword">in</span>
+    <span class="keyword">self</span>.updateUI(with: data)
+}
+
+<span class="comment">// ✅ GOOD - weak self</span>
+networkManager.fetchData { [<span class="keyword">weak self</span>] data <span class="keyword">in</span>
+    <span class="keyword">guard let self</span> = <span class="keyword">self else</span> { <span class="keyword">return</span> }
+    <span class="keyword">self</span>.updateUI(with: data)
+}
+
+<span class="comment">// ✅ Also valid - optional chaining</span>
+networkManager.fetchData { [<span class="keyword">weak self</span>] data <span class="keyword">in</span>
+    <span class="keyword">self</span>?.updateUI(with: data)
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">UserDefaults</div>
+                    <div class="pattern-desc">Simple key-value storage</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">let</span> defaults = <span class="type">UserDefaults</span>.standard
+
+<span class="comment">// Save data</span>
+defaults.set(<span class="string">"john"</span>, forKey: <span class="string">"username"</span>)
+defaults.set(<span class="number">5</span>, forKey: <span class="string">"loginCount"</span>)
+defaults.set(<span class="keyword">true</span>, forKey: <span class="string">"isLoggedIn"</span>)
+
+<span class="comment">// Read data</span>
+<span class="keyword">let</span> username = defaults.string(forKey: <span class="string">"username"</span>) ?? <span class="string">""</span>
+<span class="keyword">let</span> count = defaults.integer(forKey: <span class="string">"loginCount"</span>)  <span class="comment">// 0 if not set</span>
+<span class="keyword">let</span> loggedIn = defaults.bool(forKey: <span class="string">"isLoggedIn"</span>)  <span class="comment">// false if not set</span>
+
+<span class="comment">// Remove</span>
+defaults.removeObject(forKey: <span class="string">"username"</span>)</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">URLSession Request</div>
+                    <div class="pattern-desc">Basic network request</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">func</span> <span class="function">fetchData</span>(completion: <span class="annotation">@escaping</span> (<span class="type">Result</span>&lt;<span class="type">Data</span>, <span class="type">Error</span>&gt;) -> <span class="type">Void</span>) {
+    <span class="keyword">guard let</span> url = <span class="type">URL</span>(string: <span class="string">"https://api.example.com/data"</span>) <span class="keyword">else</span> {
+        <span class="keyword">return</span>
+    }
+    
+    <span class="type">URLSession</span>.shared.dataTask(with: url) { data, response, error <span class="keyword">in</span>
+        <span class="keyword">if let</span> error = error {
+            completion(.failure(error))
+            <span class="keyword">return</span>
+        }
+        
+        <span class="keyword">guard let</span> data = data <span class="keyword">else</span> {
+            completion(.failure(<span class="type">NSError</span>(domain: <span class="string">""</span>, code: -<span class="number">1</span>)))
+            <span class="keyword">return</span>
+        }
+        
+        completion(.success(data))
+    }.resume()  <span class="comment">// Don't forget resume()!</span>
+}
+
+<span class="comment">// Usage</span>
+fetchData { [<span class="keyword">weak self</span>] result <span class="keyword">in</span>
+    <span class="type">DispatchQueue</span>.main.async {
+        <span class="keyword">switch</span> result {
+        <span class="keyword">case</span> .success(<span class="keyword">let</span> data):
+            <span class="keyword">self</span>?.handleData(data)
+        <span class="keyword">case</span> .failure(<span class="keyword">let</span> error):
+            <span class="keyword">self</span>?.showError(error)
+        }
+    }
+}</pre>
+                </div>
+            </div>
+            
+            <div class="pattern">
+                <div class="pattern-header">
+                    <div class="pattern-title">SwiftUI Basic View</div>
+                    <div class="pattern-desc">Simple SwiftUI view with state</div>
+                </div>
+                <div class="code-block">
+<pre><span class="keyword">struct</span> <span class="type">ContentView</span>: <span class="type">View</span> {
+    <span class="annotation">@State</span> <span class="keyword">private var</span> count = <span class="number">0</span>
+    <span class="annotation">@State</span> <span class="keyword">private var</span> name = <span class="string">""</span>
+    
+    <span class="keyword">var</span> body: <span class="keyword">some</span> <span class="type">View</span> {
+        <span class="type">VStack</span>(spacing: <span class="number">20</span>) {
+            <span class="type">Text</span>(<span class="string">"Count: </span>\(count)<span class="string">"</span>)
+                .font(.title)
+            
+            <span class="type">Button</span>(<span class="string">"Increment"</span>) {
+                count += <span class="number">1</span>
+            }
+            .buttonStyle(.borderedProminent)
+            
+            <span class="type">TextField</span>(<span class="string">"Enter name"</span>, text: $name)
+                .textFieldStyle(.roundedBorder)
+            
+            <span class="type">Text</span>(<span class="string">"Hello, </span>\(name)<span class="string">"</span>)
+        }
+        .padding()
+    }
+}</pre>
+                </div>
+                <div class="note"><strong>@State</strong> for local view state. <strong>$name</strong> creates a two-way binding.</div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        function showPlatform(platform) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab.${platform}`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.platform').forEach(p => p.classList.remove('active'));
+            document.getElementById(platform).classList.add('active');
+        }
+    </script>
+</body>
+</html>
