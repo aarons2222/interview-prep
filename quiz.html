@@ -876,7 +876,31 @@
         }
 
         function init() {
-            roundQuestions = shuffleArray(questionBank).slice(0, QUESTIONS_PER_ROUND);
+            // Get recently seen questions from localStorage
+            let recentlySeen = JSON.parse(localStorage.getItem('recentQuestions') || '[]');
+            
+            // Create indices for all questions
+            const allIndices = questionBank.map((_, i) => i);
+            
+            // Filter out recently seen (keep last 200 seen to cycle through)
+            let available = allIndices.filter(i => !recentlySeen.includes(i));
+            
+            // If not enough unseen questions, reset the seen list
+            if (available.length < QUESTIONS_PER_ROUND) {
+                recentlySeen = [];
+                available = allIndices;
+                localStorage.setItem('recentQuestions', '[]');
+            }
+            
+            // Shuffle available and pick questions
+            const shuffledAvailable = shuffleArray(available);
+            const selectedIndices = shuffledAvailable.slice(0, QUESTIONS_PER_ROUND);
+            roundQuestions = selectedIndices.map(i => questionBank[i]);
+            
+            // Update recently seen
+            recentlySeen = [...recentlySeen, ...selectedIndices].slice(-300);
+            localStorage.setItem('recentQuestions', JSON.stringify(recentlySeen));
+            
             document.getElementById('totalQ').textContent = QUESTIONS_PER_ROUND;
             document.getElementById('bankInfo').textContent = `Question bank: ${questionBank.length} questions`;
             results = [];
@@ -1085,6 +1109,7 @@
                 localStorage.removeItem('lastQuizResults');
                 localStorage.removeItem('quizCount');
                 localStorage.removeItem('bestScore');
+                localStorage.removeItem('recentQuestions');
                 updateStats();
                 alert('Stats reset! Fresh start 🚀');
             }
