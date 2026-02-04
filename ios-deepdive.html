@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS/Swift Deep Dive</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #007aff, #5856d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .section h2 {
+            color: #007aff;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            color: #5ac8fa;
+            font-size: 1.1rem;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+        code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            color: #5ac8fa;
+        }
+        p { margin: 10px 0; }
+        ul { margin: 10px 0 10px 20px; }
+        li { margin: 5px 0; }
+        strong { color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th { color: #5ac8fa; }
+        .tip {
+            background: rgba(0, 122, 255, 0.15);
+            border-left: 3px solid #007aff;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .nav { text-align: center; margin-bottom: 20px; }
+        .nav a {
+            color: #5ac8fa;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .nav a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍎 iOS / Swift Deep Dive</h1>
+        <p class="subtitle">Interview preparation - detailed explanations</p>
+        
+        <div class="nav">
+            <a href="index.html">← Quiz</a>
+            <a href="android-deepdive.html">Android →</a>
+            <a href="quick-reference.html">Quick Ref</a>
+        </div>
+
+        <div class="section">
+            <h2>🧠 Memory Management</h2>
+            
+            <h3>ARC (Automatic Reference Counting)</h3>
+            <p>Swift uses ARC to track and manage memory. Every time you create a class instance, ARC allocates memory. When that instance is no longer needed, ARC frees it.</p>
+            
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Each object has a <strong>retain count</strong></li>
+                <li><code>strong</code> reference → count +1</li>
+                <li>Object deallocated when count reaches 0</li>
+            </ul>
+
+            <h3>Reference Types</h3>
+            
+            <p><strong>Strong (default)</strong> — Increases retain count, keeps object alive</p>
+<pre><code>var person: Person? = Person(name: "Aaron")
+// Retain count = 1
+person = nil
+// Retain count = 0 → deallocated</code></pre>
+
+            <p><strong>Weak</strong> — Doesn't increase retain count, becomes nil when object deallocates</p>
+<pre><code>weak var delegate: SomeDelegate?
+// Use for: delegates, parent references, breaking cycles
+// Must be optional (can become nil)
+// Must be var (value changes)</code></pre>
+
+            <p><strong>Unowned</strong> — Like weak but assumes object will always exist</p>
+<pre><code>unowned let owner: Person
+// Use when: You're certain the referenced object outlives this one
+// Crashes if accessed after deallocation
+// Can be non-optional</code></pre>
+
+            <h3>Retain Cycles (Memory Leaks)</h3>
+            <p>When two objects hold strong references to each other, neither can be deallocated:</p>
+<pre><code>class Person {
+    var apartment: Apartment?
+}
+
+class Apartment {
+    var tenant: Person?  // 💥 Retain cycle!
+}
+
+let aaron = Person()
+let flat = Apartment()
+aaron.apartment = flat
+flat.tenant = aaron
+// Neither can be deallocated!</code></pre>
+
+            <p><strong>Fix with weak:</strong></p>
+<pre><code>class Apartment {
+    weak var tenant: Person?  // ✅ No cycle
+}</code></pre>
+
+            <h3>Closures & Retain Cycles</h3>
+            <p>Closures capture references strongly by default:</p>
+<pre><code>class ViewController {
+    var name = "Main"
+    
+    func setupHandler() {
+        // 💥 self captured strongly
+        someService.onComplete = {
+            print(self.name)
+        }
+    }
+}</code></pre>
+
+            <p><strong>Fix with capture list:</strong></p>
+<pre><code>someService.onComplete = { [weak self] in
+    guard let self = self else { return }
+    print(self.name)
+}
+
+// Or unowned if you're certain:
+someService.onComplete = { [unowned self] in
+    print(self.name)
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Concurrency</h2>
+            
+            <h3>The Problem</h3>
+            <ul>
+                <li>UI must run on <strong>main thread</strong></li>
+                <li>Network/disk operations block the thread</li>
+                <li>Blocking main thread = frozen UI</li>
+            </ul>
+
+            <h3>GCD (Grand Central Dispatch)</h3>
+            <p>The "old" way — still widely used:</p>
+<pre><code>// Background work
+DispatchQueue.global(qos: .background).async {
+    let data = fetchDataFromNetwork()
+    
+    // Update UI on main thread
+    DispatchQueue.main.async {
+        self.label.text = data
+    }
+}</code></pre>
+
+            <p><strong>Quality of Service (QoS):</strong></p>
+            <table>
+                <tr><th>QoS</th><th>Use For</th></tr>
+                <tr><td>.userInteractive</td><td>Animations, immediate response</td></tr>
+                <tr><td>.userInitiated</td><td>User waiting (opening document)</td></tr>
+                <tr><td>.default</td><td>Standard priority</td></tr>
+                <tr><td>.utility</td><td>Long tasks with progress (downloads)</td></tr>
+                <tr><td>.background</td><td>User not waiting (backup, sync)</td></tr>
+            </table>
+
+            <h3>async/await (iOS 15+)</h3>
+            <p>Modern, cleaner approach:</p>
+<pre><code>func fetchUser() async throws -> User {
+    let url = URL(string: "https://api.example.com/user")!
+    let (data, _) = try await URLSession.shared.data(from: url)
+    return try JSONDecoder().decode(User.self, from: data)
+}
+
+// Calling it:
+Task {
+    do {
+        let user = try await fetchUser()
+        self.user = user  // UI update
+    } catch {
+        print(error)
+    }
+}</code></pre>
+
+            <p><strong>Parallel execution:</strong></p>
+<pre><code>async let profile = fetchProfile()
+async let posts = fetchPosts()
+async let friends = fetchFriends()
+
+// All three run in parallel:
+let data = try await (profile, posts, friends)</code></pre>
+
+            <h3>Actors (Thread-Safe Classes)</h3>
+            <p>Actors protect mutable state from data races:</p>
+<pre><code>actor BankAccount {
+    private var balance: Double = 0
+    
+    func deposit(_ amount: Double) {
+        balance += amount
+    }
+}
+
+// Usage (must await):
+let account = BankAccount()
+await account.deposit(100)</code></pre>
+
+            <p><strong>@MainActor</strong> — Guarantees main thread:</p>
+<pre><code>@MainActor
+class ViewModel: ObservableObject {
+    @Published var items: [Item] = []
+    
+    func load() async {
+        let data = await fetchItems()  // Background
+        items = data  // Main thread (guaranteed)
+    }
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ Architecture Patterns</h2>
+            
+            <h3>MVC (Model-View-Controller)</h3>
+            <p>Apple's default, simple but can lead to "Massive View Controller":</p>
+            <ul>
+                <li><strong>Model</strong> — Data & business logic</li>
+                <li><strong>View</strong> — UI (UIKit views, storyboards)</li>
+                <li><strong>Controller</strong> — Glues them together, handles events</li>
+            </ul>
+            <p><strong>Problem:</strong> Controllers grow huge, hard to test.</p>
+
+            <h3>MVVM (Model-View-ViewModel)</h3>
+            <p>Better separation, testable:</p>
+<pre><code>// Model
+struct User {
+    let name: String
+    let email: String
+}
+
+// ViewModel
+class UserViewModel: ObservableObject {
+    @Published var displayName: String = ""
+    @Published var isLoading: Bool = false
+    
+    func loadUser() async {
+        isLoading = true
+        let user = await userService.fetchUser()
+        displayName = user.name
+        isLoading = false
+    }
+}
+
+// View (SwiftUI)
+struct UserView: View {
+    @StateObject var viewModel = UserViewModel()
+    
+    var body: some View {
+        if viewModel.isLoading {
+            ProgressView()
+        } else {
+            Text(viewModel.displayName)
+        }
+    }
+}</code></pre>
+
+            <div class="tip">
+                <strong>Benefits:</strong> ViewModel has no UIKit/SwiftUI imports → testable. View is dumb — just renders state.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎨 SwiftUI State Management</h2>
+            
+            <h3>Property Wrappers</h3>
+            
+            <table>
+                <tr><th>Wrapper</th><th>Use When</th></tr>
+                <tr><td>@State</td><td>Simple local value (toggles, text input)</td></tr>
+                <tr><td>@Binding</td><td>Child needs to modify parent's state</td></tr>
+                <tr><td>@StateObject</td><td>View creates & owns the object</td></tr>
+                <tr><td>@ObservedObject</td><td>Object passed from parent</td></tr>
+                <tr><td>@EnvironmentObject</td><td>Shared app-wide state</td></tr>
+            </table>
+
+            <p><strong>@State</strong> — Local value, owned by this view:</p>
+<pre><code>@State private var count = 0
+
+Button("Count: \(count)") {
+    count += 1
+}</code></pre>
+
+            <p><strong>@Binding</strong> — Reference to state owned elsewhere:</p>
+<pre><code>struct ChildView: View {
+    @Binding var count: Int
+}
+
+// Parent passes binding:
+ChildView(count: $count)</code></pre>
+
+            <p><strong>@StateObject vs @ObservedObject</strong>:</p>
+<pre><code>// StateObject: View CREATES the object (use in parent)
+@StateObject var viewModel = MyViewModel()
+
+// ObservedObject: Object PASSED IN (use in child)
+@ObservedObject var viewModel: MyViewModel</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🌐 Networking & Codable</h2>
+            
+<pre><code>func fetchUsers() async throws -> [User] {
+    let url = URL(string: "https://api.example.com/users")!
+    let (data, response) = try await URLSession.shared.data(from: url)
+    
+    guard let httpResponse = response as? HTTPURLResponse,
+          httpResponse.statusCode == 200 else {
+        throw NetworkError.badResponse
+    }
+    
+    return try JSONDecoder().decode([User].self, from: data)
+}</code></pre>
+
+            <h3>Codable (JSON Parsing)</h3>
+<pre><code>struct User: Codable {
+    let id: Int
+    let name: String
+    let email: String
+    
+    // Custom keys:
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name = "full_name"
+        case email = "email_address"
+    }
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>💾 Data Persistence</h2>
+            
+            <table>
+                <tr><th>Method</th><th>Use For</th></tr>
+                <tr><td>UserDefaults</td><td>Small key-value data (settings, preferences)</td></tr>
+                <tr><td>Keychain</td><td>Secure data (tokens, passwords)</td></tr>
+                <tr><td>Core Data</td><td>Complex relational data, offline sync</td></tr>
+                <tr><td>SwiftData (iOS 17+)</td><td>Modern Core Data replacement</td></tr>
+                <tr><td>Files</td><td>Documents, large blobs</td></tr>
+            </table>
+
+<pre><code>// UserDefaults
+UserDefaults.standard.set("Aaron", forKey: "username")
+let name = UserDefaults.standard.string(forKey: "username")
+
+// SwiftData
+@Model
+class User {
+    var name: String
+    var email: String
+}
+
+@Query var users: [User]  // Auto-updates</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Testing</h2>
+            
+<pre><code>import XCTest
+@testable import MyApp
+
+class UserViewModelTests: XCTestCase {
+    func testDisplayNameFormatting() {
+        let vm = UserViewModel()
+        vm.user = User(firstName: "Aaron", lastName: "Strickland")
+        
+        XCTAssertEqual(vm.displayName, "Aaron Strickland")
+    }
+    
+    func testLoadingState() async {
+        let vm = UserViewModel(service: MockUserService())
+        
+        XCTAssertFalse(vm.isLoading)
+        await vm.loadUser()
+        XCTAssertFalse(vm.isLoading)
+        XCTAssertNotNil(vm.user)
+    }
+}</code></pre>
+        </div>
+
+        <p style="text-align: center; color: #888; margin-top: 30px;">
+            You've shipped 5 apps — you know this stuff. This is just a refresher. 💪
+        </p>
+    </div>
+</body>
+</html>

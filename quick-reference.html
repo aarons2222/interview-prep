@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Reference - Daffodil IT Interview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff9500, #ff2d55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card.portfolio h2 { color: #ff9500; }
+        .card.ios h2 { color: #007aff; }
+        .card.android h2 { color: #3ddc84; }
+        .card.behavioral h2 { color: #ff2d55; }
+        .card.questions h2 { color: #5856d6; }
+        .card h3 {
+            color: #ccc;
+            font-size: 1rem;
+            margin: 16px 0 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+        }
+        th { color: #ff9500; }
+        ul { margin: 10px 0 10px 20px; }
+        li { margin: 5px 0; font-size: 0.95rem; }
+        strong { color: #fff; }
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .star {
+            background: rgba(255, 149, 0, 0.15);
+            border-left: 3px solid #ff9500;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+        .nav { text-align: center; margin-bottom: 20px; }
+        .nav a {
+            color: #ff9500;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .nav a:hover { text-decoration: underline; }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Quick Reference</h1>
+        <p class="subtitle">Daffodil IT Interview — Feb 5, 2026</p>
+        
+        <div class="nav">
+            <a href="index.html">← Quiz</a>
+            <a href="ios-deepdive.html">iOS Deep Dive</a>
+            <a href="android-deepdive.html">Android Deep Dive</a>
+        </div>
+
+        <div class="grid">
+            <div class="card portfolio full-width">
+                <h2>🚀 Your Portfolio</h2>
+                <p><strong>URL:</strong> <a href="https://aaron-strickland.vercel.app" style="color: #ff9500;">aaron-strickland.vercel.app</a></p>
+                <table>
+                    <tr><th>App</th><th>Stack</th><th>Key Talking Points</th></tr>
+                    <tr>
+                        <td><strong>eLOQ</strong></td>
+                        <td>Swift, Kotlin, BLE</td>
+                        <td>Chinese SDK integration, audit trails, migrated Obj-C/Java → modern</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Unify Messenger</strong></td>
+                        <td>Swift, Kotlin, WebSocket</td>
+                        <td>Secure messaging for prisons, compliance requirements</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ordernise</strong></td>
+                        <td>SwiftUI, CloudKit, StoreKit 2</td>
+                        <td>Built for personal need, iCloud sync, in-app purchases</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Powerful Reports</strong></td>
+                        <td>Swift, Kotlin, Compose</td>
+                        <td>Analytics for wife's business, Ofsted data</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Oddly Enough</strong></td>
+                        <td>React Native, Expo, Node</td>
+                        <td>Cross-platform, content aggregation, fun side project</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="card ios">
+                <h2>🍎 iOS Quick Hits</h2>
+                
+                <h3>Memory</h3>
+                <ul>
+                    <li><strong>ARC</strong> — Automatic Reference Counting</li>
+                    <li><strong>strong</strong> — Default, keeps object alive</li>
+                    <li><strong>weak</strong> — Doesn't retain, becomes nil</li>
+                    <li><strong>unowned</strong> — Doesn't retain, crashes if nil</li>
+                    <li><strong>Retain cycle</strong> — Fix with weak/unowned in closures</li>
+                </ul>
+
+                <h3>Concurrency</h3>
+                <ul>
+                    <li><code>async/await</code> — Modern (iOS 15+)</li>
+                    <li><code>Task { }</code> — Launch async work</li>
+                    <li><code>@MainActor</code> — Guarantees main thread</li>
+                    <li><code>DispatchQueue.main</code> — GCD main thread</li>
+                </ul>
+
+                <h3>SwiftUI State</h3>
+                <ul>
+                    <li><code>@State</code> — Local value</li>
+                    <li><code>@Binding</code> — Reference to parent's state</li>
+                    <li><code>@StateObject</code> — Create & own object</li>
+                    <li><code>@ObservedObject</code> — Observe passed object</li>
+                </ul>
+            </div>
+
+            <div class="card android">
+                <h2>🤖 Android Quick Hits</h2>
+                
+                <h3>Lifecycle</h3>
+                <ul>
+                    <li><code>onCreate</code> → <code>onStart</code> → <code>onResume</code></li>
+                    <li><code>onPause</code> → <code>onStop</code> → <code>onDestroy</code></li>
+                    <li><strong>ViewModel</strong> survives rotation</li>
+                </ul>
+
+                <h3>Coroutines</h3>
+                <ul>
+                    <li><code>viewModelScope.launch { }</code></li>
+                    <li><code>Dispatchers.Main</code> — UI thread</li>
+                    <li><code>Dispatchers.IO</code> — Network/disk</li>
+                    <li><code>withContext()</code> — Switch dispatcher</li>
+                </ul>
+
+                <h3>Compose State</h3>
+                <ul>
+                    <li><code>remember { mutableStateOf() }</code></li>
+                    <li><code>rememberSaveable</code> — Survives rotation</li>
+                    <li><code>collectAsState()</code> — Flow → State</li>
+                    <li><code>LaunchedEffect</code> — Side effects</li>
+                </ul>
+            </div>
+
+            <div class="card behavioral full-width">
+                <h2>💬 Behavioral Questions (STAR)</h2>
+                
+                <div class="star">
+                    <strong>S</strong>ituation → <strong>T</strong>ask → <strong>A</strong>ction → <strong>R</strong>esult
+                </div>
+
+                <h3>"Tell me about a challenging bug"</h3>
+                <p><strong>S:</strong> eLOQ Android had a 20-second black screen after PIN entry.</p>
+                <p><strong>T:</strong> Users couldn't access the app, needed urgent fix.</p>
+                <p><strong>A:</strong> Profiled with Android Studio, found <code>verifyDevice()</code> blocking main thread. Moved to coroutine with <code>Dispatchers.IO</code>.</p>
+                <p><strong>R:</strong> Fixed the freeze, improved UX, modernized codebase to Kotlin.</p>
+
+                <h3>"Tell me about working with a difficult SDK"</h3>
+                <p><strong>S:</strong> eLOQ required Chinese manufacturer's BLE SDK with poor docs.</p>
+                <p><strong>T:</strong> Needed to integrate smart key programming with full audit trails.</p>
+                <p><strong>A:</strong> Worked directly with their engineers, reverse-engineered some parts, built wrapper classes.</p>
+                <p><strong>R:</strong> Successfully integrated, app used across retail, education, healthcare sectors.</p>
+
+                <h3>"Why mobile development?"</h3>
+                <p>Love the immediacy — build something, put it in someone's hand. Enjoy the constraints — performance, battery, offline. Seeing apps on the App Store with real users is satisfying.</p>
+            </div>
+
+            <div class="card questions">
+                <h2>❓ Questions to Ask Them</h2>
+                
+                <h3>About the Role</h3>
+                <ul>
+                    <li>What does a typical project look like?</li>
+                    <li>What's the team structure?</li>
+                    <li>iOS, Android, or both?</li>
+                </ul>
+
+                <h3>About the Tech</h3>
+                <ul>
+                    <li>What's the current tech stack?</li>
+                    <li>Any plans for SwiftUI/Compose?</li>
+                    <li>How do you handle CI/CD?</li>
+                </ul>
+
+                <h3>About Growth</h3>
+                <ul>
+                    <li>How do you support learning?</li>
+                    <li>What does success look like in 6 months?</li>
+                </ul>
+            </div>
+
+            <div class="card portfolio">
+                <h2>🎯 Quick Reminders</h2>
+                <ul>
+                    <li><strong>Breathe</strong> — Pause before answering</li>
+                    <li><strong>Say "I don't know"</strong> — Follow with "but I'd approach it by..."</li>
+                    <li><strong>Show curiosity</strong> — Ask follow-ups</li>
+                    <li><strong>Be honest</strong> — Don't oversell</li>
+                    <li><strong>Bring examples</strong> — Portfolio on phone, GitHub</li>
+                </ul>
+
+                <h3>Your Details</h3>
+                <ul>
+                    <li><strong>Portfolio:</strong> aaron-strickland.vercel.app</li>
+                    <li><strong>GitHub:</strong> github.com/aarons2222</li>
+                    <li><strong>Email:</strong> aaron.strickland@icloud.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="text-align: center; color: #888; margin-top: 30px;">
+            You've shipped 5 apps — you know your stuff. Good luck! 💪
+        </p>
+    </div>
+</body>
+</html>

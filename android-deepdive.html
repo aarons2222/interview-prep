@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android/Kotlin Deep Dive</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #3ddc84, #4285f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .section h2 {
+            color: #3ddc84;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            color: #8ab4f8;
+            font-size: 1.1rem;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+        code {
+            font-family: 'JetBrains Mono', Monaco, 'Courier New', monospace;
+            color: #8ab4f8;
+        }
+        p { margin: 10px 0; }
+        ul { margin: 10px 0 10px 20px; }
+        li { margin: 5px 0; }
+        strong { color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th { color: #8ab4f8; }
+        .tip {
+            background: rgba(61, 220, 132, 0.15);
+            border-left: 3px solid #3ddc84;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .lifecycle-diagram {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .nav { text-align: center; margin-bottom: 20px; }
+        .nav a {
+            color: #8ab4f8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .nav a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Android / Kotlin Deep Dive</h1>
+        <p class="subtitle">Interview preparation - detailed explanations</p>
+        
+        <div class="nav">
+            <a href="index.html">← Quiz</a>
+            <a href="ios-deepdive.html">iOS →</a>
+            <a href="quick-reference.html">Quick Ref</a>
+        </div>
+
+        <div class="section">
+            <h2>🔄 Activity Lifecycle</h2>
+            <p>Understanding this is crucial — interviewers love asking about it.</p>
+            
+            <div class="lifecycle-diagram">
+<pre style="text-align: left; display: inline-block;">
+     ┌─────────────┐
+     │  onCreate   │  ← Activity created (setup UI)
+     └──────┬──────┘
+            ▼
+     ┌─────────────┐
+     │  onStart    │  ← Visible to user
+     └──────┬──────┘
+            ▼
+     ┌─────────────┐
+     │  onResume   │  ← Interactive (foreground)
+     └──────┬──────┘
+            │
+    [USER INTERACTING]
+            │
+            ▼
+     ┌─────────────┐
+     │  onPause    │  ← Partially obscured
+     └──────┬──────┘
+            ▼
+     ┌─────────────┐
+     │  onStop     │  ← No longer visible
+     └──────┬──────┘
+            ▼
+     ┌─────────────┐
+     │  onDestroy  │  ← Being destroyed
+     └─────────────┘
+</pre>
+            </div>
+
+            <h3>Key Points</h3>
+            <table>
+                <tr><th>Callback</th><th>Do This</th></tr>
+                <tr><td>onCreate</td><td>Setup views, bind data, one-time init</td></tr>
+                <tr><td>onStart</td><td>Register listeners, start animations</td></tr>
+                <tr><td>onResume</td><td>Resume paused operations (camera, sensors)</td></tr>
+                <tr><td>onPause</td><td>Pause operations, save critical data</td></tr>
+                <tr><td>onStop</td><td>Release resources, unregister listeners</td></tr>
+                <tr><td>onDestroy</td><td>Final cleanup, release all resources</td></tr>
+            </table>
+
+            <div class="tip">
+                <strong>Configuration changes (rotation):</strong> Activity destroyed and recreated → onDestroy → onCreate. Use <strong>ViewModel</strong> to survive this!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧠 ViewModel & LiveData</h2>
+            
+            <h3>Why ViewModel?</h3>
+            <ul>
+                <li>Survives configuration changes (rotation)</li>
+                <li>Separates UI logic from UI controller</li>
+                <li>Scoped to Activity/Fragment lifecycle</li>
+            </ul>
+
+<pre><code>class UserViewModel : ViewModel() {
+    private val _user = MutableLiveData&lt;User&gt;()
+    val user: LiveData&lt;User&gt; = _user  // Expose immutable
+    
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData&lt;Boolean&gt; = _isLoading
+    
+    fun loadUser(id: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = userRepository.getUser(id)
+                _user.value = result
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+}</code></pre>
+
+            <h3>Observing LiveData</h3>
+<pre><code>class UserActivity : AppCompatActivity() {
+    private val viewModel: UserViewModel by viewModels()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        viewModel.user.observe(this) { user ->
+            binding.nameText.text = user.name
+        }
+        
+        viewModel.isLoading.observe(this) { loading ->
+            binding.progressBar.isVisible = loading
+        }
+    }
+}</code></pre>
+
+            <h3>StateFlow (Modern Alternative)</h3>
+<pre><code>class UserViewModel : ViewModel() {
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow&lt;UiState&gt; = _uiState.asStateFlow()
+    
+    fun loadUser() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val user = userRepository.getUser()
+            _uiState.update { it.copy(user = user, isLoading = false) }
+        }
+    }
+}
+
+data class UiState(
+    val user: User? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)</code></pre>
+
+            <table>
+                <tr><th>LiveData</th><th>StateFlow</th></tr>
+                <tr><td>Android-specific</td><td>Kotlin standard</td></tr>
+                <tr><td>Lifecycle-aware by default</td><td>Need repeatOnLifecycle</td></tr>
+                <tr><td>No initial value required</td><td>Requires initial value</td></tr>
+                <tr><td>Simpler for basic cases</td><td>More powerful, composable</td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔀 Coroutines</h2>
+            
+            <h3>Basics</h3>
+<pre><code>// Launch (fire and forget)
+lifecycleScope.launch {
+    val data = fetchData()  // Suspends, doesn't block
+    updateUI(data)
+}
+
+// Async (returns result)
+lifecycleScope.launch {
+    val deferred = async { fetchData() }
+    val result = deferred.await()
+}</code></pre>
+
+            <h3>Dispatchers</h3>
+            <table>
+                <tr><th>Dispatcher</th><th>Use For</th></tr>
+                <tr><td>Dispatchers.Main</td><td>UI thread updates</td></tr>
+                <tr><td>Dispatchers.IO</td><td>Network, disk operations</td></tr>
+                <tr><td>Dispatchers.Default</td><td>CPU-heavy work (sorting, parsing)</td></tr>
+            </table>
+
+<pre><code>viewModelScope.launch {
+    // Switch to IO for network call
+    val data = withContext(Dispatchers.IO) {
+        api.fetchUsers()
+    }
+    // Back on Main for UI update
+    _users.value = data
+}</code></pre>
+
+            <h3>Structured Concurrency</h3>
+<pre><code>// viewModelScope: Cancelled when ViewModel cleared
+class MyViewModel : ViewModel() {
+    fun doWork() {
+        viewModelScope.launch {
+            // Auto-cancelled when ViewModel dies
+        }
+    }
+}
+
+// lifecycleScope: Cancelled when lifecycle ends
+class MyFragment : Fragment() {
+    fun doWork() {
+        lifecycleScope.launch {
+            // Auto-cancelled when fragment destroyed
+        }
+    }
+}</code></pre>
+
+            <h3>Parallel Execution</h3>
+<pre><code>// Sequential (slow) - 4 seconds total
+val user = fetchUser()      // 2 seconds
+val posts = fetchPosts()    // 2 seconds
+
+// Parallel (fast) - 2 seconds total
+coroutineScope {
+    val user = async { fetchUser() }
+    val posts = async { fetchPosts() }
+    
+    val result = Pair(user.await(), posts.await())
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🎨 Jetpack Compose</h2>
+            
+            <h3>Basic Composables</h3>
+<pre><code>@Composable
+fun UserCard(user: User) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = user.name,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Text(
+                text = user.email,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}</code></pre>
+
+            <h3>State Management</h3>
+<pre><code>// remember - survives recomposition
+@Composable
+fun Counter() {
+    var count by remember { mutableStateOf(0) }
+    
+    Button(onClick = { count++ }) {
+        Text("Count: $count")
+    }
+}
+
+// rememberSaveable - survives config changes
+@Composable
+fun SearchBar() {
+    var query by rememberSaveable { mutableStateOf("") }
+    
+    TextField(
+        value = query,
+        onValueChange = { query = it }
+    )
+}</code></pre>
+
+            <h3>State Hoisting</h3>
+            <p>Move state up, pass down values and lambdas:</p>
+<pre><code>// Stateless (reusable)
+@Composable
+fun CounterDisplay(
+    count: Int,
+    onIncrement: () -> Unit
+) {
+    Button(onClick = onIncrement) {
+        Text("Count: $count")
+    }
+}
+
+// Stateful (owns state)
+@Composable
+fun CounterScreen() {
+    var count by remember { mutableStateOf(0) }
+    
+    CounterDisplay(
+        count = count,
+        onIncrement = { count++ }
+    )
+}</code></pre>
+
+            <h3>With ViewModel</h3>
+<pre><code>@Composable
+fun UserScreen(
+    viewModel: UserViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    
+    when {
+        uiState.isLoading -> LoadingSpinner()
+        uiState.error != null -> ErrorMessage(uiState.error!!)
+        else -> UserContent(uiState.user)
+    }
+}</code></pre>
+
+            <h3>Side Effects</h3>
+<pre><code>// Run once when composable enters composition
+LaunchedEffect(Unit) {
+    viewModel.loadData()
+}
+
+// Run when key changes
+LaunchedEffect(userId) {
+    viewModel.loadUser(userId)
+}
+
+// Cleanup when leaving composition
+DisposableEffect(Unit) {
+    val listener = createListener()
+    onDispose { listener.remove() }
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>💉 Dependency Injection (Hilt)</h2>
+            
+<pre><code>// Application
+@HiltAndroidApp
+class MyApp : Application()
+
+// Module
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+    
+    @Provides
+    @Singleton
+    fun provideApiService(): ApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://api.example.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+    }
+}
+
+// ViewModel
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel()
+
+// Activity
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity()</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>💾 Room Database</h2>
+            
+<pre><code>// Entity
+@Entity(tableName = "users")
+data class UserEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val email: String
+)
+
+// DAO
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM users")
+    fun getAll(): Flow&lt;List&lt;UserEntity&gt;&gt;
+    
+    @Query("SELECT * FROM users WHERE id = :id")
+    suspend fun getById(id: String): UserEntity?
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(user: UserEntity)
+    
+    @Delete
+    suspend fun delete(user: UserEntity)
+}
+
+// Database
+@Database(entities = [UserEntity::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🌐 Retrofit Networking</h2>
+            
+<pre><code>interface ApiService {
+    @GET("users")
+    suspend fun getUsers(): List&lt;UserDto&gt;
+    
+    @GET("users/{id}")
+    suspend fun getUser(@Path("id") id: String): UserDto
+    
+    @POST("users")
+    suspend fun createUser(@Body user: CreateUserRequest): UserDto
+    
+    @GET("search")
+    suspend fun search(
+        @Query("q") query: String,
+        @Query("page") page: Int = 1
+    ): SearchResponse
+}</code></pre>
+
+            <h3>With Interceptors</h3>
+<pre><code>val okHttpClient = OkHttpClient.Builder()
+    .addInterceptor { chain ->
+        val request = chain.request().newBuilder()
+            .addHeader("Authorization", "Bearer $token")
+            .build()
+        chain.proceed(request)
+    }
+    .build()
+
+val retrofit = Retrofit.Builder()
+    .baseUrl("https://api.example.com/")
+    .client(okHttpClient)
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ Clean Architecture</h2>
+            
+            <div class="lifecycle-diagram">
+<pre style="text-align: left; display: inline-block;">
+┌─────────────────────────────────────────┐
+│         Presentation Layer              │
+│  (Activities, ViewModels, Composables)  │
+└───────────────────┬─────────────────────┘
+                    ▼
+┌─────────────────────────────────────────┐
+│           Domain Layer                  │
+│  (Use Cases, Repository Interfaces)     │
+└───────────────────┬─────────────────────┘
+                    ▼
+┌─────────────────────────────────────────┐
+│            Data Layer                   │
+│  (Repository Impl, API, Database)       │
+└─────────────────────────────────────────┘
+</pre>
+            </div>
+
+<pre><code>// Domain - Use Case
+class GetUserUseCase @Inject constructor(
+    private val userRepository: UserRepository
+) {
+    suspend operator fun invoke(id: String): Result&lt;User&gt; {
+        return userRepository.getUser(id)
+    }
+}
+
+// Domain - Repository Interface
+interface UserRepository {
+    suspend fun getUser(id: String): Result&lt;User&gt;
+}
+
+// Data - Repository Implementation
+class UserRepositoryImpl @Inject constructor(
+    private val api: ApiService,
+    private val dao: UserDao
+) : UserRepository {
+    
+    override suspend fun getUser(id: String): Result&lt;User&gt; {
+        return try {
+            val user = api.getUser(id)
+            dao.insert(user.toEntity())
+            Result.success(user.toDomain())
+        } catch (e: Exception) {
+            val cached = dao.getById(id)
+            if (cached != null) Result.success(cached.toDomain())
+            else Result.failure(e)
+        }
+    }
+}</code></pre>
+        </div>
+
+        <p style="text-align: center; color: #888; margin-top: 30px;">
+            You've built eLOQ and Unify on Android — you know this stuff. This is just a refresher. 💪
+        </p>
+    </div>
+</body>
+</html>
