@@ -297,6 +297,7 @@
         <div class="stats-bar" id="statsBar">
             <span>🏆 Quizzes completed: <strong id="quizCount">0</strong></span>
             <span>📊 Best score: <strong id="bestScore">-</strong></span>
+            <button onclick="resetStats()" style="background: rgba(255,68,68,0.2); border: 1px solid #ff4444; color: #ff4444; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">Reset</button>
         </div>
         
         <div class="progress-bar">
@@ -1076,6 +1077,17 @@
             const bestScore = localStorage.getItem('bestScore');
             document.getElementById('quizCount').textContent = quizCount;
             document.getElementById('bestScore').textContent = bestScore ? bestScore + '%' : '-';
+        }
+        
+        function resetStats() {
+            if (confirm('Reset all quiz history and stats?')) {
+                localStorage.removeItem('quizHistory');
+                localStorage.removeItem('lastQuizResults');
+                localStorage.removeItem('quizCount');
+                localStorage.removeItem('bestScore');
+                updateStats();
+                alert('Stats reset! Fresh start 🚀');
+            }
         }
         
         function displayHistory() {
