@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJSIP & Mobile VoIP Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            transition: all 0.2s;
+        }
+        
+        .nav a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            color: #f8fafc;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(6, 182, 212, 0.3);
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+            color: #e2e8f0;
+        }
+        
+        h4 {
+            font-size: 1rem;
+            margin: 20px 0 10px;
+            color: #cbd5e1;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            color: #cbd5e1;
+        }
+        
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+            color: #fbbf24;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tip {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .key { color: #06b6d4; font-weight: 600; }
+        
+        .diagram {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .tab.active {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📞 PJSIP & Mobile VoIP Integration</h1>
+        <p class="subtitle">SIP, VoIP, and real-time communication for mobile apps</p>
+        
+        <div class="nav">
+            <a href="index.html">Quiz</a>
+            <a href="all.html">Study Guide</a>
+            <a href="cheatsheet.html">Cheat Sheet</a>
+        </div>
+        
+        <div class="highlight">
+            <strong>What is PJSIP?</strong><br>
+            PJSIP is a free, open-source multimedia communication library written in C. It implements SIP (Session Initiation Protocol), SDP, RTP, STUN, TURN, and ICE — everything you need to build VoIP and video calling apps. It's been in development since 2005 and is used in countless commercial and open-source projects.
+        </div>
+
+        <h2>Why PJSIP for Mobile?</h2>
+        
+        <p>Building VoIP into a mobile app is complex. You need to handle:</p>
+        <ul>
+            <li><strong>Signaling</strong> — Setting up, modifying, and tearing down calls (SIP)</li>
+            <li><strong>Media</strong> — Encoding/decoding audio and video (codecs)</li>
+            <li><strong>NAT Traversal</strong> — Getting through firewalls and routers (STUN/TURN/ICE)</li>
+            <li><strong>Network changes</strong> — WiFi to cellular handoff</li>
+            <li><strong>Background operation</strong> — Receiving calls when app is suspended</li>
+        </ul>
+        
+        <p>PJSIP handles all of this with a portable, high-performance C library that works on both Android and iOS.</p>
+
+        <h2>Core Concepts</h2>
+        
+        <h3>SIP (Session Initiation Protocol)</h3>
+        <p>SIP is the <strong>signaling protocol</strong> — it sets up calls but doesn't carry the actual audio/video. Think of it like a phone operator connecting your call.</p>
+        
+        <div class="diagram">
+            <strong>SIP Call Flow</strong><br><br>
+            Caller → <span style="color:#06b6d4">INVITE</span> → Server → Callee<br>
+            Caller ← <span style="color:#22c55e">100 Trying</span> ← Server<br>
+            Caller ← <span style="color:#22c55e">180 Ringing</span> ← Server ← Callee<br>
+            Caller ← <span style="color:#22c55e">200 OK</span> ← Server ← Callee<br>
+            Caller → <span style="color:#06b6d4">ACK</span> → Server → Callee<br>
+            <span style="color:#fbbf24">═══ RTP Media Stream ═══</span><br>
+            Caller → <span style="color:#ef4444">BYE</span> → Server → Callee
+        </div>
+        
+        <h4>Key SIP Methods</h4>
+        <table>
+            <tr><th>Method</th><th>Purpose</th></tr>
+            <tr><td><span class="key">INVITE</span></td><td>Initiate a call or session</td></tr>
+            <tr><td><span class="key">ACK</span></td><td>Confirm INVITE was received</td></tr>
+            <tr><td><span class="key">BYE</span></td><td>Terminate a call</td></tr>
+            <tr><td><span class="key">CANCEL</span></td><td>Cancel pending INVITE</td></tr>
+            <tr><td><span class="key">REGISTER</span></td><td>Register with SIP server</td></tr>
+            <tr><td><span class="key">OPTIONS</span></td><td>Query capabilities</td></tr>
+        </table>
+
+        <h4>SIP Response Codes</h4>
+        <table>
+            <tr><th>Code</th><th>Meaning</th></tr>
+            <tr><td>1xx</td><td>Provisional (100 Trying, 180 Ringing)</td></tr>
+            <tr><td>2xx</td><td>Success (200 OK)</td></tr>
+            <tr><td>3xx</td><td>Redirection</td></tr>
+            <tr><td>4xx</td><td>Client error (401 Unauthorized, 404 Not Found)</td></tr>
+            <tr><td>5xx</td><td>Server error</td></tr>
+            <tr><td>6xx</td><td>Global failure (603 Decline)</td></tr>
+        </table>
+
+        <h3>RTP (Real-time Transport Protocol)</h3>
+        <p>RTP carries the actual <strong>audio and video data</strong>. While SIP sets up the call, RTP streams the media directly between endpoints (or through a media server).</p>
+        <ul>
+            <li>UDP-based for low latency</li>
+            <li>Includes timestamps and sequence numbers</li>
+            <li>RTCP provides quality feedback</li>
+        </ul>
+
+        <h3>NAT Traversal</h3>
+        <p>Most devices are behind NAT (Network Address Translation), which makes direct peer-to-peer connections difficult. PJSIP uses:</p>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h4>STUN</h4>
+                <p>Discovers your public IP and port. Works when NAT is "friendly" (most home routers).</p>
+            </div>
+            <div class="card">
+                <h4>TURN</h4>
+                <p>Relay server when direct connection fails. All media goes through the server. Higher latency but always works.</p>
+            </div>
+            <div class="card">
+                <h4>ICE</h4>
+                <p>Framework that tries STUN first, falls back to TURN. Finds the best path automatically.</p>
+            </div>
+        </div>
+
+        <h3>Audio Codecs</h3>
+        <p>Codecs compress audio for transmission. PJSIP supports many:</p>
+        <table>
+            <tr><th>Codec</th><th>Bitrate</th><th>Quality</th><th>Notes</th></tr>
+            <tr><td><span class="key">Opus</span></td><td>6-510 kbps</td><td>Excellent</td><td>Best choice, adaptive bitrate</td></tr>
+            <tr><td><span class="key">G.722</span></td><td>64 kbps</td><td>HD Voice</td><td>Wideband, good quality</td></tr>
+            <tr><td><span class="key">G.711</span></td><td>64 kbps</td><td>Good</td><td>Universal compatibility (PCMU/PCMA)</td></tr>
+            <tr><td><span class="key">iLBC</span></td><td>13-15 kbps</td><td>OK</td><td>Good for poor networks</td></tr>
+            <tr><td><span class="key">GSM</span></td><td>13 kbps</td><td>Fair</td><td>Low bandwidth</td></tr>
+        </table>
+
+        <h2>PJSIP Architecture</h2>
+        
+        <div class="diagram">
+            <strong>PJSIP Stack Layers</strong><br><br>
+            ┌─────────────────────────────────────┐<br>
+            │  <span style="color:#06b6d4">PJSUA2 (High-Level C++ API)</span>       │<br>
+            ├─────────────────────────────────────┤<br>
+            │  <span style="color:#22c55e">PJSUA (High-Level C API)</span>          │<br>
+            ├─────────────────────────────────────┤<br>
+            │  PJSIP │ PJMEDIA │ PJNATH │ PJLIB  │<br>
+            │  (SIP) │ (Media) │ (NAT)  │ (Core) │<br>
+            └─────────────────────────────────────┘
+        </div>
+        
+        <ul>
+            <li><strong>PJLIB</strong> — Core utilities, OS abstraction, data structures</li>
+            <li><strong>PJSIP</strong> — SIP protocol stack</li>
+            <li><strong>PJMEDIA</strong> — Media framework (codecs, audio devices, RTP)</li>
+            <li><strong>PJNATH</strong> — NAT traversal (STUN, TURN, ICE)</li>
+            <li><strong>PJSUA</strong> — High-level C API combining everything</li>
+            <li><strong>PJSUA2</strong> — C++ wrapper, easiest to use, recommended for mobile</li>
+        </ul>
+
+        <h2>Mobile Integration</h2>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('android-tab')">🤖 Android</button>
+            <button class="tab" onclick="showTab('ios-tab')">🍎 iOS</button>
+        </div>
+        
+        <div id="android-tab" class="tab-content active">
+            <h3>Android Integration</h3>
+            
+            <h4>Setup</h4>
+            <p>PJSIP provides pre-built libraries or you can compile from source:</p>
+            <pre><code># Clone PJSIP
+git clone https://github.com/pjsip/pjproject.git
+
+# Configure for Android
+export ANDROID_NDK_ROOT=/path/to/ndk
+./configure-android --use-ndk-cflags
+
+# Build
+make dep && make</code></pre>
+            
+            <p>Add the compiled <code>.so</code> files to your project's <code>jniLibs</code> folder.</p>
+
+            <h4>Basic Usage (Java with JNI)</h4>
+            <pre><code>// Load native library
+static {
+    System.loadLibrary("pjsua2");
+}
+
+// Initialize endpoint
+Endpoint ep = new Endpoint();
+EpConfig epConfig = new EpConfig();
+ep.libCreate();
+ep.libInit(epConfig);
+
+// Create transport
+TransportConfig tcfg = new TransportConfig();
+tcfg.setPort(5060);
+ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, tcfg);
+
+// Start library
+ep.libStart();
+
+// Create account
+AccountConfig acfg = new AccountConfig();
+acfg.setIdUri("sip:user@domain.com");
+acfg.getRegConfig().setRegistrarUri("sip:domain.com");
+
+AuthCredInfo cred = new AuthCredInfo("digest", "*", "user", 0, "password");
+acfg.getSipConfig().getAuthCreds().add(cred);
+
+MyAccount acc = new MyAccount();
+acc.create(acfg);</code></pre>
+
+            <h4>Making a Call</h4>
+            <pre><code>// Create call
+MyCall call = new MyCall(acc);
+CallOpParam prm = new CallOpParam();
+call.makeCall("sip:destination@domain.com", prm);</code></pre>
+
+            <h4>Handling Incoming Calls</h4>
+            <pre><code>class MyAccount extends Account {
+    @Override
+    public void onIncomingCall(OnIncomingCallParam prm) {
+        MyCall call = new MyCall(this, prm.getCallId());
+        CallOpParam answerPrm = new CallOpParam();
+        answerPrm.setStatusCode(pjsip_status_code.PJSIP_SC_OK);
+        call.answer(answerPrm);  // Answer the call
+    }
+}</code></pre>
+
+            <h4>Background Operation</h4>
+            <div class="warning">
+                <strong>Challenge:</strong> Android kills background apps aggressively. For VoIP to work reliably, you need:
+            </div>
+            <ul>
+                <li><strong>Foreground Service</strong> with persistent notification</li>
+                <li><strong>Wake locks</strong> to prevent CPU sleep</li>
+                <li><strong>Firebase Cloud Messaging (FCM)</strong> for incoming call push notifications</li>
+                <li><strong>ConnectionService</strong> (Android 8+) for system call integration</li>
+            </ul>
+            
+            <pre><code>// Foreground service for VoIP
+public class VoIPService extends Service {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Notification notification = buildNotification();
+        startForeground(NOTIFICATION_ID, notification);
+        return START_STICKY;
+    }
+}</code></pre>
+        </div>
+        
+        <div id="ios-tab" class="tab-content">
+            <h3>iOS Integration</h3>
+            
+            <h4>Setup</h4>
+            <p>Build PJSIP for iOS:</p>
+            <pre><code># Clone PJSIP
+git clone https://github.com/pjsip/pjproject.git
+cd pjproject
+
+# Configure for iOS
+./configure-iphone
+
+# Build
+make dep && make</code></pre>
+            
+            <p>Add the compiled <code>.a</code> static libraries to your Xcode project.</p>
+
+            <h4>Basic Usage (Swift with Objective-C Bridge)</h4>
+            <pre><code>// Bridging header needed for C/C++ code
+// MyApp-Bridging-Header.h
+#import "pjsua2.hpp"
+
+// Swift wrapper class
+class SIPManager {
+    private var endpoint: Endpoint?
+    private var account: MyAccount?
+    
+    func initialize() {
+        endpoint = Endpoint()
+        
+        var epConfig = EpConfig()
+        try? endpoint?.libCreate()
+        try? endpoint?.libInit(epConfig)
+        
+        var tcfg = TransportConfig()
+        tcfg.port = 5060
+        try? endpoint?.transportCreate(.UDP, tcfg)
+        
+        try? endpoint?.libStart()
+    }
+    
+    func register(user: String, password: String, domain: String) {
+        var acfg = AccountConfig()
+        acfg.idUri = "sip:\(user)@\(domain)"
+        acfg.regConfig.registrarUri = "sip:\(domain)"
+        
+        var cred = AuthCredInfo()
+        cred.scheme = "digest"
+        cred.username = user
+        cred.data = password
+        acfg.sipConfig.authCreds.append(cred)
+        
+        account = MyAccount()
+        try? account?.create(acfg)
+    }
+}</code></pre>
+
+            <h4>CallKit Integration</h4>
+            <p>iOS requires <strong>CallKit</strong> for VoIP apps to display native call UI and work in background:</p>
+            <pre><code>import CallKit
+
+class CallManager: NSObject, CXProviderDelegate {
+    let provider: CXProvider
+    let callController = CXCallController()
+    
+    override init() {
+        let config = CXProviderConfiguration()
+        config.supportsVideo = false
+        config.maximumCallsPerCallGroup = 1
+        config.supportedHandleTypes = [.phoneNumber, .generic]
+        
+        provider = CXProvider(configuration: config)
+        super.init()
+        provider.setDelegate(self, queue: nil)
+    }
+    
+    // Report incoming call to system
+    func reportIncomingCall(uuid: UUID, handle: String) {
+        let update = CXCallUpdate()
+        update.remoteHandle = CXHandle(type: .generic, value: handle)
+        
+        provider.reportNewIncomingCall(with: uuid, update: update) { error in
+            if error == nil {
+                // Show native incoming call UI
+            }
+        }
+    }
+    
+    // User answered
+    func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+        // Answer the PJSIP call
+        sipManager.answerCall()
+        action.fulfill()
+    }
+    
+    // User ended call
+    func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        sipManager.endCall()
+        action.fulfill()
+    }
+}</code></pre>
+
+            <h4>PushKit for VoIP Push</h4>
+            <p>Use <strong>PushKit</strong> to wake your app for incoming calls:</p>
+            <pre><code>import PushKit
+
+class AppDelegate: UIApplicationDelegate, PKPushRegistryDelegate {
+    var voipRegistry: PKPushRegistry!
+    
+    func setupVoIPPush() {
+        voipRegistry = PKPushRegistry(queue: .main)
+        voipRegistry.delegate = self
+        voipRegistry.desiredPushTypes = [.voIP]
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, 
+                      didReceiveIncomingPushWith payload: PKPushPayload,
+                      for type: PKPushType) {
+        // MUST report call to CallKit immediately (iOS 13+)
+        let uuid = UUID()
+        let handle = payload.dictionaryPayload["caller"] as? String ?? "Unknown"
+        callManager.reportIncomingCall(uuid: uuid, handle: handle)
+    }
+}</code></pre>
+
+            <div class="warning">
+                <strong>iOS 13+ Requirement:</strong> When you receive a VoIP push, you MUST report a call to CallKit immediately. If you don't, iOS will terminate your app and may revoke push privileges.
+            </div>
+
+            <h4>Background Modes</h4>
+            <p>Enable in Info.plist or Xcode capabilities:</p>
+            <ul>
+                <li><code>voip</code> — VoIP background mode</li>
+                <li><code>audio</code> — Background audio</li>
+                <li><code>remote-notification</code> — Push notifications</li>
+            </ul>
+        </div>
+
+        <h2>Common Interview Questions</h2>
+        
+        <div class="card">
+            <h4>What is SIP and how does it work?</h4>
+            <p>SIP (Session Initiation Protocol) is a signaling protocol for setting up, managing, and tearing down real-time communication sessions. It handles call setup but doesn't carry media — that's RTP's job. SIP uses methods like INVITE (start call), ACK (confirm), BYE (end call), and REGISTER (authenticate with server).</p>
+        </div>
+        
+        <div class="card">
+            <h4>What's the difference between STUN, TURN, and ICE?</h4>
+            <p><strong>STUN</strong> discovers your public IP/port — works when NAT is cooperative. <strong>TURN</strong> is a relay server — all media goes through it, always works but higher latency. <strong>ICE</strong> is a framework that tries direct connection first, then STUN, then TURN, finding the best path.</p>
+        </div>
+        
+        <div class="card">
+            <h4>How do you handle incoming calls when the app is killed?</h4>
+            <p><strong>Android:</strong> Use FCM (Firebase Cloud Messaging) with high-priority data messages to wake the app, then start a foreground service. <strong>iOS:</strong> Use PushKit VoIP pushes, which wake the app and require immediate CallKit reporting.</p>
+        </div>
+        
+        <div class="card">
+            <h4>What is CallKit and why is it required on iOS?</h4>
+            <p>CallKit is Apple's framework for integrating VoIP calls with the native phone experience. It shows the native call UI, integrates with Do Not Disturb, shows calls in Recents, and is required for VoIP apps to receive calls when backgrounded/killed.</p>
+        </div>
+        
+        <div class="card">
+            <h4>How do you handle network changes (WiFi to cellular)?</h4>
+            <p>PJSIP can handle network changes by re-registering with the SIP server and re-establishing media streams. You need to detect connectivity changes (Android: ConnectivityManager, iOS: NWPathMonitor) and call appropriate PJSIP methods to update transport.</p>
+        </div>
+        
+        <div class="card">
+            <h4>What codecs would you recommend and why?</h4>
+            <p><strong>Opus</strong> is the best choice — it's royalty-free, adaptive bitrate (adjusts to network conditions), and provides excellent quality. <strong>G.711</strong> (PCMU/PCMA) is a fallback for compatibility with legacy systems. For low bandwidth, consider <strong>iLBC</strong> or <strong>Opus</strong> in low-bitrate mode.</p>
+        </div>
+
+        <h2>Best Practices</h2>
+        
+        <div class="tip">
+            <strong>1. Always use ICE</strong> — NAT traversal issues are the #1 cause of "no audio" problems.
+        </div>
+        
+        <div class="tip">
+            <strong>2. Handle network changes gracefully</strong> — Mobile networks are unreliable. Re-register and re-invite when connectivity changes.
+        </div>
+        
+        <div class="tip">
+            <strong>3. Use push notifications properly</strong> — Don't keep persistent connections; use FCM/PushKit to wake the app for incoming calls.
+        </div>
+        
+        <div class="tip">
+            <strong>4. Test on real networks</strong> — Emulators don't show real NAT/firewall issues. Test on WiFi, cellular, and switching between them.
+        </div>
+        
+        <div class="tip">
+            <strong>5. Implement proper call state management</strong> — Track call states (dialing, ringing, connected, ended) and update UI accordingly.
+        </div>
+
+        <h2>Useful Resources</h2>
+        <ul>
+            <li><a href="https://www.pjsip.org/docs/latest/pjsua2/docs/html/" style="color: #06b6d4;">PJSUA2 Documentation</a></li>
+            <li><a href="https://github.com/pjsip/pjproject" style="color: #06b6d4;">PJSIP GitHub Repository</a></li>
+            <li><a href="https://developer.apple.com/documentation/callkit" style="color: #06b6d4;">Apple CallKit Documentation</a></li>
+            <li><a href="https://developer.apple.com/documentation/pushkit" style="color: #06b6d4;">Apple PushKit Documentation</a></li>
+        </ul>
+        
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
