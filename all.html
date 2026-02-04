@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Interview Prep - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        
+        /* Fixed Nav */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        
+        .nav-btn.active {
+            background: rgba(168, 85, 247, 0.3);
+            color: #a855f7;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            color: #f8fafc;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(168, 85, 247, 0.3);
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+            color: #e2e8f0;
+        }
+        
+        h4 {
+            font-size: 1rem;
+            margin: 20px 0 10px;
+            color: #cbd5e1;
+        }
+        
+        p {
+            margin-bottom: 16px;
+            color: #cbd5e1;
+        }
+        
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+            color: #fbbf24;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tip {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22c55e;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .diagram {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 2;
+            overflow-x: auto;
+        }
+        
+        .key { color: #fbbf24; font-weight: 600; }
+        .android { color: #3ddc84; }
+        .ios { color: #007aff; }
+        
+        /* Q&A Accordion */
+        .qa {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .question {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .question::after {
+            content: "+";
+            font-size: 1.5rem;
+            color: #666;
+        }
+        
+        .qa.open .question::after {
+            content: "−";
+        }
+        
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+        
+        .qa.open .answer {
+            max-height: 1000px;
+        }
+        
+        .answer-content {
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Code tabs */
+        .code-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: -1px;
+        }
+        
+        .code-tab {
+            padding: 8px 16px;
+            border: none;
+            background: rgba(255,255,255,0.05);
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .code-tab.active {
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+        }
+        
+        .code-panel {
+            display: none;
+        }
+        
+        .code-panel.active {
+            display: block;
+        }
+        
+        /* Quick ref boxes */
+        .quick-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .quick-box h4 {
+            color: #a855f7;
+            margin-bottom: 12px;
+        }
+        
+        /* Print styles */
+        @media print {
+            .top-nav { display: none; }
+            .container { padding-top: 20px; }
+            .section { display: block !important; page-break-before: always; }
+            body { background: white; color: black; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="nav-btn active" onclick="showSection('cheatsheet')">📋 Cheat Sheet</button>
+        <button class="nav-btn" onclick="showSection('android')">🤖 Android</button>
+        <button class="nav-btn" onclick="showSection('ios')">🍎 iOS</button>
+        <button class="nav-btn" onclick="showSection('general')">🌐 General</button>
+        <button class="nav-btn" onclick="showSection('qa')">❓ Q&A</button>
+        <button class="nav-btn" onclick="showSection('patterns')">💻 Code</button>
+        <a href="index.html" class="nav-btn">🎯 Quiz</a>
+    </nav>
+
+    <div class="container">
+        
+        <!-- ==================== CHEAT SHEET ==================== -->
+        <div id="cheatsheet" class="section active">
+            <h1>📋 Quick Reference Cheat Sheet</h1>
+            <p class="subtitle">Everything you need at a glance</p>
+            
+            <h2>🤖 Android Essentials</h2>
+            
+            <h3>Activity Lifecycle</h3>
+            <div class="diagram">
+                <span style="color:#22c55e">onCreate</span> → 
+                <span style="color:#22c55e">onStart</span> → 
+                <span style="color:#22c55e">onResume</span> → 
+                <span style="color:#fbbf24">[RUNNING]</span> → 
+                <span style="color:#22c55e">onPause</span> → 
+                <span style="color:#22c55e">onStop</span> → 
+                <span style="color:#22c55e">onDestroy</span>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>onCreate</h4>
+                    <p>Initialize UI, setContentView, bind views, restore state</p>
+                </div>
+                <div class="card">
+                    <h4>onStart</h4>
+                    <p>Becoming visible, not interactive yet</p>
+                </div>
+                <div class="card">
+                    <h4>onResume</h4>
+                    <p>Foreground, interactive — start camera, animations</p>
+                </div>
+                <div class="card">
+                    <h4>onPause</h4>
+                    <p>Losing focus — pause video, save drafts (keep it fast!)</p>
+                </div>
+                <div class="card">
+                    <h4>onStop</h4>
+                    <p>No longer visible — release resources, save data</p>
+                </div>
+                <div class="card">
+                    <h4>onDestroy</h4>
+                    <p>Being killed — final cleanup</p>
+                </div>
+            </div>
+            
+            <div class="quick-box">
+                <h4>Common Scenarios</h4>
+                <table>
+                    <tr><td><strong>Home button</strong></td><td>onPause → onStop</td></tr>
+                    <tr><td><strong>Back button</strong></td><td>onPause → onStop → onDestroy</td></tr>
+                    <tr><td><strong>Rotation</strong></td><td>Full destroy → recreate (save state!)</td></tr>
+                    <tr><td><strong>Dialog appears</strong></td><td>onPause only (still visible)</td></tr>
+                </table>
+            </div>
+            
+            <h3>The 4 Components</h3>
+            <table>
+                <tr><th>Component</th><th>Purpose</th><th>Started By</th></tr>
+                <tr><td><span class="key">Activity</span></td><td>Single screen with UI</td><td>Intent</td></tr>
+                <tr><td><span class="key">Service</span></td><td>Background work, no UI</td><td>startService / bindService</td></tr>
+                <tr><td><span class="key">BroadcastReceiver</span></td><td>Responds to system events</td><td>sendBroadcast / system</td></tr>
+                <tr><td><span class="key">ContentProvider</span></td><td>Share data between apps</td><td>ContentResolver</td></tr>
+            </table>
+            
+            <div class="highlight">
+                <strong>Started vs Bound Service:</strong><br>
+                <strong>Started</strong> = fire and forget, runs independently (music player)<br>
+                <strong>Bound</strong> = client-server connection, dies when all unbind
+            </div>
+            
+            <h3>Threading Rules</h3>
+            <div class="warning">
+                <strong>❌ Never touch UI from background thread</strong> — UI toolkit isn't thread-safe
+            </div>
+            <p>Get back to main thread:</p>
+            <pre><code>runOnUiThread(() -> { textView.setText(result); });
+new Handler(Looper.getMainLooper()).post(() -> { });</code></pre>
+            
+            <h3>Context</h3>
+            <table>
+                <tr><td><span class="key">Activity context</span></td><td>Dies with Activity — use for UI, dialogs</td></tr>
+                <tr><td><span class="key">Application context</span></td><td>Lives forever — use for singletons, databases</td></tr>
+            </table>
+            <div class="warning">
+                <strong>⚠️ Memory Leak:</strong> Passing Activity context to singleton = leak. Use getApplicationContext().
+            </div>
+            
+            <h2>🍎 iOS Essentials</h2>
+            
+            <h3>ViewController Lifecycle</h3>
+            <div class="diagram">
+                <span style="color:#007aff">viewDidLoad</span> → 
+                <span style="color:#007aff">viewWillAppear</span> → 
+                <span style="color:#007aff">viewDidAppear</span> → 
+                <span style="color:#fbbf24">[VISIBLE]</span> → 
+                <span style="color:#007aff">viewWillDisappear</span> → 
+                <span style="color:#007aff">viewDidDisappear</span>
+            </div>
+            
+            <div class="highlight">
+                <strong>viewDidLoad</strong> = <strong>once</strong> after view loads (setup)<br>
+                <strong>viewWillAppear</strong> = <strong>every time</strong> before visible (refresh data)
+            </div>
+            
+            <h3>Memory Management (ARC)</h3>
+            <table>
+                <tr><th>Type</th><th>Reference Count</th><th>When Deallocated</th></tr>
+                <tr><td><span class="key">strong</span></td><td>Increases</td><td>Still points to object</td></tr>
+                <tr><td><span class="key">weak</span></td><td>No change</td><td>Becomes nil automatically</td></tr>
+                <tr><td><span class="key">unowned</span></td><td>No change</td><td>Crashes if accessed</td></tr>
+            </table>
+            
+            <h3>Retain Cycles</h3>
+            <p>Two objects with strong references to each other → neither deallocates → <strong>memory leak</strong></p>
+            <pre><code>// ❌ Leak
+closure { self.doThing() }
+
+// ✅ Fixed
+closure { [weak self] in self?.doThing() }</code></pre>
+            
+            <h3>Concurrency</h3>
+            <pre><code>// GCD - background then main
+DispatchQueue.global().async {
+    let data = fetchData()
+    DispatchQueue.main.async {
+        self.updateUI(data)
+    }
+}
+
+// async/await (iOS 15+)
+Task {
+    let data = try await fetchData()
+    updateUI(data)  // automatically main thread
+}</code></pre>
+            
+            <h2>🌐 General</h2>
+            
+            <h3>SOLID Principles</h3>
+            <table>
+                <tr><td><span class="key">S</span>ingle Responsibility</td><td>One class, one job</td></tr>
+                <tr><td><span class="key">O</span>pen/Closed</td><td>Open for extension, closed for modification</td></tr>
+                <tr><td><span class="key">L</span>iskov Substitution</td><td>Subtypes replaceable for parent types</td></tr>
+                <tr><td><span class="key">I</span>nterface Segregation</td><td>Small, focused interfaces</td></tr>
+                <tr><td><span class="key">D</span>ependency Inversion</td><td>Depend on abstractions, not concretions</td></tr>
+            </table>
+            
+            <h3>HTTP Methods</h3>
+            <table>
+                <tr><td><span class="key">GET</span></td><td>Read data</td></tr>
+                <tr><td><span class="key">POST</span></td><td>Create new resource</td></tr>
+                <tr><td><span class="key">PUT</span></td><td>Update (replace entire)</td></tr>
+                <tr><td><span class="key">PATCH</span></td><td>Update (partial)</td></tr>
+                <tr><td><span class="key">DELETE</span></td><td>Remove resource</td></tr>
+            </table>
+            
+            <h3>HTTP Status Codes</h3>
+            <table>
+                <tr><td><strong>2xx</strong></td><td>Success — 200 OK, 201 Created, 204 No Content</td></tr>
+                <tr><td><strong>4xx</strong></td><td>Client error — 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found</td></tr>
+                <tr><td><strong>5xx</strong></td><td>Server error — 500 Internal Server Error, 503 Unavailable</td></tr>
+            </table>
+            
+            <h3>Architecture</h3>
+            <div class="tip">
+                <strong>MVVM</strong> is the safe interview answer. Model (data) → ViewModel (logic, prepares data) → View (dumb UI).<br>
+                Benefits: testable, separation of concerns, works with reactive frameworks.
+            </div>
+        </div>
+
+        <!-- ==================== ANDROID ==================== -->
+        <div id="android" class="section">
+            <h1>🤖 Android Deep Dive</h1>
+            <p class="subtitle">Everything you need to know for Android interviews</p>
+            
+            <h2>Activity Lifecycle In-Depth</h2>
+            
+            <p>Every Activity goes through a series of states. Understanding when each callback fires is crucial for managing resources and avoiding bugs.</p>
+            
+            <div class="diagram">
+                <span style="color:#22c55e">onCreate</span> → 
+                <span style="color:#22c55e">onStart</span> → 
+                <span style="color:#22c55e">onResume</span> → 
+                <span style="color:#fbbf24">[RUNNING]</span> → 
+                <span style="color:#22c55e">onPause</span> → 
+                <span style="color:#22c55e">onStop</span> → 
+                <span style="color:#22c55e">onDestroy</span>
+            </div>
+            
+            <h3>onCreate(Bundle savedInstanceState)</h3>
+            <p>Called <strong>once</strong> when Activity is first created. This is where you:</p>
+            <ul>
+                <li>Call <code>setContentView()</code> to inflate your layout</li>
+                <li>Initialize views with <code>findViewById()</code></li>
+                <li>Set up adapters, listeners, and data bindings</li>
+                <li>Restore state from savedInstanceState if not null</li>
+            </ul>
+            <pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    
+    if (savedInstanceState != null) {
+        counter = savedInstanceState.getInt("counter", 0);
+    }
+    
+    textView = findViewById(R.id.textView);
+    button = findViewById(R.id.button);
+}</code></pre>
+
+            <h3>onStart()</h3>
+            <p>Activity is becoming <strong>visible</strong> but not yet in the foreground. Called after onCreate() or when returning from stopped state.</p>
+            <ul>
+                <li>Register broadcast receivers that update the UI</li>
+                <li>Start animations that should run when visible</li>
+            </ul>
+
+            <h3>onResume()</h3>
+            <p>Activity is in the <strong>foreground</strong> and receiving user input. This is the "running" state.</p>
+            <ul>
+                <li>Start camera preview, sensors, location updates</li>
+                <li>Resume paused video/audio playback</li>
+                <li>Refresh data that might have changed</li>
+            </ul>
+
+            <h3>onPause()</h3>
+            <p>Activity is <strong>losing focus</strong>. Another activity is coming to the foreground (dialog, phone call, etc.).</p>
+            <ul>
+                <li>Pause video, animations, sensors</li>
+                <li>Save draft data (user might not return)</li>
+                <li>Release exclusive resources like camera</li>
+            </ul>
+            <div class="warning">
+                <strong>⚠️ Must be fast!</strong> The next Activity won't resume until onPause() completes. Don't do database writes or network calls here.
+            </div>
+
+            <h3>onStop()</h3>
+            <p>Activity is <strong>no longer visible</strong>. User pressed Home or another Activity fully covers it.</p>
+            <ul>
+                <li>Release resources not needed when invisible</li>
+                <li>Save data to database/SharedPreferences</li>
+                <li>Unregister broadcast receivers</li>
+            </ul>
+
+            <h3>onDestroy()</h3>
+            <p>Activity is being <strong>destroyed</strong>. Either user finished it or system is killing it for memory.</p>
+            <ul>
+                <li>Final cleanup — unregister all listeners</li>
+                <li>Stop any background threads owned by this Activity</li>
+                <li>Release any remaining resources</li>
+            </ul>
+
+            <h3>Saving Instance State</h3>
+            <p>When system destroys your Activity (rotation, low memory), save state to restore later:</p>
+            <pre><code>@Override
+protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt("counter", counter);
+    outState.putString("userName", userName);
+}
+
+// Restore in onCreate or onRestoreInstanceState
+if (savedInstanceState != null) {
+    counter = savedInstanceState.getInt("counter");
+}</code></pre>
+            <div class="tip">
+                <strong>💡 Better approach:</strong> Use <strong>ViewModel</strong> for configuration changes (rotation). It survives automatically. Use onSaveInstanceState only for process death scenarios.
+            </div>
+
+            <h2>The 4 Android Components</h2>
+            
+            <h3>1. Activity</h3>
+            <p>A single screen with UI. The entry point for user interaction.</p>
+            <pre><code>// Start another Activity
+Intent intent = new Intent(this, DetailActivity.class);
+intent.putExtra("item_id", 123);
+startActivity(intent);</code></pre>
+
+            <h3>2. Service</h3>
+            <p>Background work without UI. Two types:</p>
+            
+            <h4>Started Service</h4>
+            <p>Fire and forget. Call <code>startService()</code>, runs until stopSelf() or stopService().</p>
+            <pre><code>// Start
+Intent intent = new Intent(this, MusicService.class);
+startService(intent);
+
+// In Service
+public int onStartCommand(Intent intent, int flags, int startId) {
+    // Do work
+    return START_STICKY; // Restart if killed
+}</code></pre>
+
+            <h4>Bound Service</h4>
+            <p>Client-server pattern. Clients bind and communicate directly.</p>
+            <pre><code>// Bind
+bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+// In Service - return IBinder for communication
+public IBinder onBind(Intent intent) {
+    return new LocalBinder();
+}</code></pre>
+
+            <h4>Foreground Service</h4>
+            <p>Must show notification. Used for ongoing work user should be aware of (music, navigation, downloads).</p>
+            <pre><code>startForeground(NOTIFICATION_ID, notification);</code></pre>
+
+            <h3>3. BroadcastReceiver</h3>
+            <p>Responds to system-wide broadcasts (battery low, connectivity change, boot complete).</p>
+            <pre><code>public class MyReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (Intent.ACTION_BATTERY_LOW.equals(intent.getAction())) {
+            // Handle low battery
+        }
+    }
+}
+
+// Register dynamically
+IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+registerReceiver(receiver, filter);
+
+// Unregister when done!
+unregisterReceiver(receiver);</code></pre>
+            <div class="warning">
+                <strong>⚠️ onReceive() must complete in 10 seconds.</strong> For longer work, start a Service.
+            </div>
+
+            <h3>4. ContentProvider</h3>
+            <p>Manages shared data. Standard interface for accessing data across app boundaries.</p>
+            <pre><code>// Query contacts
+Cursor cursor = getContentResolver().query(
+    ContactsContract.Contacts.CONTENT_URI,
+    projection,
+    selection,
+    selectionArgs,
+    sortOrder
+);</code></pre>
+
+            <h2>Threading</h2>
+            
+            <div class="warning">
+                <strong>🚫 The Golden Rule:</strong> Never access UI from a background thread. The UI toolkit is not thread-safe.
+            </div>
+            
+            <p>Violation causes:</p>
+            <pre><code>CalledFromWrongThreadException: Only the original thread 
+that created a view hierarchy can touch its views.</code></pre>
+
+            <h3>Solutions</h3>
+            
+            <h4>runOnUiThread()</h4>
+            <pre><code>new Thread(() -> {
+    String result = fetchData();
+    
+    runOnUiThread(() -> {
+        textView.setText(result);
+    });
+}).start();</code></pre>
+
+            <h4>Handler</h4>
+            <pre><code>Handler mainHandler = new Handler(Looper.getMainLooper());
+
+executor.execute(() -> {
+    String result = fetchData();
+    
+    mainHandler.post(() -> {
+        textView.setText(result);
+    });
+});</code></pre>
+
+            <h4>Executors (Modern Approach)</h4>
+            <pre><code>ExecutorService executor = Executors.newSingleThreadExecutor();
+Handler handler = new Handler(Looper.getMainLooper());
+
+executor.execute(() -> {
+    // Background
+    String result = fetchFromNetwork();
+    
+    handler.post(() -> {
+        // Main thread
+        updateUI(result);
+    });
+});</code></pre>
+
+            <h2>Memory & Context</h2>
+            
+            <h3>Context Types</h3>
+            <table>
+                <tr><th>Context</th><th>Lifetime</th><th>Use For</th></tr>
+                <tr><td>Activity</td><td>Activity lifecycle</td><td>UI, dialogs, toasts, inflate layouts</td></tr>
+                <tr><td>Application</td><td>App process lifetime</td><td>Singletons, databases, long-lived objects</td></tr>
+            </table>
+
+            <h3>Memory Leak: Activity in Singleton</h3>
+            <pre><code>// ❌ BAD - leaks Activity forever
+public class DataManager {
+    private static DataManager instance;
+    private Context context;
+    
+    public static DataManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new DataManager();
+            instance.context = context; // LEAK if Activity!
+        }
+        return instance;
+    }
+}
+
+// ✅ GOOD - use Application context
+instance.context = context.getApplicationContext();</code></pre>
+
+            <h3>AsyncTask Memory Leak</h3>
+            <p>Inner classes hold implicit reference to outer class:</p>
+            <pre><code>// ❌ BAD - inner class leaks Activity
+class MyActivity extends Activity {
+    class MyTask extends AsyncTask<...> {
+        // Holds reference to MyActivity
+    }
+}
+
+// ✅ GOOD - static + WeakReference
+private static class MyTask extends AsyncTask<...> {
+    private WeakReference<MyActivity> activityRef;
+    
+    MyTask(MyActivity activity) {
+        activityRef = new WeakReference<>(activity);
+    }
+    
+    protected void onPostExecute(String result) {
+        MyActivity activity = activityRef.get();
+        if (activity != null && !activity.isFinishing()) {
+            activity.updateUI(result);
+        }
+    }
+}</code></pre>
+
+            <h3>Common Leak Sources & Fixes</h3>
+            <table>
+                <tr><th>Source</th><th>Fix</th></tr>
+                <tr><td>Singleton with Activity context</td><td>Use getApplicationContext()</td></tr>
+                <tr><td>Inner AsyncTask/Handler</td><td>Make static + WeakReference</td></tr>
+                <tr><td>Unregistered listeners</td><td>Unregister in onStop/onDestroy</td></tr>
+                <tr><td>Static View reference</td><td>Never do this</td></tr>
+            </table>
+            
+            <div class="tip">
+                <strong>💡 Tool:</strong> Mention <strong>LeakCanary</strong> in interviews — shows you know about memory profiling tools.
+            </div>
+        </div>
+
+        <!-- ==================== iOS ==================== -->
+        <div id="ios" class="section">
+            <h1>🍎 iOS Deep Dive</h1>
+            <p class="subtitle">Everything you need to know for iOS interviews</p>
+            
+            <h2>App Lifecycle</h2>
+            
+            <div class="diagram">
+                <span style="color:#64748b">Not Running</span> → 
+                <span style="color:#007aff">Inactive</span> → 
+                <span style="color:#fbbf24">Active</span> → 
+                <span style="color:#007aff">Background</span> → 
+                <span style="color:#64748b">Suspended</span>
+            </div>
+            
+            <table>
+                <tr><th>State</th><th>Description</th></tr>
+                <tr><td><strong>Not Running</strong></td><td>App hasn't launched or was terminated</td></tr>
+                <tr><td><strong>Inactive</strong></td><td>Running in foreground but not receiving events (transitioning)</td></tr>
+                <tr><td><strong>Active</strong></td><td>Running in foreground, receiving events</td></tr>
+                <tr><td><strong>Background</strong></td><td>In background, executing code (limited time)</td></tr>
+                <tr><td><strong>Suspended</strong></td><td>In background, not executing (can be purged)</td></tr>
+            </table>
+
+            <h3>AppDelegate Methods</h3>
+            <pre><code>func application(_ application: UIApplication, 
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    // App launched - one-time setup
+    return true
+}
+
+func applicationWillResignActive(_ application: UIApplication) {
+    // About to lose focus - pause tasks, disable timers
+}
+
+func applicationDidEnterBackground(_ application: UIApplication) {
+    // Now in background - save data, release resources
+}
+
+func applicationWillEnterForeground(_ application: UIApplication) {
+    // Returning to foreground - undo background changes
+}
+
+func applicationDidBecomeActive(_ application: UIApplication) {
+    // Now active - restart tasks, refresh UI
+}</code></pre>
+
+            <h2>ViewController Lifecycle</h2>
+            
+            <div class="diagram">
+                <span style="color:#007aff">viewDidLoad</span> → 
+                <span style="color:#007aff">viewWillAppear</span> → 
+                <span style="color:#007aff">viewDidAppear</span> → 
+                <span style="color:#fbbf24">[VISIBLE]</span> → 
+                <span style="color:#007aff">viewWillDisappear</span> → 
+                <span style="color:#007aff">viewDidDisappear</span>
+            </div>
+
+            <h3>viewDidLoad()</h3>
+            <p>Called <strong>once</strong> after view is loaded into memory.</p>
+            <ul>
+                <li>Initial UI setup</li>
+                <li>Configure views, constraints</li>
+                <li>One-time initialization</li>
+            </ul>
+
+            <h3>viewWillAppear(_:)</h3>
+            <p>Called <strong>every time</strong> view is about to become visible.</p>
+            <ul>
+                <li>Refresh data that might have changed</li>
+                <li>Start observing notifications</li>
+                <li>Update UI for current state</li>
+            </ul>
+
+            <h3>viewDidAppear(_:)</h3>
+            <p>Called after view is visible and animations complete.</p>
+            <ul>
+                <li>Start animations</li>
+                <li>Begin expensive operations</li>
+                <li>Start video/audio playback</li>
+            </ul>
+
+            <h3>viewWillDisappear(_:)</h3>
+            <p>Called when view is about to be hidden.</p>
+            <ul>
+                <li>Save changes</li>
+                <li>Stop timers, observers</li>
+            </ul>
+
+            <h3>viewDidDisappear(_:)</h3>
+            <p>Called after view is no longer visible.</p>
+            <ul>
+                <li>Stop tasks that shouldn't run when hidden</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Key Difference:</strong><br>
+                <code>viewDidLoad</code> = called <strong>once</strong> (setup)<br>
+                <code>viewWillAppear</code> = called <strong>every time</strong> (refresh)
+            </div>
+
+            <h2>ARC (Automatic Reference Counting)</h2>
+            
+            <p>Swift's memory management system. Compiler inserts retain/release at compile time (not runtime like garbage collection).</p>
+            
+            <p>Every class instance has a <strong>reference count</strong>. When it hits zero → deallocated.</p>
+
+            <pre><code>class Person {
+    let name: String
+    init(name: String) { 
+        self.name = name
+        print("\(name) initialized")
+    }
+    deinit { 
+        print("\(name) deinitialized")
+    }
+}
+
+var ref1: Person? = Person(name: "John")  // Count: 1
+var ref2 = ref1                            // Count: 2
+ref1 = nil                                 // Count: 1
+ref2 = nil                                 // Count: 0 → deinit</code></pre>
+
+            <h3>Reference Types</h3>
+            <table>
+                <tr><th>Type</th><th>Count Change</th><th>When Deallocated</th><th>Must Be Optional?</th></tr>
+                <tr><td><span class="key">strong</span></td><td>+1</td><td>Still valid</td><td>No</td></tr>
+                <tr><td><span class="key">weak</span></td><td>No change</td><td>Becomes nil</td><td>Yes</td></tr>
+                <tr><td><span class="key">unowned</span></td><td>No change</td><td>Crashes if accessed</td><td>No</td></tr>
+            </table>
+
+            <h3>Retain Cycles</h3>
+            <p>Two objects hold strong references to each other → neither can deallocate → <strong>memory leak</strong>.</p>
+
+            <pre><code>class Person {
+    var apartment: Apartment?
+}
+class Apartment {
+    var tenant: Person?  // Strong reference!
+}
+
+let john = Person()
+let unit4A = Apartment()
+john.apartment = unit4A
+unit4A.tenant = john
+// john → unit4A and unit4A → john
+// Neither can be freed!
+
+// FIX: Make one reference weak
+class Apartment {
+    weak var tenant: Person?
+}</code></pre>
+
+            <h3>Closures and Retain Cycles</h3>
+            <p>Closures capture references strongly by default:</p>
+
+            <pre><code>// ❌ RETAIN CYCLE
+class ViewController {
+    var onComplete: (() -> Void)?
+    
+    func setup() {
+        onComplete = {
+            self.doSomething()  // Strong capture of self
+        }
+        // self → onComplete → self
+    }
+}
+
+// ✅ FIXED with capture list
+onComplete = { [weak self] in
+    self?.doSomething()
+}
+
+// Or with guard
+onComplete = { [weak self] in
+    guard let self = self else { return }
+    self.doSomething()
+}</code></pre>
+
+            <div class="highlight">
+                <strong>When to use which:</strong><br>
+                <strong>weak</strong>: Reference might become nil (network callbacks, async operations)<br>
+                <strong>unowned</strong>: Reference will always outlive the closure
+            </div>
+
+            <h2>Concurrency</h2>
+            
+            <h3>GCD (Grand Central Dispatch)</h3>
+            <pre><code>// Background work → Main thread update
+DispatchQueue.global(qos: .userInitiated).async {
+    let data = self.fetchData()
+    
+    DispatchQueue.main.async {
+        self.tableView.reloadData()
+    }
+}
+
+// Delayed execution
+DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+    self.showAlert()
+}</code></pre>
+
+            <h4>Quality of Service</h4>
+            <table>
+                <tr><th>QoS</th><th>Use For</th></tr>
+                <tr><td>.userInteractive</td><td>Instant feedback (animations)</td></tr>
+                <tr><td>.userInitiated</td><td>User waiting (loading)</td></tr>
+                <tr><td>.utility</td><td>Long tasks with progress</td></tr>
+                <tr><td>.background</td><td>User doesn't care (backups)</td></tr>
+            </table>
+
+            <h3>async/await (iOS 15+)</h3>
+            <pre><code>// Define async function
+func fetchUser() async throws -> User {
+    let (data, _) = try await URLSession.shared.data(from: url)
+    return try JSONDecoder().decode(User.self, from: data)
+}
+
+// Call from Task
+Task {
+    do {
+        let user = try await fetchUser()
+        self.user = user  // Main thread in SwiftUI
+    } catch {
+        print("Error: \(error)")
+    }
+}
+
+// @MainActor ensures main thread
+@MainActor
+func updateUI() {
+    label.text = "Done"
+}</code></pre>
+
+            <h2>Swift Essentials</h2>
+            
+            <h3>Optionals</h3>
+            <pre><code>var name: String? = nil   // Optional - can be nil
+
+name!                      // Force unwrap (crashes if nil)
+name?                      // Optional chaining (returns nil)
+name ?? "default"          // Nil coalescing
+
+if let name = name { }     // Safe unwrap
+guard let name = name else { return }  // Early exit</code></pre>
+
+            <h3>struct vs class</h3>
+            <table>
+                <tr><th></th><th>struct</th><th>class</th></tr>
+                <tr><td>Type</td><td>Value</td><td>Reference</td></tr>
+                <tr><td>Copy</td><td>Creates new copy</td><td>Shares reference</td></tr>
+                <tr><td>Inheritance</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Memory</td><td>Usually stack</td><td>Heap</td></tr>
+            </table>
+            <div class="tip">
+                <strong>💡 Default to struct.</strong> Use class when you need identity, inheritance, or shared mutable state.
+            </div>
+
+            <h3>Protocols</h3>
+            <pre><code>protocol Drawable {
+    var color: String { get }
+    func draw()
+}
+
+struct Circle: Drawable {
+    var color: String
+    func draw() { print("Drawing circle") }
+}
+
+// Protocol extension - default implementation
+extension Drawable {
+    func describe() {
+        print("A \(color) shape")
+    }
+}</code></pre>
+
+            <h3>Delegates vs Closures</h3>
+            <table>
+                <tr><th></th><th>Delegate</th><th>Closure</th></tr>
+                <tr><td>Pattern</td><td>Protocol + weak reference</td><td>Inline callback</td></tr>
+                <tr><td>Best for</td><td>Multiple callbacks</td><td>Single callback</td></tr>
+                <tr><td>Memory</td><td>weak var delegate</td><td>[weak self] capture</td></tr>
+            </table>
+        </div>
+
+        <!-- ==================== GENERAL ==================== -->
+        <div id="general" class="section">
+            <h1>🌐 General Concepts</h1>
+            <p class="subtitle">Architecture, principles, and fundamenttic knowledge</p>
+            
+            <h2>SOLID Principles</h2>
+            
+            <h3>S — Single Responsibility</h3>
+            <p>A class should have only <strong>one reason to change</strong>.</p>
+            <pre><code>// ❌ BAD - too many responsibilities
+class User {
+    func saveToDatabase() { }
+    func sendEmail() { }
+    func generateReport() { }
+}
+
+// ✅ GOOD - separate concerns
+class User { }
+class UserRepository { func save(user: User) { } }
+class EmailService { func send(to: User) { } }
+class ReportGenerator { func generate(for: User) { } }</code></pre>
+
+            <h3>O — Open/Closed</h3>
+            <p>Open for <strong>extension</strong>, closed for <strong>modification</strong>.</p>
+            <pre><code>// ❌ BAD - must modify to add shapes
+func area(shape: String) -> Double {
+    if shape == "rectangle" { ... }
+    if shape == "circle" { ... }
+    // Add more shapes = modify this function
+}
+
+// ✅ GOOD - extend by adding new types
+protocol Shape {
+    func area() -> Double
+}
+class Rectangle: Shape { ... }
+class Circle: Shape { ... }
+// New shapes = new classes, no modification</code></pre>
+
+            <h3>L — Liskov Substitution</h3>
+            <p>Subtypes must be <strong>substitutable</strong> for their base types without breaking behavior.</p>
+
+            <h3>I — Interface Segregation</h3>
+            <p>Many <strong>small interfaces</strong> are better than one big interface.</p>
+            <pre><code>// ❌ BAD - forces unused implementations
+protocol Worker {
+    func work()
+    func eat()
+}
+class Robot: Worker {
+    func eat() { } // Robots don't eat!
+}
+
+// ✅ GOOD - separate interfaces
+protocol Workable { func work() }
+protocol Eatable { func eat() }
+class Robot: Workable { ... }</code></pre>
+
+            <h3>D — Dependency Inversion</h3>
+            <p>Depend on <strong>abstractions</strong>, not concretions.</p>
+            <pre><code>// ❌ BAD - depends on concrete class
+class UserService {
+    let db = MySQLDatabase()  // Tightly coupled
+}
+
+// ✅ GOOD - depends on abstraction
+protocol Database { func save(_ user: User) }
+
+class UserService {
+    let db: Database  // Can inject any database
+    init(db: Database) { self.db = db }
+}</code></pre>
+
+            <h2>Architecture Patterns</h2>
+            
+            <h3>MVC (Model-View-Controller)</h3>
+            <ul>
+                <li><strong>Model</strong>: Data and business logic</li>
+                <li><strong>View</strong>: UI elements</li>
+                <li><strong>Controller</strong>: Mediates between Model and View</li>
+            </ul>
+            <p>Problem: Controllers often become "Massive View Controllers" with too much responsibility.</p>
+
+            <h3>MVVM (Model-View-ViewModel)</h3>
+            <ul>
+                <li><strong>Model</strong>: Data and business logic</li>
+                <li><strong>View</strong>: UI (UIViewController, SwiftUI View)</li>
+                <li><strong>ViewModel</strong>: Prepares data for display, handles UI logic</li>
+            </ul>
+            <pre><code>// Model
+struct User {
+    let firstName: String
+    let lastName: String
+}
+
+// ViewModel
+class UserViewModel {
+    private let user: User
+    
+    var fullName: String {
+        "\(user.firstName) \(user.lastName)"
+    }
+}
+
+// View just displays ViewModel properties
+label.text = viewModel.fullName</code></pre>
+            <div class="tip">
+                <strong>💡 Interview Answer:</strong> "I prefer MVVM — it separates concerns, makes code testable, and works great with reactive frameworks like Combine."
+            </div>
+
+            <h3>Other Patterns</h3>
+            <ul>
+                <li><strong>MVP</strong>: Like MVVM but Presenter explicitly tells View what to do</li>
+                <li><strong>Clean Architecture</strong>: Layers (Domain → Data → Presentation) with strict dependency rules</li>
+                <li><strong>Coordinator</strong>: Handles navigation outside ViewControllers</li>
+            </ul>
+
+            <h2>REST & HTTP</h2>
+            
+            <h3>HTTP Methods</h3>
+            <table>
+                <tr><th>Method</th><th>Purpose</th><th>Idempotent?</th></tr>
+                <tr><td><span class="key">GET</span></td><td>Read data</td><td>Yes</td></tr>
+                <tr><td><span class="key">POST</span></td><td>Create resource</td><td>No</td></tr>
+                <tr><td><span class="key">PUT</span></td><td>Replace resource</td><td>Yes</td></tr>
+                <tr><td><span class="key">PATCH</span></td><td>Partial update</td><td>No</td></tr>
+                <tr><td><span class="key">DELETE</span></td><td>Remove resource</td><td>Yes</td></tr>
+            </table>
+            <p><strong>Idempotent</strong> = same request multiple times gives same result (safe to retry).</p>
+
+            <h3>Status Codes</h3>
+            <table>
+                <tr><td><strong>200 OK</strong></td><td>Success</td></tr>
+                <tr><td><strong>201 Created</strong></td><td>Resource created (POST)</td></tr>
+                <tr><td><strong>204 No Content</strong></td><td>Success, no body (DELETE)</td></tr>
+                <tr><td><strong>400 Bad Request</strong></td><td>Invalid syntax</td></tr>
+                <tr><td><strong>401 Unauthorized</strong></td><td>Authentication required</td></tr>
+                <tr><td><strong>403 Forbidden</strong></td><td>Authenticated but not allowed</td></tr>
+                <tr><td><strong>404 Not Found</strong></td><td>Resource doesn't exist</td></tr>
+                <tr><td><strong>500 Server Error</strong></td><td>Generic server error</td></tr>
+            </table>
+
+            <h3>RESTful URLs</h3>
+            <pre><code>GET    /users           → List users
+GET    /users/123       → Get user 123
+POST   /users           → Create user
+PUT    /users/123       → Replace user 123
+PATCH  /users/123       → Update user 123
+DELETE /users/123       → Delete user 123
+GET    /users/123/posts → Get posts by user 123</code></pre>
+
+            <h2>Git Essentials</h2>
+            
+            <h3>Key Commands</h3>
+            <table>
+                <tr><td><code>git pull</code></td><td>Fetch + merge remote</td></tr>
+                <tr><td><code>git fetch</code></td><td>Download remote (don't merge)</td></tr>
+                <tr><td><code>git stash</code></td><td>Save uncommitted changes</td></tr>
+                <tr><td><code>git stash pop</code></td><td>Restore stashed changes</td></tr>
+                <tr><td><code>git rebase main</code></td><td>Replay commits on main</td></tr>
+                <tr><td><code>git cherry-pick SHA</code></td><td>Copy specific commit</td></tr>
+            </table>
+
+            <h3>Merge vs Rebase</h3>
+            <p><strong>Merge:</strong> Creates merge commit, preserves history</p>
+            <p><strong>Rebase:</strong> Replays commits, creates linear history</p>
+            <div class="warning">
+                <strong>⚠️ Never rebase shared commits.</strong> Rebase rewrites history — only use on local branches.
+            </div>
+
+            <h3>Undoing Things</h3>
+            <pre><code>git reset --soft HEAD~1   // Undo commit, keep staged
+git reset --hard HEAD~1   // Undo commit, discard changes
+git revert SHA            // Create new commit that undoes (safe)</code></pre>
+        </div>
+
+        <!-- ==================== Q&A ==================== -->
+        <div id="qa" class="section">
+            <h1>❓ Interview Q&A</h1>
+            <p class="subtitle">Click questions to reveal answers</p>
+            
+            <h2>🤖 Android Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What happens when you rotate an Android device?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>The Activity is <strong>destroyed and recreated</strong>. Full lifecycle: onPause → onStop → onDestroy → onCreate → onStart → onResume.</p>
+                    <p>To preserve data:</p>
+                    <ul>
+                        <li><code>onSaveInstanceState()</code> for small UI state</li>
+                        <li><strong>ViewModel</strong> survives configuration changes (preferred)</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between Serializable and Parcelable?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Serializable:</strong> Java standard, uses reflection, slower, easy to implement.</p>
+                    <p><strong>Parcelable:</strong> Android-specific, manual implementation, 10x faster, optimized for IPC.</p>
+                    <p>Always answer <strong>Parcelable</strong> for Android interviews.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Why can't you update UI from a background thread?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>The Android UI toolkit is <strong>not thread-safe</strong>. Multiple threads modifying Views causes race conditions and crashes.</p>
+                    <p>Solution: Use <code>runOnUiThread()</code>, Handler, or coroutines to post updates to main thread.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What causes memory leaks in Android?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Common causes:</p>
+                    <ul>
+                        <li>Static references to Activity/Context</li>
+                        <li>Inner classes (AsyncTask, Handler) holding Activity reference</li>
+                        <li>Unregistered listeners</li>
+                    </ul>
+                    <p>Fixes: Use Application context for singletons, static inner class + WeakReference, unregister in onDestroy.</p>
+                </div></div>
+            </div>
+
+            <h2>🍎 iOS Questions</h2>
+            
+            <div class="qa">
+                <div class="question">Explain ARC and how it works</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Automatic Reference Counting</strong> — compiler inserts retain/release at compile time (not garbage collection).</p>
+                    <p>Each object has reference count. When it hits zero → deallocated.</p>
+                    <ul>
+                        <li><strong>strong:</strong> Increments count</li>
+                        <li><strong>weak:</strong> No increment, becomes nil when deallocated</li>
+                        <li><strong>unowned:</strong> No increment, crashes if accessed after dealloc</li>
+                    </ul>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's a retain cycle and how do you fix it?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Two objects hold strong references to each other → neither can deallocate → memory leak.</p>
+                    <p>Common in closures: <code>self.closure = { self.doThing() }</code></p>
+                    <p>Fix: Use <code>[weak self]</code> or <code>[unowned self]</code> in capture list.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">What's the difference between frame and bounds?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>frame:</strong> Position and size in superview's coordinate system (where view sits in parent)</p>
+                    <p><strong>bounds:</strong> Position and size in view's own coordinate system (usually origin 0,0)</p>
+                    <p>Use frame to position views. Bounds.origin is how UIScrollView scrolls internally.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">struct vs class in Swift?</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>struct:</strong> Value type, copied on assignment, no inheritance, usually stack.</p>
+                    <p><strong>class:</strong> Reference type, shared on assignment, supports inheritance, heap.</p>
+                    <p>Apple recommends <strong>struct by default</strong>. Use class when you need identity, inheritance, or shared state.</p>
+                </div></div>
+            </div>
+
+            <h2>🌐 General Questions</h2>
+            
+            <div class="qa">
+                <div class="question">What is dependency injection?</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Pass dependencies in from outside instead of creating them inside.</p>
+                    <p>Benefits: Testability (inject mocks), flexibility (swap implementations), decoupling.</p>
+                    <pre><code>// Instead of: let api = APIClient()
+// Do: init(api: APIClient) { self.api = api }</code></pre>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">Explain MVVM architecture</div>
+                <div class="answer"><div class="answer-content">
+                    <p><strong>Model:</strong> Data and business logic</p>
+                    <p><strong>View:</strong> UI layer (dumb)</p>
+                    <p><strong>ViewModel:</strong> Prepares data for display, handles UI logic</p>
+                    <p>View observes ViewModel. ViewModel doesn't know about View. Benefits: testable, separated concerns.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you debug a crash?</div>
+                <div class="answer"><div class="answer-content">
+                    <ol>
+                        <li>Read the stack trace — find your code</li>
+                        <li>Reproduce — can you make it crash again?</li>
+                        <li>Check obvious: nil/null, index bounds, threading</li>
+                        <li>Add logging to narrow down location</li>
+                        <li>Use debugger — breakpoints, step through</li>
+                        <li>Check recent changes — git diff</li>
+                    </ol>
+                    <p>Mention tools: Firebase Crashlytics, Sentry.</p>
+                </div></div>
+            </div>
+
+            <h2>💬 Behavioral Questions</h2>
+            
+            <div class="qa">
+                <div class="question">Tell me about a challenging bug you solved</div>
+                <div class="answer"><div class="answer-content">
+                    <p>Use <strong>STAR method:</strong></p>
+                    <ul>
+                        <li><strong>S</strong>ituation: Context</li>
+                        <li><strong>T</strong>ask: The problem</li>
+                        <li><strong>A</strong>ction: What YOU did</li>
+                        <li><strong>R</strong>esult: Outcome</li>
+                    </ul>
+                    <p>Good examples: race conditions, memory leaks, device-specific bugs.</p>
+                </div></div>
+            </div>
+            
+            <div class="qa">
+                <div class="question">How do you stay current with mobile development?</div>
+                <div class="answer"><div class="answer-content">
+                    <ul>
+                        <li>WWDC / Google I/O sessions</li>
+                        <li>Official blogs and release notes</li>
+                        <li>Side projects to try new APIs</li>
+                        <li>Communities: Reddit, Twitter</li>
+                    </ul>
+                    <p>Be specific — mention a recent feature you learned.</p>
+                </div></div>
+            </div>
+        </div>
+
+        <!-- ==================== CODE PATTERNS ==================== -->
+        <div id="patterns" class="section">
+            <h1>💻 Code Patterns</h1>
+            <p class="subtitle">Common patterns and snippets</p>
+            
+            <div class="code-tabs">
+                <button class="code-tab active" onclick="showCodeTab('android-code')">🤖 Android</button>
+                <button class="code-tab" onclick="showCodeTab('ios-code')">🍎 iOS</button>
+            </div>
+            
+            <div id="android-code" class="code-panel active">
+                <h2>Activity Lifecycle</h2>
+                <pre><code>public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // Initialize views
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh data, start animations
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Pause animations, save drafts
+    }
+}</code></pre>
+
+                <h2>Background Thread → UI</h2>
+                <pre><code>// Option 1: runOnUiThread
+new Thread(() -> {
+    String result = fetchData();
+    
+    runOnUiThread(() -> {
+        textView.setText(result);
+    });
+}).start();
+
+// Option 2: Handler
+Handler handler = new Handler(Looper.getMainLooper());
+executor.execute(() -> {
+    String result = fetchData();
+    handler.post(() -> textView.setText(result));
+});</code></pre>
+
+                <h2>RecyclerView Adapter</h2>
+                <pre><code>public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    
+    private List<Item> items;
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.item_layout, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Item item = items.get(position);
+        holder.titleText.setText(item.getTitle());
+    }
+
+    @Override
+    public int getItemCount() { return items.size(); }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleText;
+        ViewHolder(View view) {
+            super(view);
+            titleText = view.findViewById(R.id.title);
+        }
+    }
+}</code></pre>
+
+                <h2>Intent with Data</h2>
+                <pre><code>// Send
+Intent intent = new Intent(this, DetailActivity.class);
+intent.putExtra("USER_ID", 123);
+intent.putExtra("USER_NAME", "John");
+startActivity(intent);
+
+// Receive
+int userId = getIntent().getIntExtra("USER_ID", -1);
+String userName = getIntent().getStringExtra("USER_NAME");</code></pre>
+
+                <h2>SharedPreferences</h2>
+                <pre><code>SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+// Save
+prefs.edit()
+    .putString("username", "john")
+    .putBoolean("loggedIn", true)
+    .apply();
+
+// Read
+String username = prefs.getString("username", "");
+boolean loggedIn = prefs.getBoolean("loggedIn", false);</code></pre>
+
+                <h2>Singleton (Thread-Safe)</h2>
+                <pre><code>public class DataManager {
+    private static volatile DataManager instance;
+    
+    private DataManager() { }
+    
+    public static DataManager getInstance() {
+        if (instance == null) {
+            synchronized (DataManager.class) {
+                if (instance == null) {
+                    instance = new DataManager();
+                }
+            }
+        }
+        return instance;
+    }
+}</code></pre>
+            </div>
+            
+            <div id="ios-code" class="code-panel">
+                <h2>ViewController Lifecycle</h2>
+                <pre><code>class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // One-time setup
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Refresh data every time
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // Stop tasks
+    }
+}</code></pre>
+
+                <h2>GCD: Background → Main</h2>
+                <pre><code>DispatchQueue.global(qos: .userInitiated).async {
+    let data = self.fetchData()
+    
+    DispatchQueue.main.async {
+        self.tableView.reloadData()
+    }
+}
+
+// Delayed
+DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+    self.showAlert()
+}</code></pre>
+
+                <h2>async/await</h2>
+                <pre><code>func fetchUser() async throws -> User {
+    let (data, _) = try await URLSession.shared.data(from: url)
+    return try JSONDecoder().decode(User.self, from: data)
+}
+
+Task {
+    do {
+        let user = try await fetchUser()
+        self.user = user
+    } catch {
+        print(error)
+    }
+}</code></pre>
+
+                <h2>Delegate Pattern</h2>
+                <pre><code>// 1. Protocol
+protocol SelectionDelegate: AnyObject {
+    func didSelect(_ item: Item)
+}
+
+// 2. Child with delegate
+class ListVC: UIViewController {
+    weak var delegate: SelectionDelegate?
+    
+    func itemTapped(_ item: Item) {
+        delegate?.didSelect(item)
+    }
+}
+
+// 3. Parent implements
+class MainVC: UIViewController, SelectionDelegate {
+    func showList() {
+        let vc = ListVC()
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+    
+    func didSelect(_ item: Item) {
+        print("Selected: \(item)")
+    }
+}</code></pre>
+
+                <h2>Closure with weak self</h2>
+                <pre><code>// ❌ Retain cycle
+networkManager.fetch { data in
+    self.updateUI(data)
+}
+
+// ✅ Fixed
+networkManager.fetch { [weak self] data in
+    guard let self = self else { return }
+    self.updateUI(data)
+}</code></pre>
+
+                <h2>UserDefaults</h2>
+                <pre><code>let defaults = UserDefaults.standard
+
+// Save
+defaults.set("john", forKey: "username")
+defaults.set(true, forKey: "loggedIn")
+
+// Read
+let username = defaults.string(forKey: "username") ?? ""
+let loggedIn = defaults.bool(forKey: "loggedIn")</code></pre>
+
+                <h2>URLSession Request</h2>
+                <pre><code>func fetchData(completion: @escaping (Result<Data, Error>) -> Void) {
+    guard let url = URL(string: "https://api.example.com") else { return }
+    
+    URLSession.shared.dataTask(with: url) { data, _, error in
+        if let error = error {
+            completion(.failure(error))
+            return
+        }
+        if let data = data {
+            completion(.success(data))
+        }
+    }.resume()  // Don't forget!
+}</code></pre>
+
+                <h2>SwiftUI View</h2>
+                <pre><code>struct ContentView: View {
+    @State private var count = 0
+    @State private var name = ""
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Count: \(count)")
+            
+            Button("Increment") {
+                count += 1
+            }
+            
+            TextField("Name", text: $name)
+        }
+        .padding()
+    }
+}</code></pre>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        document.querySelectorAll('.qa').forEach(qa => {
+            qa.querySelector('.question').addEventListener('click', () => {
+                qa.classList.toggle('open');
+            });
+        });
+        
+        function showCodeTab(id) {
+            document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
