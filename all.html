@@ -512,9 +512,19 @@ Task {
             <h1>🤖 Android Deep Dive</h1>
             <p class="subtitle">Everything you need to know for Android interviews</p>
             
+            <div class="highlight">
+                <strong>Why Android Knowledge Matters:</strong> Android powers over 70% of mobile devices worldwide. Understanding its architecture — how Activities manage UI, how Services handle background work, and how the system manages memory — is essential for building apps that don't crash, drain battery, or frustrate users.
+            </div>
+            
             <h2>Activity Lifecycle In-Depth</h2>
             
-            <p>Every Activity goes through a series of states. Understanding when each callback fires is crucial for managing resources and avoiding bugs.</p>
+            <p>The Activity lifecycle is the <strong>#1 most asked Android interview topic</strong>. Every Activity goes through a series of states from birth to death. Understanding when each callback fires is crucial for:</p>
+            <ul>
+                <li>Saving user data at the right time</li>
+                <li>Releasing resources when not needed</li>
+                <li>Avoiding memory leaks and crashes</li>
+                <li>Handling screen rotation gracefully</li>
+            </ul>
             
             <div class="diagram">
                 <span style="color:#22c55e">onCreate</span> → 
@@ -608,8 +618,14 @@ if (savedInstanceState != null) {
 
             <h2>The 4 Android Components</h2>
             
+            <p>Android apps are built from four fundamental building blocks. Each component serves a specific purpose and has its own lifecycle. Understanding these is essential — interviewers love asking about when to use each one.</p>
+            
+            <div class="highlight">
+                <strong>Key insight:</strong> Unlike desktop apps where you have one entry point (main function), Android apps can be entered through any component. A user might launch your Activity, or the system might start your Service, or a broadcast might wake up your Receiver.
+            </div>
+            
             <h3>1. Activity</h3>
-            <p>A single screen with UI. The entry point for user interaction.</p>
+            <p>A single screen with UI. The entry point for user interaction. Think of each Activity as one "page" of your app — the login screen, the home feed, the settings page are all separate Activities.</p>
             <pre><code>// Start another Activity
 Intent intent = new Intent(this, DetailActivity.class);
 intent.putExtra("item_id", 123);
@@ -678,9 +694,13 @@ Cursor cursor = getContentResolver().query(
 
             <h2>Threading</h2>
             
+            <p>Threading is where many Android developers struggle. The core problem: you need to do slow work (network calls, database queries) without freezing the UI, but Android only lets you touch UI elements from the main thread.</p>
+            
             <div class="warning">
-                <strong>🚫 The Golden Rule:</strong> Never access UI from a background thread. The UI toolkit is not thread-safe.
+                <strong>🚫 The Golden Rule:</strong> Never access UI from a background thread. The UI toolkit is not thread-safe. If two threads tried to modify a View simultaneously, you'd get corrupted state, visual glitches, or crashes.
             </div>
+            
+            <p>If you block the main thread for more than 5 seconds, Android shows the dreaded <strong>"Application Not Responding" (ANR)</strong> dialog. Users hate this.</p>
             
             <p>Violation causes:</p>
             <pre><code>CalledFromWrongThreadException: Only the original thread 
@@ -910,7 +930,13 @@ public void addIntegers(List<? super Integer> list) {
             <h1>🍎 iOS Deep Dive</h1>
             <p class="subtitle">Everything you need to know for iOS interviews</p>
             
+            <div class="highlight">
+                <strong>Why iOS Knowledge Matters:</strong> iOS development with Swift is known for its emphasis on safety, performance, and great user experience. Apple's strict guidelines mean you need to understand memory management (ARC), app lifecycle, and UI patterns deeply. The good news: Swift is designed to help you avoid common bugs.
+            </div>
+            
             <h2>App Lifecycle</h2>
+            
+            <p>Understanding when your app transitions between states is crucial for providing a smooth user experience. You need to save data before going to background, refresh content when coming back, and release resources when suspended.</p>
             
             <div class="diagram">
                 <span style="color:#64748b">Not Running</span> → 
@@ -1008,9 +1034,13 @@ func applicationDidBecomeActive(_ application: UIApplication) {
 
             <h2>ARC (Automatic Reference Counting)</h2>
             
-            <p>Swift's memory management system. Compiler inserts retain/release at compile time (not runtime like garbage collection).</p>
+            <p>Memory management is one of the most important topics in iOS interviews. Unlike languages with garbage collection (Java, JavaScript), Swift uses <strong>ARC</strong> — the compiler automatically inserts retain/release calls at compile time.</p>
             
-            <p>Every class instance has a <strong>reference count</strong>. When it hits zero → deallocated.</p>
+            <div class="highlight">
+                <strong>Why this matters:</strong> If you don't understand ARC, you'll create memory leaks (app uses more and more RAM until it crashes) or dangling pointers (app crashes when accessing freed memory). Retain cycles are the #1 cause of memory leaks in iOS apps.
+            </div>
+            
+            <p>Every class instance has a <strong>reference count</strong> — a number tracking how many references point to it. When it hits zero, the object is immediately deallocated (deterministic, unlike garbage collection).</p>
 
             <pre><code>class Person {
     let name: String
@@ -1092,7 +1122,17 @@ onComplete = { [weak self] in
 
             <h2>Concurrency</h2>
             
+            <p>Like Android, iOS requires all UI updates to happen on the main thread. The challenge is doing slow work (network requests, image processing, database queries) without freezing the UI. iOS provides two main approaches:</p>
+            
+            <ul>
+                <li><strong>GCD (Grand Central Dispatch)</strong> — Apple's C-based API, available since iOS 4. Still widely used.</li>
+                <li><strong>async/await</strong> — Modern Swift concurrency (iOS 15+). Cleaner syntax, structured concurrency.</li>
+            </ul>
+            
+            <p>You should know both — existing codebases use GCD, new code prefers async/await.</p>
+            
             <h3>GCD (Grand Central Dispatch)</h3>
+            <p>GCD manages a pool of threads for you. You submit work to <strong>queues</strong>, and GCD handles thread management.</p>
             <pre><code>// Background work → Main thread update
 DispatchQueue.global(qos: .userInitiated).async {
     let data = self.fetchData()
@@ -1141,7 +1181,10 @@ func updateUI() {
 
             <h2>Swift Essentials</h2>
             
+            <p>Swift was designed with safety in mind. These language features help you write code that's less prone to crashes and bugs. Understanding them deeply will help you answer interview questions and write better code.</p>
+            
             <h3>Optionals</h3>
+            <p>Swift's solution to the "billion dollar mistake" — null pointer exceptions. An optional explicitly represents "this value might be missing." The compiler forces you to handle the nil case.</p>
             <pre><code>var name: String? = nil   // Optional - can be nil
 
 name!                      // Force unwrap (crashes if nil)
